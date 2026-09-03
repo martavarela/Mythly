@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Characters — Mythly</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>⚡</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --title-size: clamp(2.5rem, 9vw, 10rem);
+            --subtitle-size: clamp(1.2rem, 3vw, 2rem);
+            --nav-height: 5.6rem;
+            --sticky-offset: 6rem; /* used to offset anchors so content isn't hidden behind the sticky nav */
+        }
+        html{width:100%;height:100%;background:linear-gradient(135deg, rgba(224, 239, 255, 0.88), rgba(239, 231, 255, 0.88)), url('mountolympus.jpg') center/cover fixed no-repeat;background-color:#e8f0ff;background-attachment:fixed;overflow-x:hidden}
+        body{font-family: Georgia, "Times New Roman", serif; width:100%; height:100%; margin:2rem; line-height:1.6; padding-top:0; background:transparent; overflow-x:hidden}
+        .site-header{position:relative;z-index:1000;margin-bottom:2rem;width:calc(100% - 4rem)}
+        .header-top{display:flex;align-items:center;justify-content:space-between;background:rgba(245,230,200,0.98);padding:0.8rem 2rem;box-sizing:border-box;border-radius:.75rem .75rem 0 0;box-shadow:0 14px 28px rgba(0,0,0,0.14)}
+        h1{font-family:'Cormorant Garamond', serif;font-weight:600;font-size:clamp(2rem,6vw,3.5rem);text-transform:uppercase;margin:0;letter-spacing:0.15em;line-height:1;color:#0b3b1f}
+        .subtitle{background:rgba(220,245,225,0.98);padding:1.1rem 2rem;text-align:center;border-radius:0 0 .75rem .75rem;box-shadow:0 8px 20px rgba(0,0,0,0.08)}
+        .subtitle p{margin:0;font-family:'Cormorant Garamond', serif;font-weight:500;text-transform:none;letter-spacing:0.02em;font-size:clamp(1.2rem,3vw,2rem);color:#0b3b1f}
+        .top-nav{display:flex;justify-content:flex-end;gap:2rem;padding:0;position:relative;background:none;z-index:1200;align-items:center}
+        .top-nav a{font-family:'Cormorant Garamond', serif;font-weight:500;text-transform:none;letter-spacing:0.15em;font-size:clamp(1rem,2.5vw,1.3rem);text-decoration:none;color:#0b3b1f;background:none;border:none;padding:0;cursor:pointer}
+        .top-nav a:hover{filter:brightness(.7);text-decoration:underline}
+        .top-nav a:active{text-decoration:underline}
+        main{max-width:1100px;margin:2.5rem auto;padding:0 1rem}
+        html{scroll-behavior:smooth}
+        :target{scroll-margin-top:var(--sticky-offset)}
+        h2{font-family:'Cormorant Garamond', serif;font-weight:500;font-size:2rem}
+        .characters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2rem;margin-top:2rem}
+        .character-card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;transition:box-shadow 0.3s ease,transform 0.3s ease}
+        .character-card:hover{box-shadow:0 12px 24px rgba(0,0,0,0.12);transform:translateY(-4px)}
+        .character-card h3{font-family:'Cormorant Garamond', serif;font-weight:500;margin:0 0 0.5rem 0;font-size:1.5rem}
+        .character-card p{margin:0 0 1.5rem 0;flex-grow:1}
+        .character-card a{display:inline-block;padding:0.75rem 1.25rem;background:#6b2fa3;color:#fff;text-decoration:none;border-radius:6px;border:1px solid rgba(0,0,0,0.06);transition:background 0.2s;margin-top:auto;text-align:center;font-weight:600}
+        .character-card a:hover{filter:brightness(1.1)}
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body { margin: 1rem; }
+            .top-nav { gap: 1rem; flex-wrap: wrap; }
+            .characters-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+            .character-card { padding: 1rem; }
+        }
+        @media (max-width: 480px) {
+            body { margin: 0.75rem; }
+            .top-nav { gap: 0.75rem; }
+            .characters-grid { grid-template-columns: 1fr; }
+            .character-card a { min-height: 44px; padding: 0.6rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <h1 id="site-title" data-edit-id="site-title" data-editable>Mythly</h1>
+            <nav class="top-nav" aria-label="Main navigation">
+                <a href="home.html">Home</a>
+                <a href="quizzes.html">Quizzes</a>
+                <a href="myths.html">Myths</a>
+                <a href="mythly-tools.html">Tools</a>
+                <a href="fun.html">Fun</a>
+                <a href="about.html">About</a>
+            </nav>
+        </div>
+        <div class="subtitle"><p id="site-subtitle" data-edit-id="site-subtitle" data-editable style="margin:0;font-family:'Cormorant Garamond', serif;font-weight:500;text-transform:none;font-size:var(--subtitle-size);color:#0b3b1f">Explore the gods, heroes, and creatures</p></div>
+    </header>
+    <main>
+        <h2>Characters</h2>
+        <p>Browse notable figures from Greek myth. Click to learn more about each character.</p>
+        <div class="characters-grid">
+            <div class="character-card">
+                <h3>Zeus</h3>
+                <p id="detail-zeus" data-edit-id="detail-zeus" data-editable>Zeus is the ruler of Mount Olympus and the god of the sky and thunder.</p>
+                <a href="zeus.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Hera</h3>
+                <p id="detail-hera" data-edit-id="detail-hera" data-editable>Hera is the queen of the gods, goddess of marriage, family, and fertility.</p>
+                <a href="hera.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Athena</h3>
+                <p id="detail-athena" data-edit-id="detail-athena" data-editable>Athena is the goddess of wisdom, strategic warfare, and crafts.</p>
+                <a href="athena.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Hephaestus</h3>
+                <p id="detail-hephaestus" data-edit-id="detail-hephaestus" data-editable>Hephaestus was the god of fire, metalworking, and craftsmanship.</p>
+                <a href="hephaestus.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Dionysus</h3>
+                <p id="detail-dionysus" data-edit-id="detail-dionysus" data-editable>Dionysus was the god of wine, festivity, theatre, and ecstatic celebration.</p>
+                <a href="dionysus.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Poseidon</h3>
+                <p id="detail-poseidon" data-edit-id="detail-poseidon" data-editable>Poseidon is the god of the sea, earthquakes, and horses.</p>
+                <a href="poseidon.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Hades</h3>
+                <p id="detail-hades" data-edit-id="detail-hades" data-editable>Hades was the lord of the dead and the underworld.</p>
+                <a href="hades.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Ares</h3>
+                <p id="detail-ares" data-edit-id="detail-ares" data-editable>Ares was the god of chaotic battles and respected mortals devoted to war.</p>
+                <a href="ares.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Aphrodite</h3>
+                <p id="detail-aphrodite" data-edit-id="detail-aphrodite" data-editable>Aphrodite was the god of love and beauty, known for being both kind and cunning.</p>
+                <a href="aphrodite.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Eros</h3>
+                <p id="detail-eros" data-edit-id="detail-eros" data-editable>Eros was the god of love and was feared because of his love arrows.</p>
+                <a href="eros.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Hestia</h3>
+                <p id="detail-hestia" data-edit-id="detail-hestia" data-editable>Hestia was the goddess of the home and the hearth.</p>
+                <a href="hestia.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Persephone</h3>
+                <p id="detail-persephone" data-edit-id="detail-persephone" data-editable>Persephone was the goddess of springtime.</p>
+                <a href="persephone.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Demeter</h3>
+                <p id="detail-demeter" data-edit-id="detail-demeter" data-editable>Demeter was the goddess of the harvest and agriculture.</p>
+                <a href="demeter.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Artemis</h3>
+                <p id="detail-artemis" data-edit-id="detail-artemis" data-editable>Artemis was the goddess of hunting, archery and the wilderness.</p>
+                <a href="artemis.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Apollo</h3>
+                <p id="detail-apollo" data-edit-id="detail-apollo" data-editable>Apollo was the god of music, arts, knowledge, healing, and poetry.</p>
+                <a href="apollo.html">Learn More</a>
+            </div>
+            <div class="character-card">
+                <h3>Hermes</h3>
+                <p id="detail-hermes" data-edit-id="detail-hermes" data-editable>Hermes was the god of messengers, travelling and thieves.</p>
+                <a href="hermes.html">Learn More</a>
+            </div>
+        </div>
+    </main>
+    
+</body>
+</html>

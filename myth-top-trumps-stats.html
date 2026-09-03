@@ -1,0 +1,354 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Myth Top Trumps — Game Stats</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mint: #dff7eb;
+            --mint-dark: #cfe8d9;
+            --line: #ececec;
+            --text: #2c2c2c;
+            --muted: #5f665f;
+            --shadow: 0 8px 28px rgba(0,0,0,0.05);
+            --shadow-hover: 0 22px 50px rgba(0,0,0,0.10);
+            --title-size: clamp(2.5rem, 9vw, 10rem);
+            --subtitle-size: clamp(1.2rem, 3vw, 2rem);
+        }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: linear-gradient(135deg, #e8f4f0 0%, #c7e9d0 25%, #a8d8ff 50%, #b8d4f1 75%, #e8d4f4 100%); margin: 0; padding: 0; line-height: 1.6; min-height: 100vh; }
+        .site-header { background: var(--mint); border-bottom: 1px solid var(--line); }
+        .site-header h1, h1 { font-family: 'Cormorant Garamond', serif; font-weight: 500; margin: 0; text-align: center; padding: 1.4rem 2rem; font-size: var(--title-size); color: #111; text-transform: none; letter-spacing: 0.02em; }
+        .subtitle { background: var(--mint-dark); padding: 1.1rem 2rem; text-align: center; }
+        .subtitle p { margin: 0; font-family: 'Cormorant Garamond', serif; font-size: var(--subtitle-size); color: var(--text); }
+        .top-nav { display: flex; justify-content: center; gap: 2rem; padding: 0.5rem 2rem 1rem; }
+        .top-nav a { font-family: 'Cormorant Garamond', serif; color: var(--text); text-decoration: none; font-size: 1.5rem; transition: color 0.2s; background: none; box-shadow: none; border: none; }
+        .top-nav a:hover { color: var(--muted); }
+        main, .wrap { max-width: 900px; margin: 2.5rem auto; padding: 2rem; background: transparent; border-radius: 8px; box-shadow: none; }
+        h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; }
+        .myth-card, section { background: transparent; border: none; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: none; }
+        .stat-card { background: rgba(255, 255, 255, 0.15); padding: 1.5rem; margin: 1rem 0; border-radius: 6px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .stat-card h2 { font-size: 0.95rem; color: var(--muted); margin: 0 0 0.5rem; font-weight: 500; }
+        .stat-card .num { font-size: 1.8rem; font-weight: 600; color: var(--text); }
+        .stat-card.wide { grid-column: 1 / -1; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .note { color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
+        table { width: 100%; border-collapse: collapse; }
+        table th, table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--line); }
+        table th { background: #f9f9f9; font-weight: 600; }
+        canvas { width: 100%; height: auto; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; background: #333; color: white; text-decoration: none; border-radius: 4px; margin-right: 1rem; margin-top: 1rem; cursor: pointer; border: none; font-family: inherit; font-size: 1rem; }
+        .btn:hover { background: #555; }
+    </style>
+
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Game Stats</h1>
+      <div class="note" id="subtitle">Stats from your most recent Myth Top Trumps game.</div>
+    </header>
+    <div id="stats-area" class="grid">
+      <div class="stat-card wide"><h2>Total rounds</h2><div id="total" class="num">—</div></div>
+      <div class="stat-card"><h2>Player rounds won</h2><div id="playerWins" class="num">—</div></div>
+      <div class="stat-card"><h2>AI rounds won</h2><div id="aiWins" class="num">—</div></div>
+      <div class="stat-card"><h2>Tied rounds</h2><div id="ties" class="num">—</div></div>
+      <div class="stat-card"><h2>Longest streak</h2><div id="longestStreak" class="num">—</div></div>
+      
+      <div class="stat-card"><h2>Player starting card strength</h2><div id="playerStart" class="num">—</div></div>
+      <div class="stat-card"><h2>AI starting card strength</h2><div id="aiStart" class="num">—</div></div>
+      <div class="stat-card"><h2>Player rating</h2><div id="playerElo" class="num">—</div></div>
+      <div class="stat-card"><h2>Player accuracy</h2><div id="playerAcc" class="num">—</div></div>
+      <div class="stat-card"><h2>AI accuracy</h2><div id="aiAcc" class="num">—</div></div>
+      <div class="stat-card"><h2>Avg decision time (player)</h2><div id="playerTime" class="num">—</div></div>
+      <div class="stat-card"><h2>Avg decision time (AI)</h2><div id="aiTime" class="num">—</div></div>
+      <div class="stat-card wide" >
+        <h2>Game summary</h2>
+        <div id="gameSummary" class="note">—</div>
+      </div>
+      <div class="stat-card wide" >
+        <h2>Win-by-stat</h2>
+        <canvas id="winByStat" width="800" height="180" style="width:100%;height:auto;"></canvas>
+      </div>
+      <div class="stat-card wide" >
+        <h2>Tightness</h2>
+        <canvas id="tightness" width="800" height="180" style="width:100%;height:auto;"></canvas>
+      </div>
+      <div class="stat-card wide" >
+        <h2>Comments</h2>
+        <div id="comments" class="note">—</div>
+      </div>
+      <div class="stat-card wide" >
+        <h2>Win-likelihood over time</h2>
+        <canvas id="probChart" width="800" height="300" ></canvas>
+      </div>
+    </div>
+    <div >
+      <a class="btn" id="back" href="myth-top-trumps.html">Back to game</a>
+      <a class="btn" id="clear"  href="#">Clear stats</a>
+    </div>
+  </div>
+<script>
+(function(){
+  function drawChart(history){
+    const c = document.getElementById('probChart'); if(!c) return;
+    const ctx = c.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const w = c.clientWidth; const h = c.clientHeight;
+    c.width = Math.floor(w * dpr); c.height = Math.floor(h * dpr);
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0,0,w,h);
+    const pad = 36; const chartW = w - pad*2; const chartH = h - pad*2;
+    ctx.strokeStyle = 'rgba(32,16,32,0.3)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(pad, pad); ctx.lineTo(pad, pad+chartH); ctx.lineTo(pad+chartW, pad+chartH); ctx.stroke();
+    if(!history || history.length===0) return;
+    const n = history.length;
+    function plot(color, getter){ ctx.beginPath(); for(let i=0;i<n;i++){ const x = pad + (i/(n-1||1))*chartW; const y = pad + chartH - getter(history[i]) * chartH; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.stroke(); }
+    ctx.beginPath(); for(let i=0;i<n;i++){ const x = pad + (i/(n-1||1))*chartW; const y = pad + chartH - history[i].pProb * chartH; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.lineTo(pad+chartW, pad+chartH); ctx.lineTo(pad, pad+chartH); ctx.closePath(); ctx.fillStyle = 'rgba(111,208,255,0.12)'; ctx.fill();
+    plot('#8b5cf6', h=>h.pProb);
+    plot('#7ad1a8', h=>h.aProb);
+    ctx.fillStyle = '#201020'; ctx.font = '12px Arial'; ctx.fillText('Player prob', pad+6, pad+12); ctx.fillStyle = '#8b5cf6'; ctx.fillRect(pad+6, pad+18, 12,6); ctx.fillStyle = '#7ad1a8'; ctx.fillRect(pad+110, pad+18, 12,6); ctx.fillStyle = '#201020'; ctx.fillText('AI prob', pad+128, pad+12);
+  }
+
+  function load(){
+    let s = null;
+    try{ s = JSON.parse(localStorage.getItem('mythTopTrumpsStats')); }catch(e){}
+    if(!s){ try{ s = JSON.parse(sessionStorage.getItem('mythTopTrumpsStats')); }catch(e){} }
+    if(!s){ document.getElementById('stats-area').innerHTML = '<div class="stat-card wide"><h2>No stats found</h2><div class="note">Play a game first and return here.</div></div>'; return; }
+    document.getElementById('total').innerText = s.totalRounds || 0;
+    document.getElementById('playerWins').innerText = s.playerRoundWins || 0;
+    document.getElementById('aiWins').innerText = s.aiRoundWins || 0;
+    document.getElementById('ties').innerText = s.tieRounds || 0;
+    if(s.startingStrengths){ document.getElementById('playerStart').innerText = (s.startingStrengths.playerPct||0) + '%'; document.getElementById('aiStart').innerText = (s.startingStrengths.aiPct||0) + '%'; } else { document.getElementById('playerStart').innerText = '—'; document.getElementById('aiStart').innerText = '—'; }
+    const hist = s.statsHistory || [];
+    // helper escape
+    const escapeHtml = (str) => String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    // win-by-stat heatmap: aggregate wins per stat for player and AI — render as canvas heatmap
+    (function(){
+      const stats = ['Strength','Wisdom','Generation','Magic','Influence'];
+      const counts = {};
+      for(const sKey of stats) counts[sKey] = { player:0, ai:0, tie:0 };
+      for(const h of hist){ if(h.stat && counts[h.stat]){ const r = h.result || 'tie'; counts[h.stat][r] = (counts[h.stat][r]||0) + 1; } }
+      let maxCount = 0; for(const sKey of stats){ maxCount = Math.max(maxCount, counts[sKey].player || 0, counts[sKey].ai || 0); }
+      const canvas = document.getElementById('winByStat');
+      if(canvas && canvas.getContext){
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const w = canvas.clientWidth; const h = canvas.clientHeight;
+        canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0,0,w,h);
+        const cellH = h / stats.length; const labelW = 100; const cellW = (w - labelW) / 2;
+        ctx.font = '13px Arial'; ctx.fillStyle = '#fff';
+        for(let i=0; i<stats.length; i++){
+          const stat = stats[i];
+          const y = i * cellH;
+          ctx.fillText(stat, 8, y + cellH/2 + 5);
+          const c = counts[stat];
+          const p = c.player || 0; const a = c.ai || 0;
+          [['Player', p, '#2d9cdb'], ['AI', a, '#ff6384']].forEach((col, j) => {
+            const alpha = maxCount ? (0.3 + 0.7 * (col[1] / maxCount)) : 0.3;
+            ctx.fillStyle = col[2]; ctx.globalAlpha = alpha;
+            ctx.fillRect(labelW + j*cellW, y, cellW, cellH);
+            ctx.globalAlpha = 1;
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1; ctx.strokeRect(labelW + j*cellW, y, cellW, cellH);
+            ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.fillText(col[1], labelW + j*cellW + cellW/2, y + cellH/2 + 5);
+            ctx.textAlign = 'left';
+          });
+        }
+      }
+    })();
+    // tightness distribution heatmap: per-stat counts for margins 1..MAX (last bucket is MAX+)
+    (function(){
+      const MAX = 5;
+      const stats = ['Strength','Wisdom','Generation','Magic','Influence'];
+      const buckets = {};
+      for(const sKey of stats) buckets[sKey] = new Array(MAX+1).fill(0);
+      for(const h of hist){
+        if(!h.result || h.result === 'tie') continue;
+        if(!h.stat || !(h.stat in buckets)) continue;
+        const mRaw = Math.abs((h.pVal||0) - (h.aVal||0));
+        const m = Math.max(1, Math.floor(mRaw));
+        const idx = m >= MAX ? MAX : m;
+        buckets[h.stat][idx] = (buckets[h.stat][idx]||0) + 1;
+      }
+      let globalMax = 0; for(const sKey of stats){ for(let i=1;i<=MAX;i++){ globalMax = Math.max(globalMax, buckets[sKey][i]||0); } }
+      const canvas = document.getElementById('tightness');
+      if(canvas && canvas.getContext){
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const w = canvas.clientWidth; const h = canvas.clientHeight;
+        canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0,0,w,h);
+        const cellH = h / stats.length; const labelW = 100; const cellW = (w - labelW) / MAX;
+        ctx.font = '13px Arial'; ctx.fillStyle = '#fff';
+        for(let i=0; i<stats.length; i++){
+          const stat = stats[i];
+          const y = i * cellH;
+          ctx.fillText(stat, 8, y + cellH/2 + 5);
+          for(let j=1; j<=MAX; j++){
+            const c = buckets[stat][j] || 0;
+            const alpha = globalMax ? (0.3 + 0.7 * (c / globalMax)) : 0.3;
+            ctx.fillStyle = '#58c884'; ctx.globalAlpha = alpha;
+            ctx.fillRect(labelW + (j-1)*cellW, y, cellW, cellH);
+            ctx.globalAlpha = 1;
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1; ctx.strokeRect(labelW + (j-1)*cellW, y, cellW, cellH);
+            ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.fillText(c, labelW + (j-1)*cellW + cellW/2, y + cellH/2 + 5);
+            ctx.textAlign = 'left';
+          }
+        }
+      }
+    })();
+    // compute longest consecutive win streak (ignore ties)
+    (function(){
+      let longestOwner = null; let longestLen = 0; let curOwner = null; let curLen = 0;
+      for(const h of hist){
+        const owner = (h.result === 'player') ? 'Player' : (h.result === 'ai' ? 'AI' : null);
+        if(owner && owner === curOwner){ curLen++; } else { curOwner = owner; curLen = owner ? 1 : 0; }
+        if(curLen > longestLen){ longestLen = curLen; longestOwner = curOwner; }
+      }
+      const el = document.getElementById('longestStreak');
+      if(el){ el.innerText = (longestOwner && longestLen>0) ? (longestOwner + ' — ' + longestLen) : '—'; }
+    })();
+    const playerChooserRounds = hist.filter(h=>h.chooser==='player');
+    const aiChooserRounds = hist.filter(h=>h.chooser==='ai');
+    const playerChooserWins = playerChooserRounds.filter(h=>h.result==='player').length;
+    const aiChooserWins = aiChooserRounds.filter(h=>h.result==='ai').length;
+    const pAcc = playerChooserRounds.length ? Math.round((playerChooserWins / playerChooserRounds.length)*100) : 0;
+    const aAcc = aiChooserRounds.length ? Math.round((aiChooserWins / aiChooserRounds.length)*100) : 0;
+    document.getElementById('playerAcc').innerText = pAcc + '%';
+    document.getElementById('aiAcc').innerText = aAcc + '%';
+    
+    const dt = s.decisionTimes || { player: [], ai: [] };
+    function avg(arr){ if(!arr || arr.length===0) return 0; return Math.round(arr.reduce((a,b)=>a+b,0)/arr.length); }
+    const pAvg = avg(dt.player); const aAvg = avg(dt.ai);
+    document.getElementById('playerTime').innerText = (pAvg ? (pAvg + ' ms') : '—');
+    document.getElementById('aiTime').innerText = (aAvg ? (aAvg + ' ms') : '—');
+    const summary = s.summary || null;
+    if(summary){
+      const lines = [];
+      if(summary.winner) lines.push('Winner: ' + (summary.winner === 'player' ? 'Player' : 'AI'));
+      if(summary.starter) lines.push('Starter: ' + (summary.starter === 'player' ? 'Player' : 'AI'));
+      // Render only winner and starter, each as its own paragraph for spacing.
+      const gs = document.getElementById('gameSummary');
+      if(gs){
+        const escapeHtml = (str) => String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        gs.innerHTML = lines.map(l => `<p>${escapeHtml(l)}</p>`).join('');
+      }
+    }
+    // show player's ELO before/after if available
+    const rBefore = s.ratingsBefore || null; const rAfter = s.ratingsAfter || null;
+    if(rBefore || rAfter){
+      const pb = rBefore && rBefore.player ? rBefore.player : '—'; const pa = rAfter && rAfter.player ? rAfter.player : '—';
+      const pDelta = (pb !== '—' && pa !== '—') ? (pa - pb) : null;
+      document.getElementById('playerElo').innerText = (pb === '—' ? '—' : pb + ' → ' + pa + (pDelta!=null ? (' (' + (pDelta>0?'+':'') + pDelta + ')') : ''));
+    }
+    const sub = document.getElementById('subtitle'); if(sub){ sub.style.background = 'linear-gradient(90deg,#ffd67a,#9ef0b8)'; sub.style.padding = '8px 12px'; sub.style.borderRadius = '8px'; sub.style.display='inline-block'; sub.style.color='#201020'; }
+    drawChart(s.statsHistory || []);
+    generateComments(s);
+  }
+
+  // Produce qualitative, randomized and non-numeric comments for the stats page
+  function generateComments(s){
+    const hist = s.statsHistory || [];
+    const lines = [];
+
+    // helper utils
+    const randPick = (arr) => arr[Math.floor(Math.random()*arr.length)];
+    const shuffle = (a) => { for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a };
+
+    // features
+    let lastLeader = null; let leadChanges = 0;
+    for(const h of hist){
+      const leader = (h.pCount > h.aCount) ? 'player' : (h.aCount > h.pCount ? 'ai' : 'tie');
+      if(lastLeader && leader !== lastLeader && leader !== 'tie' && lastLeader !== 'tie') leadChanges++;
+      if(leader !== 'tie') lastLeader = leader;
+    }
+    const ties = s.tieRounds || 0;
+    const dt = s.decisionTimes || { player: [], ai: [] };
+    const pAvg = (dt.player && dt.player.length) ? (dt.player.reduce((a,b)=>a+b,0)/dt.player.length) : null;
+    const aiAvg = (dt.ai && dt.ai.length) ? (dt.ai.reduce((a,b)=>a+b,0)/dt.ai.length) : null;
+    let longest = {who:null,len:0}; let cur = {who:null,len:0};
+    for(const h of hist){ if(h.result === cur.who) cur.len++; else { cur.who = h.result; cur.len = (h.result==='tie'?0:1); } if(cur.who && cur.len > longest.len) longest = {who:cur.who,len:cur.len}; }
+    const winner = s.summary && s.summary.winner ? s.summary.winner : null;
+    const starter = s.summary && s.summary.starter ? s.summary.starter : null;
+    const dominantStat = (s.perGame && s.perGame.mostSuccessfulStat) ? s.perGame.mostSuccessfulStat : null;
+
+    // template pools (no digits anywhere)
+    const openers = [
+      'That game had real character and kept me guessing.',
+      'A lively session that showcased a mix of approaches.',
+      'Good match energy all the way through.'
+    ];
+
+    const leadPool = [
+      'The lead traded hands enough to keep things exciting.',
+      'Momentum shifted at times, which kept the outcome lively.',
+      'Once a rhythm formed, the match settled into a steady push.'
+    ];
+
+    const tiePool = [
+      'Shared stalemates stretched the pot into interesting moments.',
+      'Those tied rounds added a welcome sense of suspense.'
+    ];
+
+    const speedPool = [
+      'Quick reads paid off in the heat of the match.',
+      'A thoughtful pace revealed stronger options as the game progressed.',
+      'Balanced timing gave each choice room to matter.'
+    ];
+
+    const streakPool = [
+      'A steady run by one side created a memorable stretch.',
+      'A run of success by one side shaped the middle of the match.'
+    ];
+
+    const strategyPool = [
+      'Some categories had outsized influence this time; adapt your picks.',
+      'Category choices swung the tide in key moments; mix things up next time.'
+    ];
+
+    const closingWin = [
+      'That finish felt earned; well played.',
+      'A satisfying close; ready for another challenge?' 
+    ];
+    const closingLoss = [
+      'A tough end, but useful for testing new tactics.',
+      'Not the result you wanted, but a good lesson for rematches.'
+    ];
+    const closingNeutral = [
+      'An unusual finish that invites another try.',
+      'Interesting outcome — a fresh run might reveal new options.'
+    ];
+
+    // assemble candidate lines based on detected features
+    lines.push(randPick(openers));
+    if(leadChanges > 0) lines.push(randPick(leadPool)); else lines.push('Control stayed relatively steady for most of the match.');
+    if(ties > 0) lines.push(randPick(tiePool));
+    if(pAvg !== null && aiAvg !== null){ if(pAvg < aiAvg) lines.push('Your quicker decisions kept steady pressure.'); else if(pAvg > aiAvg) lines.push('Taking more time produced careful choices in this match.'); }
+    if(longest.len >= 3) lines.push(randPick(streakPool));
+    if(dominantStat) lines.push('A particular category shaped many turns — consider leaning into that variety.');
+    lines.push(randPick(strategyPool));
+
+    if(winner === 'player') lines.push(randPick(closingWin));
+    else if(winner === 'ai') lines.push(randPick(closingLoss));
+    else lines.push(randPick(closingNeutral));
+
+    // randomize order and pick up to four unique lines
+    const unique = Array.from(new Set(shuffle(lines))).slice(0,4);
+    const sanitized = unique.map(c=>c.replace(/[0-9]/g,'').replace(/\s+/g,' ').trim());
+    document.getElementById('comments').innerText = sanitized.join('\n\n');
+  }
+
+  document.getElementById('clear').addEventListener('click', e=>{ e.preventDefault(); localStorage.removeItem('mythTopTrumpsStats'); sessionStorage.removeItem('mythTopTrumpsStats'); load(); });
+  window.addEventListener('resize', ()=>{ let s=null; try{ s=JSON.parse(localStorage.getItem('mythTopTrumpsStats')) }catch(e){} if(!s) try{ s=JSON.parse(sessionStorage.getItem('mythTopTrumpsStats')) }catch(e){} if(s) drawChart(s.statsHistory||[]); });
+  load();
+})();
+</script>
+</body>
+</html>

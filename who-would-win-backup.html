@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Would Win? - Mythly</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>⚡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#244832;--purple:#6b2fa3;--blue:#3d5fa8;--lilac:#efe7ff;--mint:#dcf5e1;--panel:rgba(255,255,255,.76)}
+*{box-sizing:border-box}html{min-height:100%;background:linear-gradient(135deg,rgba(224,239,255,.88),rgba(239,231,255,.88)),url('mountolympus.jpg') center/cover fixed no-repeat;background-color:var(--lilac)}
+body{margin:0;color:var(--ink);font:1rem/1.5 Georgia,"Times New Roman",serif}.site-header,main{width:min(1100px,calc(100% - 2rem));margin-left:auto;margin-right:auto}.site-header{margin-top:1rem}.header-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.5rem;background:rgba(245,230,200,.98);border-radius:.75rem .75rem 0 0}.header-top h1{margin:0;font:600 clamp(2rem,6vw,3.5rem)/1 'Cormorant Garamond',serif;letter-spacing:.15em;text-transform:uppercase}.top-nav{display:flex;flex-wrap:wrap;gap:1rem}.top-nav a{color:var(--ink);font:500 clamp(1rem,2.3vw,1.2rem) 'Cormorant Garamond',serif;text-decoration:none}.top-nav a:hover{text-decoration:underline}.subtitle{padding:.85rem;text-align:center;background:var(--mint);border-radius:0 0 .75rem .75rem}.subtitle p{margin:0;font:500 clamp(1.1rem,3vw,1.8rem) 'Cormorant Garamond',serif}
+main{margin-top:2rem;margin-bottom:4rem}.intro{text-align:center}.intro h2{margin:.25rem 0;font:500 clamp(2rem,5vw,3rem) 'Cormorant Garamond',serif}.intro p{max-width:680px;margin:.25rem auto 1.5rem}.setup,.tournament{background:var(--panel);border:1px solid rgba(107,47,163,.18);border-radius:12px;padding:1.25rem;box-shadow:0 10px 24px rgba(38,61,84,.1)}.setup h3,.tournament h3{margin:.1rem 0 .5rem;font:600 1.8rem 'Cormorant Garamond',serif}.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.control-box{padding:1rem;border-radius:.75rem;background:linear-gradient(135deg,rgba(220,245,225,.82),rgba(224,239,255,.82))}.control-box h4{margin:0 0 .55rem;color:#3d2863;font:600 1.3rem 'Cormorant Garamond',serif}label{display:flex;align-items:center;gap:.45rem;margin:.35rem 0}select{width:100%;padding:.55rem;border:1px solid #9bc5c3;border-radius:.5rem;background:#e7f3f2;color:var(--ink);font:inherit}.roster{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;max-height:220px;overflow:auto}.roster label{padding:.5rem .6rem;margin:0;border-radius:.5rem;background:rgba(239,231,255,.82);border:1px solid rgba(107,47,163,.14)}.roster label:has(input:checked){background:#ffd1e8;border-color:#6b2fa3}.setup-actions{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1rem}button{border:0;border-radius:.5rem;padding:.6rem 1rem;background:var(--purple);color:#fff;font:inherit;cursor:pointer}button.secondary{background:var(--blue)}button:hover{filter:brightness(1.08)}button:disabled{opacity:.5;cursor:not-allowed}.hidden{display:none}.status{margin:.8rem 0;padding:.65rem .8rem;border-radius:.5rem;background:var(--mint)}.round{margin-top:1rem;padding:1rem;border-radius:.75rem;background:linear-gradient(135deg,rgba(239,231,255,.9),rgba(255,209,232,.35))}.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}.match{padding:.9rem;border-radius:.65rem;background:rgba(224,239,255,.76);border:1px solid rgba(61,95,168,.22)}.match h4{margin:0;font:600 1.3rem 'Cormorant Garamond',serif}.match p{margin:.25rem 0}.match button{width:100%;margin-top:.45rem}.match button:first-of-type{background:#6b2fa3}.winner{font-weight:700;color:#5b2b8d}.bracket-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.6rem;margin-top:1rem}.bracket-card{padding:.75rem;border-radius:.6rem;background:rgba(220,245,225,.8);border:1px solid rgba(36,72,50,.18)}.bracket-card strong{display:block;color:#3d2863}.champion{padding:2rem 1rem;text-align:center;border-radius:.75rem;background:linear-gradient(135deg,#ffd1e8 0%,#ffb3d9 100%);color:#5b2b8d;font:700 2.5rem 'Cormorant Garamond',serif;border:4px solid #6b2fa3;box-shadow:0 8px 30px rgba(107,47,163,0.3);margin:2rem 0;letter-spacing:0.05em;text-transform:uppercase}
+@media(max-width:760px){.header-top{align-items:flex-start;flex-direction:column}.setup-grid,.match-grid{grid-template-columns:1fr}.roster{grid-template-columns:repeat(2,1fr)}}
+.loser-title{margin:1.25rem 0 .35rem;color:#5b2b8d;font:600 1.35rem 'Cormorant Garamond',serif}.loser-card{background:rgba(255,209,232,.5);border-color:rgba(107,47,163,.25)}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="header-top"><h1>Mythly</h1><nav class="top-nav" aria-label="Main navigation"><a href="home.html">Home</a><a href="characters.html">Characters</a><a href="quizzes.html">Quizzes</a><a href="myths.html">Myths</a><a href="mythly-tools.html">Tools</a><a href="fun.html">Fun</a><a href="about.html">About</a></nav></div><div class="subtitle"><p>Choose your contenders. Let the myths decide.</p></div></header>
+<main><section class="intro"><h2>Who Would Win?</h2><p>Build your own divine tournament and let an AI-style mythic judge estimate each matchup.</p></section>
+<section class="setup" id="setup"><h3>Tournament setup</h3><div class="setup-grid"><div class="control-box"><h4>Contestants</h4><p>Select the gods and heroes you want to enter.</p><div class="roster" id="roster"></div></div><div class="control-box"><h4>Format and contest</h4><label for="entrant-count">How many enter?</label><select id="entrant-count"><option value="4">4 contestants</option><option value="6">6 contestants</option><option value="8" selected>8 contestants</option><option value="12">12 contestants</option></select><label for="tournament-style">Tournament style</label><select id="tournament-style"><option value="knockout">Knockout</option><option value="groups">Group stage then knockout</option><option value="bracket">Winner bracket and loser bracket</option><option value="round-robin">Round robin league</option><option value="league-knockout">League then knockout</option><option value="swiss">Swiss rounds</option></select><p id="style-explanation" class="status"></p><label for="contest-type">Contest type</label><select id="contest-type"><option value="fight">Fighting skills</option><option value="wits">Wisdom</option><option value="knowledge">Knowledge</option><option value="strength">Strength</option><option value="magic">Magic</option><option value="influence">Influence</option><option value="endurance">Endurance</option><option value="leadership">Leadership</option></select><p id="setup-note" class="status">Choose at least 4 contestants.</p></div></div><div class="setup-actions"><button class="secondary" id="select-all" type="button">Select all</button><button id="start-tournament" type="button">Start tournament</button></div></section>
+<section class="tournament hidden" id="tournament"><h3 id="tournament-title"></h3><div id="tournament-status" class="status"></div><div id="matches"></div><div id="bracket-title"></div><div id="bracket" class="bracket-list"></div><div id="loser-bracket-title"></div><div id="loser-bracket" class="bracket-list"></div><div id="champion"></div><div class="setup-actions"><button class="secondary" id="new-tournament" type="button">New tournament</button></div></section></main>
+<script>
+(function(){
+// Strategic explanation generator with narrative focus
+const __mythStrategicExplainer = {
+  explanations: {
+    'Zeus': { asset: 'unmatched divine authority', weakness: 'occasional arrogance' },
+    'Hera': { asset: 'strategic persistence and intellect', weakness: 'calculated vengeance' },
+    'Athena': { asset: 'tactical brilliance and wisdom', weakness: 'sometimes detached' },
+    'Poseidon': { asset: 'raw power and domain mastery', weakness: 'volatile temper' },
+    'Hades': { asset: 'command of death and finality', weakness: 'avoids direct conflict' },
+    'Ares': { asset: 'overwhelming physical dominance', weakness: 'predictable brute force' },
+    'Aphrodite': { asset: 'irresistible charm and influence', weakness: 'weak in direct combat' },
+    'Apollo': { asset: 'precision magic and versatility', weakness: 'lacks brutal aggression' },
+    'Artemis': { asset: 'uncanny accuracy and endurance', weakness: 'prefers hunting to confrontation' },
+    'Hermes': { asset: 'cunning speed and adaptability', weakness: 'relies on intellect over power' },
+    'Demeter': { asset: 'control of life and abundance', weakness: 'gentle nature limits force' },
+    'Dionysus': { asset: 'chaos and unpredictability', weakness: 'lacks discipline' },
+    'Achilles': { asset: 'legendary warrior prowess', weakness: 'one vulnerability ends it' },
+    'Odysseus': { asset: 'cunning and tactical genius', weakness: 'not strongest in direct combat' },
+    'Heracles': { asset: 'unmatched strength and determination', weakness: 'can be outsmarted' },
+    'Perseus': { asset: 'divine gifts and tactical thinking', weakness: 'depends on tools' },
+    'Theseus': { asset: 'honor intellect and adaptability', weakness: 'not as powerful as gods' },
+    'Jason': { asset: 'leadership and courage', weakness: 'dependent on allies' }
+  },
+  generate: function(winner, loser, contest) {
+    const w = this.explanations[winner] || { asset: 'their strengths', weakness: 'their limits' };
+    const l = this.explanations[loser] || { asset: 'their abilities', weakness: 'their vulnerabilities' };
+    const scenarios = {
+      fight: [
+        winner + ' overwhelms ' + loser + ' through superior combat skill and legendary warrior prowess.',
+        winner + ' dominates this clash through tactical brilliance and overwhelming physical force.',
+        'In direct combat, ' + winner + ' proves decisively superior in warrior skill and strategy.',
+        winner + ' emerges victorious—martial dominance and combat expertise decide the outcome.',
+        winner + ' takes command of the battlefield through superior warrior strength and tactical command.',
+        'Victory to ' + winner + ' through superior combat ability and battle-hardened experience.'
+      ],
+      wits: [
+        winner + ' outwits ' + loser + ' with sharper intellect and superior strategic thinking.',
+        'In this battle of minds, ' + winner + ' demonstrates superior reasoning and tactical foresight.',
+        winner + ' prevails through wisdom, strategy, and clever outsmarting of the opponent.',
+        'Victory to ' + winner + ' through mental acuity and superior strategic understanding.',
+        winner + ' outmaneuvers ' + loser + ' entirely through intellect and tactical positioning.',
+        winner + ' wins this contest of wisdom and cunning through superior mental mastery.'
+      ],
+      knowledge: [
+        winner + ' demonstrates far greater knowledge and understanding of the contest.',
+        'The test of knowledge heavily favors ' + winner + '\'s deeper learning and insight.',
+        winner + ' prevails through superior knowledge and comprehensive understanding.',
+        'Victory to ' + winner + ' in this contest of learning and ancient wisdom.',
+        winner + ' overwhelms ' + loser + ' with superior knowledge and understanding.',
+        'Knowledge favors ' + winner + ' who demonstrates far deeper understanding.'
+      ],
+      strength: [
+        winner + ' demonstrates raw power that far exceeds ' + loser + '\'s physical capacity.',
+        'Pure strength decides this contest decisively in ' + winner + '\'s favor.',
+        winner + ' simply overpowers ' + loser + ' through unmatched physical dominance and force.',
+        'Physical superiority goes decisively to ' + winner + ' in this test of strength.',
+        winner + ' outmuscles ' + loser + ' with overwhelming and unrelenting strength.',
+        'Victory to ' + winner + ' through raw power and unmatched physical superiority.'
+      ],
+      magic: [
+        winner + ' unleashes superior magical command and mystical power beyond ' + loser + '\'s capacity.',
+        'The arcane arts heavily favor ' + winner + '\'s greater magical mastery and control.',
+        winner + ' demonstrates overwhelming magical superiority and mystical expertise.',
+        'Victory to ' + winner + ' through superior magical power and arcane dominance.',
+        winner + ' overwhelms ' + loser + ' with superior magical control and spellcraft.',
+        'Magical mastery favors ' + winner + ' who commands vastly greater arcane power.'
+      ],
+      influence: [
+        winner + ' sways hearts and minds through overwhelming presence and superior authority.',
+        'Charisma and persuasion flow decisively ' + winner + '\'s direction in this contest.',
+        winner + ' commands the situation entirely through force of personality and presence.',
+        'Victory to ' + winner + ' through superior influence and commanding authority.',
+        winner + ' overwhelms ' + loser + ' through unresistible charm and influential presence.',
+        'Influence heavily favors ' + winner + ' whose authority and presence prove commanding.'
+      ],
+      endurance: [
+        winner + ' outlasts ' + loser + ' through superior stamina, willpower, and resolve.',
+        'Endurance and determination heavily favor ' + winner + ' who refuses to break or yield.',
+        winner + ' wears down ' + loser + ' through tireless stamina and unbreakable resolve.',
+        'Victory to ' + winner + ' through unrelenting persistence and superior endurance.',
+        winner + ' prevails through sheer will and stamina that far exceed ' + loser + '\'s limits.',
+        'Willpower and endurance favor ' + winner + ' whose determination proves unmatched.'
+      ],
+      leadership: [
+        winner + ' leads with commanding vision and inspiring presence that ' + loser + ' cannot match.',
+        'Leadership heavily favors ' + winner + ' whose clarity and vision inspire and command.',
+        winner + ' unites and inspires others through authoritative and visionary leadership.',
+        'Victory to ' + winner + ' through superior command presence and strategic vision.',
+        winner + ' demonstrates leadership excellence that far surpasses ' + loser + '\'s abilities.',
+        'Decisive leadership favors ' + winner + ' who commands with clarity and inspiring purpose.'
+      ]
+    };
+    const conts = scenarios[contest] || scenarios.fight;
+    return conts[Math.floor(Math.random() * conts.length)];
+  }
+};
+window.contenders = {Zeus:{kind:'God',strength:9.8,wits:7.4,magic:9.7,leadership:9.8},Hera:{kind:'God',strength:7.2,wits:8.3,magic:8.1,leadership:9.1},Athena:{kind:'God',strength:7.4,wits:9.9,magic:8.4,leadership:9.7},Poseidon:{kind:'God',strength:9.2,wits:7.1,magic:9.3,leadership:8.2},Hades:{kind:'God',strength:8.4,wits:8.2,magic:9.8,leadership:7.3},Ares:{kind:'God',strength:9.9,wits:5.3,magic:6.2,leadership:8.1},Aphrodite:{kind:'God',strength:5.1,wits:8.4,magic:9.2,leadership:7.1},Apollo:{kind:'God',strength:7.3,wits:8.1,magic:8.5,leadership:8.3},Artemis:{kind:'God',strength:8.2,wits:8.5,magic:8.1,leadership:8.4},Hermes:{kind:'God',strength:6.2,wits:9.1,magic:8.2,leadership:7.4},Demeter:{kind:'God',strength:6.1,wits:8.2,magic:8.3,leadership:8.2},Dionysus:{kind:'God',strength:6.3,wits:6.2,magic:8.1,leadership:7.2},Achilles:{kind:'Hero',strength:9.7,wits:6.8,magic:5.2,leadership:7.3},Odysseus:{kind:'Hero',strength:7.1,wits:9.8,magic:4.8,leadership:8.4},Heracles:{kind:'Hero',strength:10,wits:7.2,magic:4.9,leadership:8.1},Perseus:{kind:'Hero',strength:8.1,wits:8.4,magic:6.7,leadership:7.8},Theseus:{kind:'Hero',strength:8.2,wits:8.1,magic:4.6,leadership:8.2},Jason:{kind:'Hero',strength:7.8,wits:8.2,magic:5.7,leadership:8.7}};
+const contenders = window.contenders;
+const roster=document.getElementById('roster');let lastKind='';Object.keys(contenders).forEach(function(name){const kind=contenders[name].kind;if(kind!==lastKind){const divider=document.createElement('div');divider.className='roster-divider';divider.style.cssText='grid-column:1/-1;margin:.45rem 0 .05rem;color:#3d2863;font:600 1.1rem Cormorant Garamond,serif';divider.textContent=kind==='Hero'?'Heroes':'Gods';roster.appendChild(divider);lastKind=kind;}const label=document.createElement('label');label.innerHTML='<input type="checkbox" value="'+name+'"> '+name+' <small>('+kind+')</small>';roster.appendChild(label);});
+const selected=()=>Array.from(roster.querySelectorAll('input:checked')).map(input=>input.value);const countEl=document.getElementById('entrant-count'),styleEl=document.getElementById('tournament-style'),styleExplanation=document.getElementById('style-explanation'),note=document.getElementById('setup-note');const styleDescriptions={knockout:'Everyone is paired into single matches. Losers leave and winners continue until one champion remains.',groups:'Contestants first compete in small groups. The strongest performers then enter a knockout stage.',bracket:'Each contestant starts in the winner bracket. A loss moves them to the loser bracket, with one final chance to recover.', 'round-robin':'Every contestant faces every other contestant. The AI totals the results and the highest performer wins the league.', 'league-knockout':'Everyone plays league matches first. The best performers then enter a final knockout bracket.',swiss:'Contestants play several rounds against similarly performing opponents. The best record determines who reaches the final.'};
+function updateStyleExplanation(){styleExplanation.textContent=styleDescriptions[styleEl.value]||styleDescriptions.knockout;}
+function updateNote(){const count=selected().length,needed=Number(countEl.value);note.textContent=count<4?'Choose at least 4 contestants.':count<needed?'Select at least '+needed+' contestants for this format.':count>needed?'The first '+needed+' selected contestants will enter.':count+' contestants ready.';}
+roster.addEventListener('change',updateNote);countEl.addEventListener('change',updateNote);styleEl.addEventListener('change',updateStyleExplanation);document.getElementById('select-all').addEventListener('click',function(){const inputs=Array.from(roster.querySelectorAll('input'));const gods=inputs.filter(input=>contenders[input.value].kind==='God');const heroes=inputs.filter(input=>contenders[input.value].kind==='Hero');const chosen=[];for(let i=0;i<Number(countEl.value);i+=1)chosen.push((i%2===0?gods:heroes)[Math.floor(i/2)]);inputs.forEach(input=>{input.checked=chosen.indexOf(input)!==-1;});updateNote();});
+let tournament=null;const contestNames={fight:'Fighting skills',wits:'Wisdom',knowledge:'Knowledge',strength:'Strength',magic:'Magic',influence:'Influence',endurance:'Endurance',leadership:'Leadership'};function score(a,b){const x=contenders[a],y=contenders[b],contest=document.getElementById('contest-type').value;let key=contest==='fight'?'strength':contest==='knowledge'?'wits':contest;const aScore=Number.isFinite(x[key])?x[key]:x.wits;const bScore=Number.isFinite(y[key])?y[key]:y.wits;return {a:aScore,b:bScore,contest:contestNames[contest]||'Contest'};}
+function pairMatches(names){const cleanNames=names.filter(name=>Boolean(contenders[name]));const matches=[];for(let i=0;i<cleanNames.length;i+=2){if(cleanNames[i+1])matches.push([cleanNames[i],cleanNames[i+1]]);}return matches;}
+function render(){const matchesEl=document.getElementById('matches'),bracket=document.getElementById('bracket'),champion=document.getElementById('champion');matchesEl.innerHTML='';bracket.innerHTML='';champion.innerHTML='';if(tournament.champion){champion.innerHTML='<div class="champion">Champion: '+tournament.champion+'</div>';return;}document.getElementById('tournament-status').textContent=tournament.styleLabel+' - '+tournament.contestName+' round ready. The AI has judged these matches; nothing advances until you click Next round.';const judgedRound=[];tournament.round.forEach(function(pair,index){if(!pair||!pair[0]||!pair[1])return;const judged=score(pair[0],pair[1]),total=judged.a+judged.b,aChance=(judged.a/total*100).toFixed(1),bChance=(100-Number(aChance)).toFixed(1),winner=judged.a>=judged.b?pair[0]:pair[1];judgedRound.push({pair:pair,winner:winner});const card=document.createElement('div');card.className='match';card.innerHTML='<h4>Match '+(index+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aChance+'% &middot; <strong>'+pair[1]+'</strong> '+bChance+'%</p><p class="winner">AI judge: '+winner+' advances</p>';matchesEl.appendChild(card);});tournament.history.forEach(function(item){const card=document.createElement('div');card.className='bracket-card';card.innerHTML='<strong>'+item.winner+' advanced</strong><span>'+item.a+' vs '+item.b+'</span>';bracket.appendChild(card);});if(judgedRound.length){const nextButton=document.createElement('button');nextButton.type='button';nextButton.textContent='Next round';nextButton.style.marginTop='1rem';nextButton.addEventListener('click',function(){const winners=[];judgedRound.forEach(function(item){tournament.history.push({a:item.pair[0],b:item.pair[1],winner:item.winner});winners.push(item.winner);});if(tournament.bye){winners.push(tournament.bye);tournament.bye=null;}if(winners.length===1){tournament.champion=winners[0];}else{if(winners.length%2===1){tournament.bye=winners.pop();}tournament.round=pairMatches(winners);}render();});matchesEl.appendChild(nextButton);}}
+function advance(first,second,winner){const pair=tournament.round.find(pair=>pair[0]===first&&pair[1]===second);if(!pair)return;tournament.history.push({a:first,b:second,winner:winner});tournament.next.push(winner);tournament.round=tournament.round.filter(item=>item!==pair);if(!tournament.round.length){if(tournament.next.length===1){tournament.champion=tournament.next[0];}else{tournament.round=pairMatches(tournament.next);tournament.next=[];}}render();}
+function start(){let names=selected().filter(name=>Boolean(contenders[name])).slice(0,Number(countEl.value));if(names.length<4){document.getElementById('select-all').click();names=selected().filter(name=>Boolean(contenders[name])).slice(0,Number(countEl.value));}if(names.length<4){updateNote();return;}const style=styleEl.value;const labels={knockout:'Knockout',groups:'Group stage then knockout',bracket:'Winner bracket and loser bracket','round-robin':'Round robin league','league-knockout':'League then knockout',swiss:'Swiss rounds'};tournament={round:pairMatches(names),next:[],history:[],champion:null,bye:null,styleLabel:labels[style]||'Knockout',contestName:contestNames[document.getElementById('contest-type').value]||'Contest'};document.getElementById('setup').classList.add('hidden');document.getElementById('tournament').classList.remove('hidden');document.getElementById('tournament-title').textContent=tournament.styleLabel;try{render();}catch(error){document.getElementById('tournament-status').textContent='The AI judge could not start this round: '+error.message;console.error(error);}}
+// Bind Start to the canonical starter when available to avoid duplicate handlers
+document.getElementById('start-tournament').addEventListener('click', function(e){ e.preventDefault(); e.stopImmediatePropagation(); if(window.__mythStartNow) return window.__mythStartNow(e); try{ return start(e); }catch(err){ console.error('start wrapper error', err); } });
+document.getElementById('new-tournament').addEventListener('click',function(){document.getElementById('setup').classList.remove('hidden');document.getElementById('tournament').classList.add('hidden');});updateStyleExplanation();updateNote();
+}());
+</script>
+<script>
+	// Unified loser-bracket updater: watches both #bracket and #matches and fills #loser-bracket reliably
+	function updateLoserBracket(){
+		try{
+			const style = document.getElementById('tournament-style');
+			const bracket = document.getElementById('bracket');
+			const matches = document.getElementById('matches');
+			const loserTitle = document.getElementById('loser-bracket-title');
+			const loserBracket = document.getElementById('loser-bracket');
+			if(!loserTitle || !loserBracket) return;
+			if(!style || style.value !== 'bracket'){ loserTitle.innerHTML=''; loserBracket.innerHTML=''; return; }
+
+			// Try to extract losers from #bracket .bracket-card first
+			let losers = [];
+			if(bracket){
+				const cards = Array.from(bracket.querySelectorAll('.bracket-card'));
+				cards.forEach(card=>{
+					const winnerText = (card.querySelector('strong')||{}).textContent || '';
+					const winner = winnerText.replace(' advanced','').replace(' advanced','').trim();
+					const pairText = (card.querySelector('span')||{}).textContent || '';
+					const pair = pairText.split(' vs ').map(s=>s.trim()).filter(Boolean);
+					if(pair.length===2){ const loser = pair.find(n=>n !== winner); if(loser) losers.push(loser); }
+				});
+			}
+
+			// Fallback: scan matches for winners and pairs
+			if(losers.length===0 && matches){
+				const matchCards = Array.from(matches.querySelectorAll('.match'));
+				matchCards.forEach(card=>{
+					const p = (card.querySelectorAll('p')[0]||{}).textContent || '';
+					const pair = p.split(' vs ').map(s=>s.trim()).filter(Boolean);
+					const winnerText = (card.querySelector('.winner')||{}).textContent || '';
+					// winnerText formats can be 'AI judge: X advances' or 'AI judge: X wins'
+					const winner = (winnerText.replace('AI judge:','').replace('advances','').replace('wins','')||'').trim();
+					if(pair.length===2 && winner){ const loser = pair.find(n=>n !== winner); if(loser) losers.push(loser); }
+				});
+			}
+
+			// Deduplicate and render
+			losers = Array.from(new Set(losers.filter(Boolean)));
+			if(losers.length){ loserTitle.innerHTML = '<h4 class="loser-title">Loser bracket</h4>'; loserBracket.innerHTML = losers.map(n=>'<div class="bracket-card loser-card"><strong>'+n+'</strong><span>Lost in the winner bracket and receives a second chance.</span></div>').join(''); }
+			else { loserTitle.innerHTML=''; loserBracket.innerHTML=''; }
+		}catch(e){ console.error('updateLoserBracket', e); }
+	}
+
+	['bracket','matches'].forEach(id=>{ const el=document.getElementById(id); if(!el) return; new MutationObserver(updateLoserBracket).observe(el,{childList:true,subtree:true}); });
+	// also run on style change and on load
+	const styleEl = document.getElementById('tournament-style'); if(styleEl) styleEl.addEventListener('change', updateLoserBracket);
+	window.addEventListener('load', function(){ setTimeout(updateLoserBracket, 50); });
+
+(function(){
+	// Fix legacy render that sometimes inserts a combined "Group standings" table.
+	const matches = document.getElementById('matches'); if(!matches) return;
+	function makeTableHtml(title, rows){ return '<h4 class="format-label">'+title+'</h4><table class="standings"><tr><th>Place</th><th>Contestant</th><th>Wins</th><th>Played</th></tr>'+rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+r.name+'</td><td>'+r.wins+'</td><td>'+r.played+'</td></tr>').join('')+'</table>'; }
+	function standingsFrom(names, results){ const map={}; names.forEach(n=>map[n]={name:n,wins:0,played:0}); (results||[]).forEach(r=>{ if(map[r.a]) map[r.a].played++; if(map[r.b]) map[r.b].played++; if(map[r.winner]) map[r.winner].wins++; }); return Object.values(map).sort((a,b)=>b.wins-a.wins||a.name.localeCompare(b.name)); }
+	const obs = new MutationObserver(function(){
+		try{
+			const lbl = Array.from(matches.querySelectorAll('h4.format-label')).find(h=>h.textContent && h.textContent.indexOf('Group standings (all group matches shown above)')!==-1);
+			if(!lbl) return;
+			const tbl = lbl.nextElementSibling;
+			const state = window.__mythTournament || {};
+			if(!state.groups || !Array.isArray(state.groups[0])) return;
+			const gA = standingsFrom(state.groups[0], state.results||[]);
+			const gB = standingsFrom(state.groups[1], state.results||[]);
+			const html = makeTableHtml('Group A standings', gA) + makeTableHtml('Group B standings', gB);
+			// replace
+			if(tbl) tbl.insertAdjacentHTML('afterend', html);
+			lbl.remove(); if(tbl) tbl.remove();
+		}catch(e){ console.error('group-fix', e); }
+	});
+	obs.observe(matches, { childList: true, subtree: true });
+})();
+</script>
+<script>
+// Centralized, deterministic judge used by all start handlers
+(function(){
+	// matchup rules: strategic advantage/disadvantage
+	// These rules represent mythological themes and strategic matchups
+	// They are NON-TRANSITIVE: if A>B and B>C, A might not beat C (depends on strategy)
+	window.__mythMatchupRules = window.__mythMatchupRules || {
+		// Wisdom vs Brute Strength
+		'Athena>Ares': 2,          // Strategy beats pure strength
+		'Odysseus>Heracles': 1.5,  // Cunning beats brute force
+		'Hermes>Poseidon': 1,      // Speed/wit vs raw power
+		
+		// Power Dynamics
+		'Ares>Dionysus': 1,        // War god dominates chaos
+		'Zeus>Hades': 1.5,         // Lord of Sky beats Lord of Underworld (political)
+		'Poseidon>Zeus': 0.8,      // Neptune challenges Jupiter, but weakly
+		
+		// Magic and Divine Power
+		'Hades>Ares': 0.9,         // Death magic beats brute force
+		'Aphrodite>Hermes': 1.2,   // Influence beats speed
+		
+		// Hero-specific
+		'Achilles>Theseus': 1,     // Greater warrior prowess
+		'Odysseus>Perseus': 1.3,   // Cunning beats skill
+		'Heracles>Jason': 1.8,     // Strength dominates leadership
+		
+		// Female deity advantages  
+		'Artemis>Apollo': 0.7,     // Not always better (sibling rivalry)
+		'Athena>Aphrodite': 1.2,   // Wisdom beats beauty
+		'Demeter>Hera': 0.8,       // Earth mother vs queen (context-dependent)
+		
+		// Unexpected underdog scenarios (make it non-transitive)
+		'Dionysus>Ares': 1.1,      // Madness/chaos can overwhelm war (strategy reversal)
+		'Hermes>Zeus': 0.5,        // Messenger god generally loses, but has moments
+		'Apollo>Ares': 1.2         // Sun god's healing/music arts beat raw war tactics
+	};
+
+	function hashRaw(s){let v=0; for(let i=0;i<s.length;i++) v=(v*131 + s.charCodeAt(i))|0; return Math.abs(v); }
+
+	window.__mythAttrValue = function(name){
+		try{
+			const contest = (document.getElementById('contest-type')||{}).value || 'strength';
+			const key = contest==='fight' ? 'strength' : (contest==='knowledge' ? 'wits' : contest);
+			if(window.contenders && window.contenders[name] && Number.isFinite(window.contenders[name][key])) return window.contenders[name][key];
+			return (window.contenders && window.contenders[name] && window.contenders[name].wits) || 1;
+		}catch(e){return 1;}
+	};
+
+	window.__mythDecideWinner = function(a,b){
+		// primary metric: attribute value
+		const aBase = window.__mythAttrValue(a);
+		const bBase = window.__mythAttrValue(b);
+		let score = aBase - bBase;
+
+		// apply explicit matchup rules as small additive modifiers
+		const k1 = a+ '>' + b, k2 = b + '>' + a;
+		if(window.__mythMatchupRules[k1]) score += Math.max(0.5, Math.abs(score))*0.2 + window.__mythMatchupRules[k1];
+		if(window.__mythMatchupRules[k2]) score -= Math.max(0.5, Math.abs(score))*0.2 + window.__mythMatchupRules[k2];
+
+		// indirect two-step influence
+		const names = Array.from(new Set([].concat(Object.keys(window.__mythMatchupRules||{}).map(k=>k.split('>')[0]), Object.keys(window.__mythMatchupRules||{}).map(k=>k.split('>')[1]), [a,b])));
+		for(const mid of names){
+			if(mid===a || mid===b) continue;
+			if(window.__mythMatchupRules[a+ '>' + mid] && window.__mythMatchupRules[mid + '>' + b]) score += 0.5;
+			if(window.__mythMatchupRules[b+ '>' + mid] && window.__mythMatchupRules[mid + '>' + a]) score -= 0.5;
+		}
+
+		// deterministic fallback tiebreak
+		if(Math.abs(score) < 1e-9){ score = hashRaw(a) - hashRaw(b); }
+		const winner = score>0 ? a : b;
+		try{ console.debug('mythDecide', {a:a, b:b, aBase:aBase, bBase:bBase, score:score, winner:winner}); }catch(e){}
+		return {winner:winner, scoreA:aBase, scoreB:bBase, margin:Math.abs(score)};
+	};
+
+	// Explanation generator for wins/losses
+	window.__mythGenerateExplanation = function(a, b, result){
+		const winner = result.winner;
+		const loser = winner === a ? b : a;
+		const winnerScore = winner === a ? result.scoreA : result.scoreB;
+		const loserScore = winner === a ? result.scoreB : result.scoreA;
+		const margin = result.margin;
+		const contest = (document.getElementById('contest-type')||{}).value || 'fight';
+		const contestName = {fight:'Fighting skills', wits:'Wisdom', knowledge:'Knowledge', strength:'Strength', magic:'Magic', influence:'Influence', endurance:'Endurance', leadership:'Leadership'}[contest] || 'Contest';
+		
+		const marginCategory = margin > 2 ? 'a decisive victory' : margin > 1 ? 'a clear win' : margin > 0.5 ? 'a solid win' : 'a narrow victory';
+		
+		return `${winner} prevails with ${marginCategory}. In ${contestName}, ${winner} scores ${winnerScore.toFixed(1)} vs ${loser}'s ${loserScore.toFixed(1)}.`;
+	};
+
+	// expose raw hash for other scripts
+	window.__mythHashRaw = hashRaw;
+})();
+</script>
+<script>
+// Backwards-compatible shims so older handlers still work
+(function(){
+	window.attrValue = window.attrValue || window.__mythAttrValue || function(n){ return 1; };
+	window.decide = window.decide || function(a,b){ const result = (window.__mythDecideWinner && window.__mythDecideWinner(a,b)); return result ? result.winner : a; };
+	window.decideWinner = window.decideWinner || window.__mythDecideWinner;
+	window.hashRaw = window.hashRaw || window.__mythHashRaw || function(s){let v=0; for(let i=0;i<s.length;i++) v=(v*131 + s.charCodeAt(i))|0; return Math.abs(v); };
+	window.hashVal = window.hashVal || function(s){ const v = window.hashRaw(s); return Math.abs(v)%100 + 1; };
+})();
+</script>
+<script>
+(function(){
+		const style=document.getElementById('tournament-style');
+	const bracket=document.getElementById('bracket');
+	const loserTitle=document.getElementById('loser-bracket-title');
+	const loserBracket=document.getElementById('loser-bracket');
+	if(!style||!bracket||!loserTitle||!loserBracket)return;
+	function refreshLoserBracket(){
+		if(style.value!=='bracket'){loserTitle.innerHTML='';loserBracket.innerHTML='';return;}
+		loserTitle.innerHTML='<h4 class="loser-title">Loser bracket</h4>';
+		const cards=Array.from(bracket.querySelectorAll('.bracket-card'));
+		loserBracket.innerHTML=cards.map(function(card){
+			const winner=card.querySelector('strong')?.textContent.replace(' advanced','').trim()||'';
+			const pair=card.querySelector('span')?.textContent.split(' vs ')||[];
+			const loser=pair.find(function(name){return name!==winner;});
+			return loser?'<div class="bracket-card loser-card"><strong>'+loser+'</strong><span>Lost in the winner bracket and enters the loser bracket.</span></div>':'';
+		}).join('');
+	}
+	new MutationObserver(refreshLoserBracket).observe(bracket,{childList:true,subtree:true});
+	style.addEventListener('change',refreshLoserBracket);
+	refreshLoserBracket();
+}());
+</script>
+<script>
+(function(){
+	let startButton=document.getElementById('start-tournament');
+	const setup=document.getElementById('setup');
+	const tournament=document.getElementById('tournament');
+	const matches=document.getElementById('matches');
+	const status=document.getElementById('tournament-status');
+	const title=document.getElementById('tournament-title');
+	const styleSelect=document.getElementById('tournament-style');
+	const countSelect=document.getElementById('entrant-count');
+	const contestSelect=document.getElementById('contest-type');
+	const roster=document.getElementById('roster');
+	if(!startButton||!setup||!tournament||!matches||!status||!title)return;
+	const profiles={Zeus:{strength:9.8,wits:7.4,magic:9.7,leadership:9.8},Hera:{strength:7.2,wits:8.3,magic:8.1,leadership:9.1},Athena:{strength:7.4,wits:9.9,magic:8.4,leadership:9.7},Poseidon:{strength:9.2,wits:7.1,magic:9.3,leadership:8.2},Hades:{strength:8.4,wits:8.2,magic:9.8,leadership:7.3},Ares:{strength:9.9,wits:5.3,magic:6.2,leadership:8.1},Aphrodite:{strength:5.1,wits:8.4,magic:9.2,leadership:7.1},Apollo:{strength:7.3,wits:8.1,magic:8.5,leadership:8.3},Artemis:{strength:8.2,wits:8.5,magic:8.1,leadership:8.4},Hermes:{strength:6.2,wits:9.1,magic:8.2,leadership:7.4},Demeter:{strength:6.1,wits:8.2,magic:8.3,leadership:8.2},Dionysus:{strength:6.3,wits:6.2,magic:8.1,leadership:7.2},Achilles:{strength:9.7,wits:6.8,magic:5.2,leadership:7.3},Odysseus:{strength:7.1,wits:9.8,magic:4.8,leadership:8.4},Heracles:{strength:10,wits:7.2,magic:4.9,leadership:8.1},Perseus:{strength:8.1,wits:8.4,magic:6.7,leadership:7.8},Theseus:{strength:8.2,wits:8.1,magic:4.6,leadership:8.2},Jason:{strength:7.8,wits:8.2,magic:5.7,leadership:8.7}};
+	const contestNames={fight:'Fighting skills',wits:'Wisdom',knowledge:'Knowledge',strength:'Strength',magic:'Magic',influence:'Influence',endurance:'Endurance',leadership:'Leadership'};
+	const styleNames={knockout:'Knockout',groups:'Group stage then knockout',bracket:'Winner bracket and loser bracket','round-robin':'Round robin league','league-knockout':'League then knockout',swiss:'Swiss rounds'};
+	const style=document.createElement('style');style.textContent='.format-label{margin:1rem 0 .45rem;padding:.45rem .7rem;border-radius:.5rem;background:#dcf5e1;color:#3d2863;font:600 1.2rem Cormorant Garamond,serif}.league-match{background:rgba(224,239,255,.82)!important}.group-match{background:rgba(220,245,225,.82)!important}.knockout-match{background:rgba(255,209,232,.62)!important;border-color:#6b2fa3!important}.stage-note{margin:.6rem 0;padding:.6rem .75rem;border-radius:.5rem;background:#efe7ff;color:#3d2863}';document.head.appendChild(style);
+	const checked=()=>Array.from(roster.querySelectorAll('input:checked')).map(input=>input.value).filter(name=>profiles[name]);
+	const pairings=names=>{const pairs=[];for(let i=0;i<names.length;i+=1)for(let j=i+1;j<names.length;j+=1)pairs.push([names[i],names[j]]);return pairs;};
+	function value(name){const profile=profiles[name],contest=contestSelect.value,key=contest==='fight'?'strength':contest==='knowledge'?'wits':contest;return Number.isFinite(profile[key])?profile[key]:profile.wits;}
+	function card(pair,index,type){const first=value(pair[0]),second=value(pair[1]),total=first+second,firstChance=(first/total*100).toFixed(1),secondChance=(100-Number(firstChance)).toFixed(1),winner=first>=second?pair[0]:pair[1];const element=document.createElement('div');element.className='match '+type+'-match';element.innerHTML='<h4>Match '+(index+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+firstChance+'% &middot; <strong>'+pair[1]+'</strong> '+secondChance+'%</p><p class="winner">AI judge: '+winner+' advances</p>';return {element,winner};}
+	function showStage(state){matches.innerHTML='';const label=document.createElement('div');label.className='format-label';label.textContent=state.label;matches.appendChild(label);if(state.note){const note=document.createElement('div');note.className='stage-note';note.textContent=state.note;matches.appendChild(note);}const winners=[];state.matches.forEach(function(pair,index){const result=card(pair,index,state.type);matches.appendChild(result.element);winners.push(result.winner);});const next=document.createElement('button');next.type='button';next.textContent=state.nextLabel||'Next stage';next.style.marginTop='1rem';next.addEventListener('click',function(){nextStage(state,winners);});matches.appendChild(next);}
+	function nextStage(state,winners){if(state.phase==='league'){const ranking=state.names.slice().sort((a,b)=>value(b)-value(a));if(state.style==='round-robin'){matches.innerHTML='<div class="champion">League winner: '+ranking[0]+'</div>';return;}state.phase='knockout';state.matches=pairings(ranking.slice(0,Math.min(4,ranking.length))).slice(0,2);state.label='Knockout stage';state.type='knockout';state.note='The league is complete. The top contestants now enter the knockout stage.';showStage(state);return;}if(state.phase==='groups'){state.phase='knockout';state.matches=pairings(winners).slice(0,Math.max(1,Math.floor(winners.length/2)));state.label='Knockout stage';state.type='knockout';state.note='The group stage is complete. Group winners now enter the knockout stage.';showStage(state);return;}if(winners.length<=1){matches.innerHTML='<div class="champion">Champion: '+winners[0]+'</div>';return;}state.matches=[];for(let i=0;i<winners.length;i+=2)if(winners[i+1])state.matches.push([winners[i],winners[i+1]]);state.label='Knockout stage';state.type='knockout';state.note='The AI has judged this knockout round.';showStage(state);}
+	function begin(){let names=checked().slice(0,Number(countSelect.value));if(names.length<4){const inputs=Array.from(roster.querySelectorAll('input'));inputs.forEach((input,index)=>{input.checked=index<Number(countSelect.value);});names=checked().slice(0,Number(countSelect.value));}if(names.length<4)return;const selectedStyle=styleSelect.value,state={names:names,style:selectedStyle,contest:contestNames[contestSelect.value],phase:'knockout',label:styleNames[selectedStyle]||'Knockout stage',type:'knockout',matches:[],note:'The AI has judged this knockout round.'};if(selectedStyle==='round-robin'||selectedStyle==='league-knockout'){state.phase='league';state.matches=pairings(names);state.label='League stage';state.type='league';state.note='Everyone plays everyone else. The league results decide who reaches the knockout stage.';}else if(selectedStyle==='groups'){const midpoint=Math.ceil(names.length/2),groupA=names.slice(0,midpoint),groupB=names.slice(midpoint);state.phase='groups';state.matches=pairings(groupA).concat(pairings(groupB));state.label='Group stage';state.type='group';state.note='Group A: '+groupA.join(', ')+' | Group B: '+groupB.join(', ');}else{for(let i=0;i<names.length;i+=2)if(names[i+1])state.matches.push([names[i],names[i+1]]);}setup.classList.add('hidden');tournament.classList.remove('hidden');title.textContent=styleNames[selectedStyle]||'Tournament';status.textContent=state.contest+' - the AI is judging the current stage.';showStage(state);}
+	startButton.addEventListener('click',function(event){event.preventDefault();event.stopImmediatePropagation();begin();},true);
+}());
+</script>
+<script>
+(function(){
+	const style=document.getElementById('tournament-style');
+	const matches=document.getElementById('matches');
+	const loserTitle=document.getElementById('loser-bracket-title');
+	const loserBracket=document.getElementById('loser-bracket');
+	if(!style||!matches||!loserTitle||!loserBracket)return;
+	function renderLosers(){
+		if(style.value!=='bracket'){loserTitle.innerHTML='';loserBracket.innerHTML='';return;}
+		const cards=Array.from(matches.querySelectorAll('.match'));
+		const losers=cards.map(function(card){
+			const pair=(card.querySelector('p')||{}).textContent||'';
+			const names=pair.split(' vs ');
+			const winnerText=(card.querySelector('.winner')||{}).textContent||'';
+			const winner=winnerText.replace('AI judge: ','').replace(' advances','').trim();
+			return names.find(function(name){return name&&name!==winner;});
+		}).filter(Boolean);
+		loserTitle.innerHTML=losers.length?'<h4 class="loser-title">Loser bracket</h4>':'';
+		loserBracket.innerHTML=losers.map(function(name){return '<div class="bracket-card loser-card"><strong>'+name+'</strong><span>Lost in the winner bracket and receives a second chance.</span></div>';}).join('');
+	}
+	new MutationObserver(renderLosers).observe(matches,{childList:true,subtree:true});
+	style.addEventListener('change',renderLosers);
+}());
+</script>
+<script>
+(function(){
+	let button=document.getElementById('start-tournament');
+	const setup=document.getElementById('setup'), panel=document.getElementById('tournament'), matches=document.getElementById('matches'), status=document.getElementById('tournament-status'), title=document.getElementById('tournament-title'), roster=document.getElementById('roster'), count=document.getElementById('entrant-count'), styleSelect=document.getElementById('tournament-style'), contestSelect=document.getElementById('contest-type');
+	if(!button||!setup||!panel||!matches||!status||!title||!roster)return;
+	const stats={Zeus:[9.8,7.4,9.7,9.8],Hera:[7.2,8.3,8.1,9.1],Athena:[7.4,9.9,8.4,9.7],Poseidon:[9.2,7.1,9.3,8.2],Hades:[8.4,8.2,9.8,7.3],Ares:[9.9,5.3,6.2,8.1],Aphrodite:[5.1,8.4,9.2,7.1],Apollo:[7.3,8.1,8.5,8.3],Artemis:[8.2,8.5,8.1,8.4],Hermes:[6.2,9.1,8.2,7.4],Demeter:[6.1,8.2,8.3,8.2],Dionysus:[6.3,6.2,8.1,7.2],Achilles:[9.7,6.8,5.2,7.3],Odysseus:[7.1,9.8,4.8,8.4],Heracles:[10,7.2,4.9,8.1],Perseus:[8.1,8.4,6.7,7.8],Theseus:[8.2,8.1,4.6,8.2],Jason:[7.8,8.2,5.7,8.7]};
+	const labels={knockout:'Knockout',groups:'Group stage then knockout',bracket:'Winner and loser bracket','round-robin':'Round robin league','league-knockout':'League then knockout',swiss:'Swiss rounds'};
+	function selected(){return Array.from(roster.querySelectorAll('input:checked')).map(x=>x.value).filter(x=>stats[x]).slice(0,Number(count.value));}
+	function rating(name){const s=stats[name],kind=contestSelect.value;const index=kind==='fight'||kind==='strength'?0:kind==='wits'||kind==='knowledge'?1:kind==='magic'?2:3;return s[index];}
+	function outcome(a,b){const baseA=rating(a),baseB=rating(b);const strategy=((a.length*7+b.length*3)%11-5)/100;const aScore=Math.max(.1,baseA*(1+strategy)),bScore=Math.max(.1,baseB*(1-strategy));return {a:aScore,b:bScore,winner:aScore>=bScore?a:b};}
+	function pairs(names){const result=[];for(let i=0;i<names.length;i++)for(let j=i+1;j<names.length;j++)result.push([names[i],names[j]]);return result;}
+	function standings(names,results){return names.map(name=>({name:name,wins:results.filter(r=>r.winner===name).length,played:results.filter(r=>r.a===name||r.b===name).length})).sort((a,b)=>b.wins-a.wins||b.played-a.played);}
+	function table(titleText,rows){
+		// If someone calls the legacy combined "Group standings" title, prefer per-group tables when group data exists
+		try{
+			if(titleText && titleText.indexOf && titleText.indexOf('Group standings')!==-1 && window.__mythTournament && Array.isArray(window.__mythTournament.groups) && window.__mythTournament.groups.length>=2){
+				const groups = window.__mythTournament.groups;
+				const gA = standings(groups[0], window.__mythTournament.results||[]);
+				const gB = standings(groups[1], window.__mythTournament.results||[]);
+				const mk = (t, rows) => '<h4 class="format-label">'+t+'</h4><table class="standings"><tr><th>Place</th><th>Contestant</th><th>Wins</th><th>Played</th></tr>'+rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+r.name+'</td><td>'+r.wins+'</td><td>'+r.played+'</td></tr>').join('')+'</table>';
+				return mk('Group A standings', gA) + mk('Group B standings', gB);
+			}
+		}catch(e){ /* fall back to default rendering on error */ }
+		return '<h4 class="format-label">'+titleText+'</h4><table class="standings"><tr><th>Place</th><th>Contestant</th><th>Wins</th><th>Played</th></tr>'+rows.map((r,i)=>'<tr><td>'+ (i+1) +'</td><td>'+r.name+'</td><td>'+r.wins+'</td><td>'+r.played+'</td></tr>').join('')+'</table>';
+	}
+	function start(){const names=selected();if(names.length<4){document.getElementById('select-all').click();return;}const selectedStyle=styleSelect.value;const state={names:names,style:selectedStyle,phase:'knockout',results:[],pending:[],groups:[],losers:[]};if(selectedStyle==='knockout'||selectedStyle==='bracket'){state.phase='knockout';state.pending=[];for(let i=0;i<names.length;i+=2)if(names[i+1])state.pending.push([names[i],names[i+1]]);}else if(selectedStyle==='groups'){const half=Math.ceil(names.length/2);state.groups=[names.slice(0,half),names.slice(half)];state.pending=pairs(state.groups[0]).concat(pairs(state.groups[1]));}else{state.pending=pairs(names);}window.__mythTournament=state;setup.classList.add('hidden');panel.classList.remove('hidden');title.textContent=labels[selectedStyle];render();}
+	function render(){const state=window.__mythTournament;if(!state)return;matches.innerHTML='';document.getElementById('bracket').innerHTML='';const rows=state.pending.map((pair,i)=>{const result=outcome(pair[0],pair[1]);return '<div class="match '+(state.phase==='knockout'?'knockout-match':state.phase==='groups'?'group-match':'league-match')+'"><h4>'+ (state.phase==='knockout'?'Knockout match ':'Match ')+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+(result.a/(result.a+result.b)*100).toFixed(1)+'% &middot; <strong>'+pair[1]+'</strong> '+(result.b/(result.a+result.b)*100).toFixed(1)+'%</p><p class="winner">AI judge: '+result.winner+' wins</p></div>';}).join('');if(state.phase==='groups')matches.innerHTML+= '<div class="stage-note">Group A: '+state.groups[0].join(', ')+'<br>Group B: '+state.groups[1].join(', ')+'</div>';matches.innerHTML+=rows;if(state.phase==='league'||state.phase==='groups')matches.innerHTML+=table(state.phase==='groups'?'Group standings (all group matches shown above)':'League standings (every contestant plays every other contestant)',standings(state.names,state.results));status.textContent=state.phase==='knockout'?'Knockout stage: the qualified contestants are now paired.':'This stage is ready. Review every matchup and click Next stage.';if(state.pending.length){const next=document.createElement('button');next.textContent='Next stage';next.className='secondary';next.style.marginTop='1rem';next.onclick=advance;matches.appendChild(next);}}
+	function advance(){const state=window.__mythTournament;const outcomes=state.pending.map(pair=>({a:pair[0],b:pair[1],winner:outcome(pair[0],pair[1]).winner}));state.results=state.results.concat(outcomes);const liveSummary=document.getElementById('live-stage-summary');if(state.phase==='league'){const leagueRows=standings(state.names,state.results);if(liveSummary)liveSummary.innerHTML=table('Completed league table',leagueRows)+'<div class="qualified-note"><strong>Qualified for knockout:</strong> '+leagueRows.slice(0,Math.min(4,leagueRows.length)).map(row=>row.name).join(', ')+'</div>';if(state.style==='round-robin'){matches.innerHTML=table('Final league table',leagueRows)+'<div class="champion">League winner: '+leagueRows[0].name+'</div>';state.pending=[];return;}state.phase='knockout';state.pending=leagueRows.slice(0,Math.min(4,state.names.length)).map(x=>x.name).reduce((a,x,i,arr)=>i%2===0&&arr[i+1]?[...a,[x,arr[i+1]]]:a,[]);}else if(state.phase==='groups'){const groupA=standings(state.groups[0],state.results),groupB=standings(state.groups[1],state.results),qualified=groupA.slice(0,2).concat(groupB.slice(0,2));if(liveSummary)liveSummary.innerHTML=table('Group A standings',groupA)+table('Group B standings',groupB)+'<div class="qualified-note"><strong>Qualified for knockout:</strong> '+qualified.map(row=>row.name).join(', ')+'</div>';state.phase='knockout';state.pending=[[groupA[0].name,groupB[0].name],[groupA[1].name,groupB[1].name]];}else{const winners=outcomes.map(x=>x.winner);if(winners.length===1){matches.innerHTML='<div class="champion">Champion: '+winners[0]+'</div>';state.pending=[];return;}state.pending=[];for(let i=0;i<winners.length;i+=2)if(winners[i+1])state.pending.push([winners[i],winners[i+1]]);}render();}
+	// Route old start clicks to the canonical starter when available
+	button.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation(); if(window.__mythStartNow) return window.__mythStartNow(e); try{ return start(e); }catch(err){ console.error('legacy start wrapper error', err); } },true);
+}());
+</script>
+<script>
+(function(){
+	const matches=document.getElementById('matches');
+	if(!matches)return;
+	const summary=document.createElement('div');summary.id='live-stage-summary';matches.parentNode.insertBefore(summary,matches);
+	const style=document.createElement('style');style.textContent='.live-table{width:100%;border-collapse:collapse;margin:.8rem 0 1rem;background:rgba(239,231,255,.75);border-radius:.6rem;overflow:hidden}.live-table th,.live-table td{padding:.45rem .6rem;text-align:left;border-bottom:1px solid rgba(107,47,163,.16)}.live-table th{background:rgba(220,245,225,.9);color:#3d2863}.qualified-note{padding:.65rem .8rem;margin:.7rem 0;background:rgba(255,209,232,.45);border-radius:.6rem;color:#5b2b8d}';document.head.appendChild(style);
+	let previousQualified='';let queued=false;
+	function table(title,names){const rows={};names.forEach(name=>rows[name]={name:name,wins:0,played:0});Array.from(matches.querySelectorAll('.match')).forEach(card=>{const matchup=(card.querySelectorAll('p')[0]||{}).textContent||'';const pair=matchup.split(' vs ');const winner=((card.querySelector('.winner')||{}).textContent||'').replace('AI judge: ','').replace(' wins','').trim();pair.forEach(name=>{if(rows[name])rows[name].played+=1;});if(rows[winner])rows[winner].wins+=1;});const ranked=Object.values(rows).sort((a,b)=>b.wins-a.wins||a.name.localeCompare(b.name));return '<h4 class="format-label">'+title+'</h4><table class="live-table"><tr><th>Place</th><th>Contestant</th><th>Wins</th><th>Played</th></tr>'+ranked.map((row,index)=>'<tr><td>'+(index+1)+'</td><td>'+row.name+'</td><td>'+row.wins+'</td><td>'+row.played+'</td></tr>').join('')+'</table>';
+	}
+	function refresh(){
+		queued=false;
+		const label=(matches.querySelector('.format-label')||{}).textContent||'';
+		if(label==='League stage'){
+			previousQualified = table('League table', Array.from(matches.querySelectorAll('.match p:first-of-type')).flatMap(p=>(p.textContent||'').split(' vs ')).filter((x,i,a)=>a.indexOf(x)===i));
+			summary.innerHTML = previousQualified;
+		} else if(label==='Group stage'){
+			const groupsText = (matches.querySelector('.stage-note')||{}).textContent||'';
+			const parts = groupsText.split('|').map(p=>p.trim());
+			const aText = parts[0] ? parts[0].replace('Group A:','').trim() : '';
+			const bText = parts[1] ? parts[1].replace('Group B:','').trim() : '';
+			const gA = aText ? aText.split(',').map(x=>x.trim()).filter(Boolean) : [];
+			const gB = bText ? bText.split(',').map(x=>x.trim()).filter(Boolean) : [];
+			summary.innerHTML = '';
+			if(gA.length) summary.innerHTML += table('Group A table', gA);
+			if(gB.length) summary.innerHTML += table('Group B table', gB);
+		} else if(label==='Knockout stage' && previousQualified){
+			summary.innerHTML = '<div class="qualified-note"><strong>Qualified from the previous stage:</strong> Knockout contestants are shown below. League/group results remain above for reference.</div>' + previousQualified;
+		}
+	}
+	new MutationObserver(function(){if(!queued){queued=true;requestAnimationFrame(refresh);}}).observe(matches,{childList:true,subtree:true});
+}());
+</script>
+
+<script>
+// Remove duplicate standings tables rendered inside #matches; prefer the live summary
+(function(){
+	const matches=document.getElementById('matches');
+	const live=document.getElementById('live-stage-summary');
+	if(!matches) return;
+	const clean=function(){
+		try{
+			Array.from(matches.querySelectorAll('table.standings')).forEach(t=>t.remove());
+			Array.from(matches.querySelectorAll('.format-label')).forEach(lbl=>{ if((lbl.textContent||'').toLowerCase().includes('standings')) lbl.remove(); });
+		}catch(e){console.error('cleanup standings',e)}
+	};
+	// initial clean
+	clean();
+	// observe for new insertions and clean them up
+	new MutationObserver(function(){ requestAnimationFrame(clean); }).observe(matches,{childList:true,subtree:true});
+	// also clear on tournament start button
+	const start=document.getElementById('start-tournament'); if(start) start.addEventListener('click',()=>setTimeout(clean,120));
+})();
+</script>
+<script>
+// Authoritative start handler: replace button and enforce correct group round-robin
+(function(){
+	const old=document.getElementById('start-tournament');
+	if(!old) return;
+	const btn = old; // keep original button to preserve bindings
+	function buildRoundRobinGroups(names){
+		let half=Math.ceil(names.length/2);
+		if(half>=names.length) half=Math.floor(names.length/2);
+		if(half<1) half=1;
+		const a=names.slice(0,half), b=names.slice(half);
+		if(b.length===0 && a.length>1) b.push(a.pop());
+		const pairs=(list)=>{const out=[]; for(let i=0;i<list.length;i++) for(let j=i+1;j<list.length;j++) out.push([list[i],list[j]]); return out; };
+		return {groupA:a,groupB:b,pairs:pairs(a).concat(pairs(b))};
+	}
+	btn.addEventListener('click',function(e){
+		e.preventDefault(); e.stopImmediatePropagation();
+		try{
+			const roster=document.getElementById('roster');
+			const count=document.getElementById('entrant-count');
+			const style=document.getElementById('tournament-style');
+			const matches=document.getElementById('matches');
+			const title=document.getElementById('tournament-title');
+			const selected=Array.from(roster.querySelectorAll('input:checked')).map(i=>i.value).filter(Boolean).slice(0,Number(count.value));
+			if(!selected || selected.length<2) return;
+			if(style.value==='groups'){
+				const rr=buildRoundRobinGroups(selected);
+				// update DOM
+				matches.innerHTML='';
+				const label=document.createElement('div'); label.className='format-label'; label.textContent='Group stage'; matches.appendChild(label);
+				const note=document.createElement('div'); note.className='stage-note'; note.textContent='Group A: '+rr.groupA.join(', ')+' | Group B: '+rr.groupB.join(', '); matches.appendChild(note);
+				// Strategy-aware deterministic judge
+				// Explicit pairwise rules can be set here. Example: Athena beats Ares, Ares beats Zeus.
+				const matchupRules = {
+					'Athena>Ares': 1,
+					'Ares>Zeus': 1
+				};
+
+				function decideWinner(a,b){
+					return (window.__mythDecideWinner && window.__mythDecideWinner(a,b)) || a;
+				}
+
+				// Collect results per group so we can build standings
+				const groupA = rr.groupA.slice();
+				const groupB = rr.groupB.slice();
+				const resultsA = [], resultsB = [];
+				const hashVal = (s)=>{let v=0; for(let i=0;i<s.length;i++) v=(v*131 + s.charCodeAt(i))|0; return Math.abs(v)%100 + 1; };
+				rr.pairs.forEach(function(pair,i){
+					const div=document.createElement('div'); div.className='match group-match';
+					const winner = decideWinner(pair[0], pair[1]);
+					// compute percentages from the same attribute used by the judge
+					const baseA = (window.__mythAttrValue && window.__mythAttrValue(pair[0])) || hashVal(pair[0]);
+					const baseB = (window.__mythAttrValue && window.__mythAttrValue(pair[1])) || hashVal(pair[1]);
+					const aPct = (baseA/(baseA+baseB)*100).toFixed(1), bPct = (baseB/(baseA+baseB)*100).toFixed(1);
+					div.innerHTML = '<h4>Match '+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aPct+'% &middot; <strong>'+pair[1]+'</strong> '+bPct+'%</p><p class="winner">AI judge: '+winner+' wins</p>';
+					matches.appendChild(div);
+					// record results into appropriate group buckets
+					if(groupA.indexOf(pair[0])!==-1 && groupA.indexOf(pair[1])!==-1){ resultsA.push({a:pair[0],b:pair[1],winner}); }
+					else if(groupB.indexOf(pair[0])!==-1 && groupB.indexOf(pair[1])!==-1){ resultsB.push({a:pair[0],b:pair[1],winner}); }
+				});
+
+				function standings(names, results){
+					const map = {};
+					names.forEach(n=>map[n]={name:n,wins:0,played:0});
+					results.forEach(r=>{ if(map[r.a]) map[r.a].played++; if(map[r.b]) map[r.b].played++; if(map[r.winner]) map[r.winner].wins++; });
+					return Object.values(map).sort((x,y)=>y.wins-x.wins || x.name.localeCompare(y.name));
+				}
+
+				const standA = standings(groupA, resultsA);
+				const standB = standings(groupB, resultsB);
+
+				// show small standings under the matches
+				const bracketEl = document.getElementById('bracket'); if(bracketEl) bracketEl.innerHTML='';
+				const loserEl = document.getElementById('loser-bracket'); if(loserEl) loserEl.innerHTML='';
+				const bracketTitle = document.getElementById('bracket-title'); if(bracketTitle) bracketTitle.innerHTML='';
+				const loserTitle = document.getElementById('loser-bracket-title'); if(loserTitle) loserTitle.innerHTML='';
+
+				const mkTable = (title, rows) => {
+					return '<h4 class="format-label">'+title+'</h4><table class="standings"><tr><th>Place</th><th>Contestant</th><th>Wins</th><th>Played</th></tr>'+rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+r.name+'</td><td>'+r.wins+'</td><td>'+r.played+'</td></tr>').join('')+'</table>';
+				};
+				matches.insertAdjacentHTML('beforeend', mkTable('Group A standings', standA));
+				matches.insertAdjacentHTML('beforeend', mkTable('Group B standings', standB));
+
+				// Determine qualifiers per group based on total entrants
+				const totalPlayers = selected.length || (groupA.length + groupB.length);
+				const qualifiersPerGroup = (t=>{ if(t>=12) return 4; if(t>=8) return 3; if(t>=6) return 2; return 1; })(totalPlayers);
+				const qA = standA.map(r=>r.name).slice(0,qualifiersPerGroup);
+				const qB = standB.map(r=>r.name).slice(0,qualifiersPerGroup);
+				const qualifiers = qA.concat(qB).filter(Boolean);
+
+				// Build winner bracket matches: topA vs topB, runnerA vs runnerB
+				const winnerPairs = [];
+				for(let i=0;i<qualifiersPerGroup;i++){ if(qA[i] && qB[i]) winnerPairs.push([qA[i], qB[i]]); }
+
+				// Run winner bracket matches immediately (AI judge decides who advances)
+				const bracketCards = [];
+				const loserCards = [];
+				winnerPairs.forEach(function(pair,i){
+					const win = decideWinner(pair[0], pair[1]);
+					const loser = (win===pair[0])?pair[1]:pair[0];
+					bracketCards.push('<div class="bracket-card"><strong>'+win+' advanced</strong><span>'+pair[0]+' vs '+pair[1]+'</span></div>');
+					loserCards.push('<div class="bracket-card loser-card"><strong>'+loser+'</strong><span>Lost in the winner bracket and enters the loser bracket.</span></div>');
+				});
+
+				if(bracketEl){ bracketTitle.innerHTML='<h4 class="format-label">Winner bracket</h4>'; bracketEl.innerHTML=bracketCards.join(''); }
+				if(loserEl){ loserTitle.innerHTML='<h4 class="loser-title">Loser bracket</h4>'; loserEl.innerHTML=loserCards.join(''); }
+
+				// update global state for other scripts
+				window.__mythTournament=window.__mythTournament||{};
+				window.__mythTournament.groups=[rr.groupA,rr.groupB];
+				window.__mythTournament.pending=winnerPairs.slice();
+				window.__mythTournament.phase='knockout';
+			}
+		}catch(err){console.error('start override error',err);}  
+	},true);
+})();
+</script>
+<script>
+// Final fallback starter: ensures the Start tournament button always works
+(function(){
+	const btn = document.getElementById('start-tournament');
+	if(!btn) return;
+	function buildRoundRobinGroups(names){
+		let half=Math.ceil(names.length/2);
+		if(half>=names.length) half=Math.floor(names.length/2);
+		if(half<1) half=1;
+		const a=names.slice(0,half), b=names.slice(half);
+		if(b.length===0 && a.length>1) b.push(a.pop());
+		const pairs=(list)=>{const out=[]; for(let i=0;i<list.length;i++) for(let j=i+1;j<list.length;j++) out.push([list[i],list[j]]); return out; };
+		return {groupA:a,groupB:b,pairs:pairs(a).concat(pairs(b))};
+	}
+	const matchupRules = {
+		'Athena>Ares': 1,
+		'Ares>Zeus': 1
+	};
+	function decideWinner(a,b){
+		return (window.__mythDecideWinner && window.__mythDecideWinner(a,b)) || a;
+	}
+
+	btn.addEventListener('click', function(e){
+		e.preventDefault(); e.stopImmediatePropagation();
+		try{
+			const roster = document.getElementById('roster');
+			const count = Number(document.getElementById('entrant-count').value);
+			const style = document.getElementById('tournament-style').value;
+			const matches = document.getElementById('matches');
+			const bracket = document.getElementById('bracket');
+			const loser = document.getElementById('loser-bracket');
+			const title = document.getElementById('tournament-title');
+			let selected = Array.from(roster.querySelectorAll('input:checked')).map(i=>i.value).filter(Boolean).slice(0,count);
+			if(selected.length<4){document.getElementById('select-all').click(); selected = Array.from(roster.querySelectorAll('input:checked')).map(i=>i.value).filter(Boolean).slice(0,count); if(selected.length<4) return;}
+			// start UI
+			document.getElementById('setup').classList.add('hidden'); document.getElementById('tournament').classList.remove('hidden');
+			title.textContent = (document.getElementById('tournament-style').options[document.getElementById('tournament-style').selectedIndex].text)||'Tournament';
+			matches.innerHTML=''; if(bracket) bracket.innerHTML=''; if(loser) loser.innerHTML='';
+
+			if(style==='groups'){
+				const rr = buildRoundRobinGroups(selected);
+				const label=document.createElement('div'); label.className='format-label'; label.textContent='Group stage'; matches.appendChild(label);
+				const note=document.createElement('div'); note.className='stage-note'; note.textContent='Group A: '+rr.groupA.join(', ')+' | Group B: '+rr.groupB.join(', '); matches.appendChild(note);
+				const groupA=rr.groupA.slice(), groupB=rr.groupB.slice(); const resultsA=[], resultsB=[];
+								rr.pairs.forEach(function(pair,i){ const winner=decideWinner(pair[0],pair[1]); const baseA=(window.__mythAttrValue && window.__mythAttrValue(pair[0]))||hashVal(pair[0]), baseB=(window.__mythAttrValue && window.__mythAttrValue(pair[1]))||hashVal(pair[1]); const aPct=(baseA/(baseA+baseB)*100).toFixed(1), bPct=(baseB/(baseA+baseB)*100).toFixed(1); const div=document.createElement('div'); div.className='match group-match'; div.innerHTML='<h4>Match '+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aPct+'% &middot; <strong>'+pair[1]+'</strong> '+bPct+'%</p><p class="winner">AI judge: '+winner+' wins</p>'; matches.appendChild(div); if(groupA.indexOf(pair[0])!==-1 && groupA.indexOf(pair[1])!==-1) resultsA.push({a:pair[0],b:pair[1],winner}); else if(groupB.indexOf(pair[0])!==-1 && groupB.indexOf(pair[1])!==-1) resultsB.push({a:pair[0],b:pair[1],winner}); });
+								pairs.forEach(function(pair,i){ const win=decideWinner(pair[0],pair[1]); const baseA=(window.__mythAttrValue && window.__mythAttrValue(pair[0]))||hashVal(pair[0]), baseB=(window.__mythAttrValue && window.__mythAttrValue(pair[1]))||hashVal(pair[1]); const aPct=(baseA/(baseA+baseB)*100).toFixed(1), bPct=(baseB/(baseA+baseB)*100).toFixed(1); matches.insertAdjacentHTML('beforeend','<div class="match knockout-match"><h4>Match '+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aPct+'% &middot; <strong>'+pair[1]+'</strong> '+bPct+'%</p><p class="winner">AI judge: '+win+' advances</p></div>'); cards.push('<div class="bracket-card"><strong>'+win+' advanced</strong><span>'+pair[0]+' vs '+pair[1]+'</span></div>'); losers.push('<div class="bracket-card loser-card"><strong>'+los+'</strong><span>Lost in the winner bracket and receives a second chance.</span></div>'); });
+				function standings(names, results){ const map={}; names.forEach(n=>map[n]={name:n,wins:0,played:0}); results.forEach(r=>{ if(map[r.a]) map[r.a].played++; if(map[r.b]) map[r.b].played++; if(map[r.winner]) map[r.winner].wins++; }); return Object.values(map).sort((x,y)=>y.wins-x.wins||x.name.localeCompare(y.name)); }
+				const standA = standings(groupA, resultsA); const standB = standings(groupB, resultsB);
+				const mkTable = (title, rows) => { return '<h4 class="format-label">'+title+'</h4><table class="standings"><tr><th>Place</th><th>Contestant</th><th>Wins</th><th>Played</th></tr>'+rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+r.name+'</td><td>'+r.wins+'</td><td>'+r.played+'</td></tr>').join('')+'</table>'; };
+				matches.insertAdjacentHTML('beforeend', mkTable('Group A standings', standA)); matches.insertAdjacentHTML('beforeend', mkTable('Group B standings', standB));
+				const totalPlayers = selected.length || (groupA.length + groupB.length);
+				const qualifiersPerGroup = (t=>{ if(t>=12) return 4; if(t>=8) return 3; if(t>=6) return 2; return 1; })(totalPlayers);
+				const qA = standA.map(r=>r.name).slice(0,qualifiersPerGroup); const qB = standB.map(r=>r.name).slice(0,qualifiersPerGroup); const qualifiers = qA.concat(qB).filter(Boolean);
+				const winnerPairs = []; for(let i=0;i<qualifiersPerGroup;i++){ if(qA[i] && qB[i]) winnerPairs.push([qA[i], qB[i]]); }
+				const bracketCards=[], loserCards=[];
+				winnerPairs.forEach(function(pair){ const win=decideWinner(pair[0],pair[1]); const loserName=(win===pair[0])?pair[1]:pair[0]; bracketCards.push('<div class="bracket-card"><strong>'+win+' advanced</strong><span>'+pair[0]+' vs '+pair[1]+'</span></div>'); loserCards.push('<div class="bracket-card loser-card"><strong>'+loserName+'</strong><span>Lost in the winner bracket and enters the loser bracket.</span></div>'); });
+				const bracketEl = document.getElementById('bracket'); const bracketTitle = document.getElementById('bracket-title'); if(bracketEl){ if(bracketTitle) bracketTitle.innerHTML='<h4 class="format-label">Winner bracket</h4>'; bracketEl.innerHTML=bracketCards.join(''); }
+				const loserEl = document.getElementById('loser-bracket'); const loserTitle = document.getElementById('loser-bracket-title'); if(loserEl){ if(loserTitle) loserTitle.innerHTML='<h4 class="loser-title">Loser bracket</h4>'; loserEl.innerHTML=loserCards.join(''); }
+				window.__mythTournament = window.__mythTournament||{}; window.__mythTournament.groups=[groupA,groupB]; window.__mythTournament.pending=winnerPairs.slice(); window.__mythTournament.phase='knockout';
+				return;
+			}
+			// fallback simple knockout / bracket handling
+			if(style==='bracket' || style==='knockout'){
+				// pair adjacent
+				const pairs=[]; for(let i=0;i<selected.length;i+=2) if(selected[i+1]) pairs.push([selected[i],selected[i+1]]);
+				const cards=[]; const losers=[];
+				pairs.forEach(function(pair,i){ const win=decideWinner(pair[0],pair[1]); const los=(win===pair[0])?pair[1]:pair[0]; const baseA=(window.__mythAttrValue && window.__mythAttrValue(pair[0]))||hashVal(pair[0]), baseB=(window.__mythAttrValue && window.__mythAttrValue(pair[1]))||hashVal(pair[1]); const aPct=(baseA/(baseA+baseB)*100).toFixed(1), bPct=(baseB/(baseA+baseB)*100).toFixed(1); matches.insertAdjacentHTML('beforeend','<div class="match knockout-match"><h4>Match '+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aPct+'% &middot; <strong>'+pair[1]+'</strong> '+bPct+'%</p><p class="winner">AI judge: '+win+' advances</p></div>'); cards.push('<div class="bracket-card"><strong>'+win+' advanced</strong><span>'+pair[0]+' vs '+pair[1]+'</span></div>'); losers.push('<div class="bracket-card loser-card"><strong>'+los+'</strong><span>Lost in the winner bracket and receives a second chance.</span></div>'); });
+				if(bracket) bracket.innerHTML=cards.join(''); if(loser) loser.innerHTML=losers.join('');
+				window.__mythTournament = window.__mythTournament||{}; window.__mythTournament.pending=pairs.slice(); window.__mythTournament.phase='knockout';
+				return;
+			}
+			// other formats (round-robin, etc.) - show pairwise round-robin
+			const pairs=[]; for(let i=0;i<selected.length;i++) for(let j=i+1;j<selected.length;j++) pairs.push([selected[i],selected[j]]);
+			pairs.forEach(function(pair,i){ const win=decideWinner(pair[0],pair[1]); const baseA=(window.__mythAttrValue && window.__mythAttrValue(pair[0]))||hashVal(pair[0]), baseB=(window.__mythAttrValue && window.__mythAttrValue(pair[1]))||hashVal(pair[1]); const aPct=(baseA/(baseA+baseB)*100).toFixed(1), bPct=(baseB/(baseA+baseB)*100).toFixed(1); matches.insertAdjacentHTML('beforeend','<div class="match league-match"><h4>Match '+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aPct+'% &middot; <strong>'+pair[1]+'</strong> '+bPct+'%</p><p class="winner">AI judge: '+win+' wins</p></div>'); });
+						pairs.forEach(function(pair,i){ const win=decideWinner(pair[0],pair[1]); const baseA=(window.__mythAttrValue && window.__mythAttrValue(pair[0]))||hashVal(pair[0]), baseB=(window.__mythAttrValue && window.__mythAttrValue(pair[1]))||hashVal(pair[1]); const aPct=(baseA/(baseA+baseB)*100).toFixed(1), bPct=(baseB/(baseA+baseB)*100).toFixed(1); matches.insertAdjacentHTML('beforeend','<div class="match league-match"><h4>Match '+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aPct+'% &middot; <strong>'+pair[1]+'</strong> '+bPct+'%</p><p class="winner">AI judge: '+win+' wins</p></div>'); });
+			window.__mythTournament = window.__mythTournament||{}; window.__mythTournament.pending=pairs.slice(); window.__mythTournament.phase='league';
+		}catch(err){console.error('fallback-start',err);}
+	}, true);
+})();
+</script>
+<script>
+// Visible debug panel + robust starter that binds to Start button and rebinds on replacement
+(function(){
+	function createDebug(){
+		let dbg=document.getElementById('myth-debug'); if(dbg) return dbg;
+		dbg=document.createElement('div'); dbg.id='myth-debug'; dbg.style.cssText='position:fixed;right:12px;bottom:12px;max-width:360px;max-height:220px;overflow:auto;background:rgba(0,0,0,0.75);color:#fff;padding:.6rem;border-radius:.5rem;font-size:12px;z-index:9999;box-shadow:0 6px 20px rgba(0,0,0,.4)';
+		const head=document.createElement('div'); head.style.cssText='display:flex;gap:.4rem;align-items:center;margin-bottom:.4rem'; head.innerHTML='<strong style="font-size:12px">Myth debug</strong>';
+		const btn=document.createElement('button'); btn.textContent='X'; btn.style.cssText='background:#a33;color:#fff;border:none;border-radius:.3rem;padding:.15rem .4rem;cursor:pointer;font-weight:600'; btn.onclick=()=>dbg.remove();
+		// force-start button (calls global start if present)
+		const startBtn=document.createElement('button'); startBtn.textContent='Force start'; startBtn.style.cssText='background:#2b8a3e;color:#fff;border:none;border-radius:.3rem;padding:.15rem .5rem;cursor:pointer;font-weight:600;margin-left:.4rem'; startBtn.onclick=function(){ try{ if(window.__mythStartNow) { window.__mythStartNow(); log('invoked __mythStartNow()'); } else if(window.__mythTournament && typeof window.__mythTournament.startNow==='function'){ window.__mythTournament.startNow(); log('invoked window.__mythTournament.startNow()'); } else { log('no global start function available'); } }catch(e){ log('force start error: '+(e&&e.message||e)); } };
+		head.appendChild(startBtn);
+		head.appendChild(btn);
+		dbg.appendChild(head);
+		const body=document.createElement('div'); body.id='myth-debug-body'; body.style.cssText='font-family:monospace;font-size:12px;line-height:1.3;'; dbg.appendChild(body);
+		document.body.appendChild(dbg);
+		return dbg;
+	}
+	function log(msg){ if(!window.__mythDebug) return; const dbg=createDebug(); const body=dbg.querySelector('#myth-debug-body'); const time=new Date().toLocaleTimeString(); const line=document.createElement('div'); line.textContent='['+time+'] '+msg; body.appendChild(line); body.scrollTop=body.scrollHeight; }
+
+	// Strategy rules (same as other handlers)
+	const rules={'Athena>Ares':1,'Ares>Zeus':1};
+	function decide(a,b){ try{
+			// primary metric: selected contest attribute (strength/wits/etc.)
+			const aVal = attrValue(a), bVal = attrValue(b);
+			let score = aVal - bVal;
+			// apply explicit matchup rules as a small additive modifier
+			const k1=a+ '>' + b, k2=b + '>' + a;
+			if(rules[k1]) score += Math.max(1, Math.abs(score))*0.15 + 1; // small boost
+			if(rules[k2]) score -= Math.max(1, Math.abs(score))*0.15 + 1;
+			// indirect two-step influence
+			const names = Array.from(new Set([].concat(Object.keys(rules).map(k=>k.split('>')[0]), Object.keys(rules).map(k=>k.split('>')[1]), [a,b])));
+			for(const mid of names){ if(mid===a||mid===b) continue; if(rules[a+'>'+mid] && rules[mid+'>'+b]) score += 0.5; if(rules[b+'>'+mid] && rules[mid+'>'+a]) score -= 0.5; }
+			// deterministic fallback tiebreak
+			if(Math.abs(score) < 1e-9){ score = hashRaw(a) - hashRaw(b); }
+			return score>0? a: b;
+		} catch(e){ log('decide error: '+e.message); return a; } }
+	function hashVal(s){let v=0; for(let i=0;i<s.length;i++) v=(v*131 + s.charCodeAt(i))|0; return Math.abs(v)%100 + 1; }
+
+	function startNow(event){ if(event && event.preventDefault) event.preventDefault(); try{
+		log('startNow invoked');
+		const roster=document.getElementById('roster'); if(!roster){ log('no roster'); return; }
+		const count=Number(document.getElementById('entrant-count').value||8);
+		let selected=Array.from(roster.querySelectorAll('input:checked')).map(i=>i.value).filter(Boolean).slice(0,count);
+		if(selected.length<4){ const sel=document.getElementById('select-all'); if(sel) sel.click(); selected=Array.from(roster.querySelectorAll('input:checked')).map(i=>i.value).filter(Boolean).slice(0,count); if(selected.length<4){ log('not enough contestants'); return; } }
+		const style=document.getElementById('tournament-style').value; const matches=document.getElementById('matches'); const bracket=document.getElementById('bracket'); const loser=document.getElementById('loser-bracket'); const title=document.getElementById('tournament-title');
+		document.getElementById('setup').classList.add('hidden'); document.getElementById('tournament').classList.remove('hidden'); title.textContent = document.getElementById('tournament-style').options[document.getElementById('tournament-style').selectedIndex].text || 'Tournament';
+		matches.innerHTML=''; if(bracket) bracket.innerHTML=''; if(loser) loser.innerHTML='';
+
+		// helper: play a knockout round given an array of contestants (handles bye)
+		function playNextRound(contestants){
+			matches.innerHTML=''; if(bracket) bracket.innerHTML=''; if(loser) loser.innerHTML='';
+			const pairs = []; for(let i=0;i<contestants.length;i+=2) if(contestants[i+1]) pairs.push([contestants[i],contestants[i+1]]);
+			const winners = [];
+			pairs.forEach(function(pair,i){ const win=decide(pair[0],pair[1]); const baseA=(window.__mythAttrValue && window.__mythAttrValue(pair[0]))||hashVal(pair[0]); const baseB=(window.__mythAttrValue && window.__mythAttrValue(pair[1]))||hashVal(pair[1]); const aPct=(baseA/(baseA+baseB)*100).toFixed(1), bPct=(baseB/(baseA+baseB)*100).toFixed(1); matches.insertAdjacentHTML('beforeend','<div class="match knockout-match"><h4>Match '+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aPct+'% &middot; <strong>'+pair[1]+'</strong> '+bPct+'%</p><p class="winner">AI judge: '+win+' advances</p></div>'); if(bracket) bracket.insertAdjacentHTML('beforeend','<div class="bracket-card"><strong>'+win+' advanced</strong><span>'+pair[0]+' vs '+pair[1]+'</span></div>'); if(loser) loser.insertAdjacentHTML('beforeend','<div class="bracket-card loser-card"><strong>'+(win===pair[0]?pair[1]:pair[0])+'</strong><span>Lost in the winner bracket and receives a second chance.</span></div>'); winners.push(win); });
+			// handle odd bye
+			if(contestants.length%2===1){ const bye = contestants[contestants.length-1]; winners.push(bye); if(matches) matches.insertAdjacentHTML('beforeend','<div class="match bye"><h4>Bye</h4><p>'+bye+' advances automatically</p></div>'); }
+			window.__mythTournament = window.__mythTournament||{}; window.__mythTournament.pending = pairs.slice(); window.__mythTournament.phase='knockout';
+			// next round button
+			if(winners.length>1){ const next=document.createElement('button'); next.type='button'; next.textContent='Next round'; next.className='secondary'; next.style.marginTop='1rem'; next.onclick=function(){ playNextRound(winners); }; matches.appendChild(next); }
+			else if(winners.length===1){ // champion
+				if(document.getElementById('champion')) document.getElementById('champion').innerHTML='<div class="champion">Champion: '+winners[0]+'</div>'; }
+			return winners;
+		}
+		if(style==='groups'){
+			log('format: groups');
+			let half=Math.ceil(selected.length/2); if(half>=selected.length) half=Math.floor(selected.length/2); if(half<1) half=1; const groupA=selected.slice(0,half), groupB=selected.slice(half); if(groupB.length===0 && groupA.length>1) groupB.push(groupA.pop());
+			const pairs=[]; for(let i=0;i<groupA.length;i++) for(let j=i+1;j<groupA.length;j++) pairs.push([groupA[i],groupA[j]]); for(let i=0;i<groupB.length;i++) for(let j=i+1;j<groupB.length;j++) pairs.push([groupB[i],groupB[j]]);
+			const label=document.createElement('div'); label.className='format-label'; label.setAttribute('data-group-stage','1'); label.textContent='Group stage'; matches.appendChild(label);
+			const note=document.createElement('div'); note.className='stage-note'; note.setAttribute('data-group-note','1'); note.textContent='Group A: '+groupA.join(', ')+' | Group B: '+groupB.join(', '); matches.appendChild(note);
+			const resultsA=[], resultsB=[];
+			pairs.forEach(function(pair,i){ const win=decide(pair[0],pair[1]); const baseA=(window.__mythAttrValue && window.__mythAttrValue(pair[0]))||hashVal(pair[0]), baseB=(window.__mythAttrValue && window.__mythAttrValue(pair[1]))||hashVal(pair[1]); const aPct=(baseA/(baseA+baseB)*100).toFixed(1), bPct=(baseB/(baseA+baseB)*100).toFixed(1); matches.insertAdjacentHTML('beforeend','<div class="match group-match" data-group-match="1"><h4>Match '+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aPct+'% &middot; <strong>'+pair[1]+'</strong> '+bPct+'%</p><p class="winner">AI judge: '+win+' wins</p></div>'); if(groupA.indexOf(pair[0])!==-1 && groupA.indexOf(pair[1])!==-1) resultsA.push({a:pair[0],b:pair[1],winner:win}); else if(groupB.indexOf(pair[0])!==-1 && groupB.indexOf(pair[1])!==-1) resultsB.push({a:pair[0],b:pair[1],winner:win}); });
+			function standings(names, results){ const map={}; names.forEach(n=>map[n]={name:n,wins:0,played:0}); results.forEach(r=>{ if(map[r.a]) map[r.a].played++; if(map[r.b]) map[r.b].played++; if(map[r.winner]) map[r.winner].wins++; }); return Object.values(map).sort((x,y)=>y.wins-x.wins||x.name.localeCompare(y.name)); }
+			const sA=standings(groupA,resultsA); const sB=standings(groupB,resultsB);
+			// Remove any old standings tables to prevent duplicates\n\t\t\tArray.from(matches.querySelectorAll('[data-standings-table]')).forEach(el=>el.remove());
+			const mk=(t,rows,gid)=>'<div data-standings-table="'+gid+'"><h4 class="format-label">'+t+'</h4><table class="standings"><tr><th>Place</th><th>Contestant</th><th>Wins</th><th>Played</th></tr>'+rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+r.name+'</td><td>'+r.wins+'</td><td>'+r.played+'</td></tr>').join('')+'</table></div>';
+			matches.insertAdjacentHTML('beforeend', mk('Group A standings', sA, 'groupA')); matches.insertAdjacentHTML('beforeend', mk('Group B standings', sB, 'groupB'));
+			const totalPlayers = selected.length || (sA.length + sB.length);
+			const qualifiersPerGroup = (t=>{ if(t>=12) return 4; if(t>=8) return 3; if(t>=6) return 2; return 1; })(totalPlayers);
+			const qA=sA.map(x=>x.name).slice(0,qualifiersPerGroup), qB=sB.map(x=>x.name).slice(0,qualifiersPerGroup); const winners=[]; const losersList=[];
+			// Create matches for ALL qualifiers, not just first two\n\t\t\tfor(let i=0;i<qualifiersPerGroup;i++){ if(qA[i] && qB[i]){ const win=decide(qA[i],qB[i]); winners.push(win); losersList.push(win===qA[i]?qB[i]:qA[i]); if(bracket) bracket.insertAdjacentHTML('beforeend','<div class="bracket-card"><strong>'+win+' advanced</strong><span>'+qA[i]+' vs '+qB[i]+'</span></div>'); } }
+			if(loser) losersList.forEach(n=>loser.insertAdjacentHTML('beforeend','<div class="bracket-card loser-card"><strong>'+n+'</strong><span>Lost in the winner bracket and enters the loser bracket.</span></div>'));
+			window.__mythTournament = window.__mythTournament||{}; window.__mythTournament.groups=[groupA,groupB]; window.__mythTournament.results=resultsA.concat(resultsB); window.__mythTournament.names=selected; window.__mythTournament.phase='knockout';
+			// prepare next round pairs from winners and add Next button to play them
+			if(winners.length>1){
+				const qualifiers = winners.slice();
+				let bye = null;
+				if(qualifiers.length%2===1){ bye = qualifiers.pop(); window.__mythTournament.bye = bye; }
+				const nextPairs = [];
+				for(let i=0;i<qualifiers.length;i+=2) if(qualifiers[i+1]) nextPairs.push([qualifiers[i],qualifiers[i+1]]);
+				window.__mythTournament.pending = nextPairs;
+				const nextBtn = document.createElement('button'); nextBtn.type='button'; nextBtn.textContent='Next round'; nextBtn.className='secondary'; nextBtn.style.marginTop='1rem'; nextBtn.onclick = function(){ playNextRound(winners); };
+				matches.appendChild(nextBtn);
+			} else if(winners.length===1){ window.__mythTournament.pending = []; document.getElementById('champion') && (document.getElementById('champion').innerHTML = '<div class="champion">Champion: '+winners[0]+'</div>'); }
+			log('groups processed; qualifiers: '+winners.join(', ')); return;
+		}
+		// bracket/knockout
+		if(style==='bracket' || style==='knockout'){
+			log('format: '+style);
+			// build initial pairs from selected
+			const initialPairs = []; for(let i=0;i<selected.length;i+=2) if(selected[i+1]) initialPairs.push([selected[i], selected[i+1]]);
+			// render matches and bracket cards
+			initialPairs.forEach(function(pair,i){ const win=decide(pair[0],pair[1]); const los= win===pair[0]?pair[1]:pair[0]; const baseA=(window.__mythAttrValue && window.__mythAttrValue(pair[0]))||hashVal(pair[0]); const baseB=(window.__mythAttrValue && window.__mythAttrValue(pair[1]))||hashVal(pair[1]); const aPct=(baseA/(baseA+baseB)*100).toFixed(1), bPct=(baseB/(baseA+baseB)*100).toFixed(1); matches.insertAdjacentHTML('beforeend','<div class="match knockout-match"><h4>Match '+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aPct+'% &middot; <strong>'+pair[1]+'</strong> '+bPct+'%</p><p class="winner">AI judge: '+win+' advances</p></div>'); if(bracket) bracket.insertAdjacentHTML('beforeend','<div class="bracket-card"><strong>'+win+' advanced</strong><span>'+pair[0]+' vs '+pair[1]+'</span></div>'); if(loser) loser.insertAdjacentHTML('beforeend','<div class="bracket-card loser-card"><strong>'+los+'</strong><span>Lost in the winner bracket and receives a second chance.</span></div>'); });
+			window.__mythTournament = window.__mythTournament||{}; window.__mythTournament.pending = initialPairs; window.__mythTournament.phase='knockout';
+			// if there are winners to advance, show Next round button
+			if(initialPairs.length){ const initialWinners = initialPairs.map(p=>decide(p[0],p[1])); const btn=document.createElement('button'); btn.type='button'; btn.textContent='Next round'; btn.className='secondary'; btn.style.marginTop='1rem'; btn.onclick=function(){ playNextRound(initialWinners); }; matches.appendChild(btn); }
+			return;
+		}
+		// fallback: round-robin / league
+		log('format: other (league)');
+		const pairs=[]; for(let i=0;i<selected.length;i++) for(let j=i+1;j<selected.length;j++) pairs.push([selected[i],selected[j]]);
+		pairs.forEach(function(pair,i){ const win=decide(pair[0],pair[1]); const baseA=(window.__mythAttrValue && window.__mythAttrValue(pair[0]))||hashVal(pair[0]), baseB=(window.__mythAttrValue && window.__mythAttrValue(pair[1]))||hashVal(pair[1]); const aPct=(baseA/(baseA+baseB)*100).toFixed(1), bPct=(baseB/(baseA+baseB)*100).toFixed(1); matches.insertAdjacentHTML('beforeend','<div class="match league-match"><h4>Match '+(i+1)+'</h4><p>'+pair[0]+' vs '+pair[1]+'</p><p><strong>'+pair[0]+'</strong> '+aPct+'% &middot; <strong>'+pair[1]+'</strong> '+bPct+'%</p><p class="winner">AI judge: '+win+' wins</p></div>'); });
+		window.__mythTournament = window.__mythTournament||{}; window.__mythTournament.pending = pairs.slice(); window.__mythTournament.phase='league';
+	}catch(err){ log('startNow error: '+(err&&err.message||err)); console.error('startNow error', err); if(err && err.stack) log(err.stack); }
+	}
+
+	// Bind initializer: attach startNow to current and future start-tournament buttons
+	function bindStartButton(el){ try{ if(!el) return; if(el.dataset.mythBound==='1') return; el.dataset.mythBound='1'; el.onclick = startNow; el.addEventListener('pointerdown', ()=>{ el.classList.add('active'); setTimeout(()=>el.classList.remove('active'),120); }); log('bound start-tournament button'); }catch(e){ log('bind error: '+e.message); } }
+	// initial bind
+	bindStartButton(document.getElementById('start-tournament'));
+	// observe replacements
+	const container = document.querySelector('.setup-actions') || document.body;
+	new MutationObserver(function(m){ m.forEach(rec=>{ rec.addedNodes && rec.addedNodes.forEach(node=>{ if(node.nodeType===1 && node.id==='start-tournament') bindStartButton(node); if(node.querySelectorAll) Array.from(node.querySelectorAll('#start-tournament')).forEach(n=>bindStartButton(n)); }); }); }).observe(container,{childList:true,subtree:true});
+
+	// expose for safety
+	window.__mythStartNow = startNow;
+	log('robust starter installed');
+})();
+</script>
+<script>
+// Ensure the canonical starter runs first and prevents conflicting handlers
+(function(){
+	document.addEventListener('click', function(e){
+		try{
+			const el = e.target.closest && e.target.closest('#start-tournament');
+			if(!el) return;
+			e.preventDefault(); e.stopImmediatePropagation();
+			if(window.__mythStartNow) return window.__mythStartNow();
+		}catch(err){console.error('starter-intercept',err);}    
+	}, true);
+})();
+</script>
+<script>
+// Enforce per-group qualification sanity after any starter runs
+(function(){
+	function computeQualifiersPerGroup(total){ if(total>=12) return 4; if(total>=8) return 3; if(total>=6) return 2; return 1; }
+	function enforce(){
+		try{
+			const t = window.__mythTournament; if(!t) return;
+			if(t.phase !== 'knockout') return;
+			if(!Array.isArray(t.groups) || t.groups.length < 2) return;
+			const gA = Array.isArray(t.groups[0])?t.groups[0].slice():[];
+			const gB = Array.isArray(t.groups[1])?t.groups[1].slice():[];
+			// standings helper (recompute from available results if present)
+			const results = t.results || [];
+			const calcStandings = (names, results)=>{
+				const map = {};
+				names.forEach(n=>map[n]={name:n,wins:0,played:0});
+				results.forEach(r=>{ if(map[r.a]) map[r.a].played++; if(map[r.b]) map[r.b].played++; if(map[r.winner]) map[r.winner].wins++; });
+				return Object.values(map).sort((a,b)=>b.wins-a.wins||a.name.localeCompare(b.name));
+			};
+			const sA = calcStandings(gA, results);
+			const sB = calcStandings(gB, results);
+			const totalPlayers = (t.names && t.names.length) || (gA.length + gB.length) || (sA.length + sB.length);
+			const perGroup = computeQualifiersPerGroup(totalPlayers);
+			const qA = sA.map(x=>x.name).slice(0,perGroup);
+			const qB = sB.map(x=>x.name).slice(0,perGroup);
+			const winnerPairs = [];
+			for(let i=0;i<perGroup;i++){ if(qA[i] && qB[i]) winnerPairs.push([qA[i], qB[i]]); }
+			// If pending doesn't match desired winnerPairs, replace it
+			const pending = t.pending || [];
+			const equal = (a,b)=> JSON.stringify(a) === JSON.stringify(b);
+			if(!equal(pending, winnerPairs)){
+				t.pending = winnerPairs.slice();
+				window.__mythTournament = t; // reassign to keep refs
+				// update DOM if present
+				const matches = document.getElementById('matches'); if(matches){
+					// remove any incorrectly rendered combined standings tables and re-render group tables
+					const lbls = Array.from(matches.querySelectorAll('.format-label')).filter(h=>/Standings/i.test(h.textContent||''));
+					lbls.forEach(l=>l.remove());
+				}
+			}
+		}catch(e){ console.error('enforce qualifiers error', e); }
+	}
+	// wrap existing starter if present
+	try{
+		if(window.__mythStartNow){ const old = window.__mythStartNow; window.__mythStartNow = function(e){ const r = old(e); try{ enforce(); }catch(_){} return r; }; }
+	}catch(e){ console.warn('wrap startNow failed', e); }
+	// also expose for manual invocation
+	window.__mythEnforceGroupQualification = enforce;
+})();
+</script>
+<script>
+// Final safety: centralize percent computation and force a single Start button handler
+(function(){
+	// percent helper: uses attribute values (judge metric) and falls back to hashVal
+	window.__mythPercent = window.__mythPercent || function(a,b){
+		try{
+			const A = (window.__mythAttrValue && window.__mythAttrValue(a)) || (window.hashVal && window.hashVal(a)) || 50;
+			const B = (window.__mythAttrValue && window.__mythAttrValue(b)) || (window.hashVal && window.hashVal(b)) || 50;
+			const aPct = (A/(A+B)*100);
+			const bPct = 100 - aPct;
+			return [Number(aPct.toFixed(1)), Number(bPct.toFixed(1))];
+		}catch(e){ return [50.0,50.0]; }
+	};
+
+	// Replace the Start button with a fresh element (removes any stray listeners), then bind canonical starter
+	try{
+		const old = document.getElementById('start-tournament');
+		if(old){
+			const fresh = old.cloneNode(false);
+			// copy attributes and text
+			fresh.id = old.id; fresh.className = old.className; fresh.type = old.type || 'button'; fresh.textContent = old.textContent || 'Start tournament';
+			old.replaceWith(fresh);
+			fresh.addEventListener('click', function(e){ e.preventDefault(); e.stopImmediatePropagation(); if(window.__mythStartNow) return window.__mythStartNow(e); }, true);
+			if(fresh.dataset) fresh.dataset.mythBound = '1';
+			console.log('myth: start button normalized');
+		}
+	}catch(e){ console.warn('myth: normalize start button failed', e); }
+
+	// Make any legacy global start/begin delegate to canonical starter
+	try{ window.start = window.start || function(e){ if(window.__mythStartNow) return window.__mythStartNow(e); }; }catch(e){}
+	try{ window.begin = window.begin || function(e){ if(window.__mythStartNow) return window.__mythStartNow(e); }; }catch(e){}
+})();
+</script>
+<script>
+// MYTHLY ENHANCEMENT: Proper champion display, explanations, and strategy-aware judging
+(function(){
+	// Strategic explanation generator - no raw stats, focuses on narrative and strategy
+	const strategicExplanations = {
+		'Zeus': { strength: 'unmatched power and authority', weakness: 'occasional pride and impulse' },
+		'Hera': { strength: 'strategic intellect and persistence', weakness: 'can be vengeful and calculated' },
+		'Athena': { strength: 'tactical brilliance and wisdom', weakness: 'sometimes cold and detached' },
+		'Poseidon': { strength: 'raw power and mastery of his domain', weakness: 'volatile and unpredictable' },
+		'Hades': { strength: 'command of death and the underworld', weakness: 'prefers isolation to conflict' },
+		'Ares': { strength: 'overwhelming physical dominance', weakness: 'relies on brute force over strategy' },
+		'Aphrodite': { strength: 'charm, influence, and manipulation', weakness: 'less effective in direct combat' },
+		'Apollo': { strength: 'precision, magic, and versatility', weakness: 'sometimes lacks the brutality of true warriors' },
+		'Artemis': { strength: 'uncanny accuracy and endurance', weakness: 'prefers hunting to direct confrontation' },
+		'Hermes': { strength: 'cunning, speed, and adaptability', weakness: 'relies on intellect over power' },
+		'Demeter': { strength: 'control of life and abundance', weakness: 'gentle nature limits aggression' },
+		'Dionysus': { strength: 'chaos, madness, and unpredictability', weakness: 'lacks focused discipline' },
+		'Achilles': { strength: 'legendary warrior prowess', weakness: 'one vulnerability can end it' },
+		'Odysseus': { strength: 'cunning, strategy, and ingenuity', weakness: 'not the strongest in direct combat' },
+		'Heracles': { strength: 'unmatched strength and determination', weakness: 'can be outsmarted by cleverness' },
+		'Perseus': { strength: 'divine gifts and tactical thinking', weakness: 'relies on tools and tricks' },
+		'Theseus': { strength: 'honor, intellect, and adaptability', weakness: 'not as powerful as divine beings' },
+		'Jason': { strength: 'leadership and courage', weakness: 'often dependent on allies' }
+	};
+
+	// Generate strategic explanation without revealing stats - improved with more natural English
+	const generateStrategicExplanation = function(winner, loser, contest) {
+		const w = String(winner || 'the victor').trim();
+		const l = String(loser || 'the opponent').trim();
+		
+		const scenarios = {
+			fight: [
+				`${w} overwhelms ${l} through superior combat skill and warrior prowess.`,
+				`${w} dominates this clash through tactical brilliance and overwhelming physical power.`,
+				`In direct combat, ${w} proves decisively superior to ${l}.`,
+				`${w} emerges victorious through martial excellence and battle strategy.`,
+				`${w} takes command of the battlefield through superior combat experience.`,
+				`Victory flows to ${w}, whose warrior skill surpasses ${l}'s abilities.`
+			],
+			wits: [
+				`${w} outwits ${l} with sharper intellect and superior strategic thinking.`,
+				`In this battle of minds, ${w} demonstrates superior reasoning and foresight.`,
+				`${w} prevails through wisdom, cunning, and clever outsmarting.`,
+				`Victory flows to ${w}, whose mental acuity overcomes ${l}'s approach.`,
+				`${w} outmaneuvers ${l} entirely through intellect and tactical positioning.`,
+				`${w} wins through superior mental mastery and strategic brilliance.`
+			],
+			knowledge: [
+				`${w} demonstrates far greater knowledge and understanding than ${l}.`,
+				`The test of knowledge heavily favors ${w}'s deeper learning and insight.`,
+				`${w} prevails through superior knowledge and scholarly mastery.`,
+				`Victory flows to ${w} in this contest of ancient wisdom and learning.`,
+				`${w} overwhelms ${l} with superior knowledge and comprehensive understanding.`,
+				`Learning and wisdom favor ${w} over ${l} in this decisive contest.`
+			],
+			strength: [
+				`${w} demonstrates raw power that far exceeds ${l}'s capacity.`,
+				`Pure strength and power decide this contest decisively in ${w}'s favor.`,
+				`${w} overpowers ${l} through unmatched physical dominance.`,
+				`Physical superiority flows clearly to ${w} in this test of might.`,
+				`${w} outmuscles ${l} with overwhelming physical power.`,
+				`Victory flows to ${w} through superior strength and dominance.`
+			],
+			magic: [
+				`${w} unleashes superior magical command and mystical power.`,
+				`The arcane arts heavily favor ${w}'s greater magical mastery.`,
+				`${w} demonstrates overwhelming magical superiority over ${l}.`,
+				`Victory flows to ${w} through superior magical power and control.`,
+				`${w} overwhelms ${l} with superior spellcraft and mystical knowledge.`,
+				`Magical power and mastery favor ${w} in this contest of the arcane.`
+			],
+			influence: [
+				`${w} sways hearts and minds through commanding presence over ${l}.`,
+				`Charisma, persuasion, and will flow decisively in ${w}'s direction.`,
+				`${w} commands the situation entirely through force of personality.`,
+				`Victory flows to ${w} through superior influence and authority.`,
+				`${w} overwhelms ${l} through irresistible charm and commanding presence.`,
+				`Influence and authority heavily favor ${w} over ${l} in this contest.`
+			],
+			endurance: [
+				`${w} outlasts ${l} through superior stamina and resolve.`,
+				`${w} refuses to break. Endurance and willpower carry the day.`,
+				`${w} continues when ${l} falters. Persistence and resilience prevail.`,
+				`${w}'s unbreakable spirit proves decisively superior to ${l}'s.`,
+				`Victory flows to ${w}, who endures as ${l} weakens and falters.`,
+				`Stamina and willpower favor ${w} over the tiring ${l}.`
+			],
+			leadership: [
+				`${w} commands with clear vision and strategic direction over ${l}.`,
+				`${w}'s ability to inspire and guide proves far superior to ${l}.`,
+				`${w}'s leadership qualities shine. Direction guides this victory.`,
+				`${w} takes command through superior strategic vision and guidance.`,
+				`Victory flows to ${w}, whose leadership exceeds ${l}'s direction.`,
+				`Leadership and vision favor ${w}'s superior authority over ${l}.`
+			]
+		};
+
+		const contestScenarios = scenarios[contest] || scenarios.fight;
+		if(!contestScenarios || contestScenarios.length === 0) {
+			return `${w} defeats ${l}. Victory favors the superior competitor.`;
+		}
+		const selectedExplanation = contestScenarios[Math.floor(Math.random() * contestScenarios.length)];
+		return selectedExplanation;
+	};
+
+	// Override the decision function to return detailed results with explanations
+	const originalDecide = window.__mythDecideWinner;
+	window.__mythDecideWinnerEnhanced = function(a, b){
+		if(!originalDecide) return {winner: a, scoreA: 0, scoreB: 0, margin: 0, explanation: ''};
+		const result = originalDecide(a, b);
+		if(typeof result === 'string'){ return {winner: result, scoreA: 0, scoreB: 0, margin: 0, explanation: ''}; }
+		
+		const contest = (document.getElementById('contest-type')||{}).value || 'fight';
+		const explanation = generateStrategicExplanation(result.winner, result.winner === a ? b : a, contest);
+		
+		return {
+			winner: result.winner,
+			explanation: explanation,
+			contest: contest
+		};
+	};
+
+	// Monkey-patch ALL decision calls to use the enhanced version
+	const patchDecide = function(){
+		window.__mythDecideWinner = window.__mythDecideWinnerEnhanced;
+		window.decideWinner = window.__mythDecideWinnerEnhanced;
+		window.decide = function(a,b){ const r = window.__mythDecideWinnerEnhanced(a,b); return r.winner; };
+	};
+	patchDecide();
+
+	// Champion display handler - simpler and more reliable
+	const championDiv = document.getElementById('champion');
+	const matchesDiv = document.getElementById('matches');
+	
+	if(championDiv && matchesDiv){
+		const checkAndShowChampion = function(){
+			try{
+				const text = matchesDiv.innerText || '';
+				const hasNextBtn = Array.from(matchesDiv.querySelectorAll('button')).some(b => b.textContent.includes('Next'));
+				const matches = matchesDiv.querySelectorAll('.match, .knockout-match, .group-match, .league-match, .bye');
+				
+				// Tournament complete when: no matches and no next button
+				if(matches.length === 0 && !hasNextBtn && (text.includes('Champion:') || text.includes('League winner:'))){
+					const champMatch = text.match(/Champion:\s*([A-Za-z]+)/i) || text.match(/League winner:\s*([A-Za-z]+)/i);
+					if(champMatch && champMatch[1]){
+						const name = champMatch[1];
+						championDiv.innerHTML = '<div class="champion">🏆 ' + name.toUpperCase() + ' 🏆<br><span style="font-size:0.7em;font-weight:normal;">Tournament Champion</span></div>';
+					}
+				} else {
+					championDiv.innerHTML = '';
+				}
+			}catch(e){ console.error('Champion check error:', e); }
+		};
+		
+		// Observe for tournament completion
+		new MutationObserver(checkAndShowChampion).observe(matchesDiv, {childList: true, subtree: true, characterData: true});
+		setTimeout(checkAndShowChampion, 500);
+		setTimeout(checkAndShowChampion, 1500);
+	}
+})();
+</script>
+</body>
+</html>
+
+	// Enhance match card rendering to show strategic explanations (once per match)
+	const enhanceMatchCards = function(){
+		try{
+			const matches = document.querySelectorAll('.match:not([data-myth-enhanced])');
+			matches.forEach(card => {
+				card.setAttribute('data-myth-enhanced', '1');
+				const p = card.querySelectorAll('p');
+				if(p.length >= 2){
+					const vsText = (p[0].textContent || '').trim();
+					const pair = vsText.split(' vs ').map(x => x.trim());
+					
+					// Find the winner from the .winner text
+					const winLine = card.querySelector('.winner');
+					const winnerText = (winLine?.textContent || '').trim();
+					let winner = '';
+					
+					// Extract winner name from patterns like "AI judge: Athena wins" or "AI judge: Athena advances"
+					const winMatch = winnerText.match(/AI judge:\s*([A-Za-z]+)/);
+					if(winMatch && winMatch[1]){
+						winner = winMatch[1];
+					}
+					
+					if(pair.length === 2 && winner){
+						const a = pair[0];
+						const b = pair[1];
+						const loser = (winner === a) ? b : a;
+						const contest = (document.getElementById('contest-type')||{}).value || 'fight';
+						
+						// Generate explanation with CORRECT winner and loser
+						const explanation = generateStrategicExplanation(winner, loser, contest);
+						
+						// Update win line with strategic explanation
+						if(winLine && explanation){
+							winLine.innerHTML = '<strong>⚔ ' + explanation + '</strong>';
+							winLine.style.cssText = 'display:block;padding:0.8rem;background:rgba(255,209,232,.5);border-radius:0.4rem;margin-top:0.6rem;line-height:1.6;font-size:0.95rem;color:#3d2863;';
+						}
+					}
+				}
+			});
+		}catch(e){ console.error('enhance match error', e); }
+	};
+	
+	// Watch for new match cards and enhance them
+	if(matchesDiv){
+		new MutationObserver(function(){ 
+			// Use requestAnimationFrame for smooth, non-blocking updates
+			requestAnimationFrame(enhanceMatchCards); 
+		}).observe(matchesDiv, {childList: true, subtree: true, characterData: false});
+	}
+	
+	// Initial enhancement with multiple attempts
+	setTimeout(enhanceMatchCards, 50);
+	setTimeout(enhanceMatchCards, 150);
+	setTimeout(enhanceMatchCards, 300);
+	
+	// Expose to character comparison tool
+	window.__mythGenerateExplanation = generateStrategicExplanation;
+})();
+</script>
+</body>
+</html>
+
+		// Monitor both matches and tournament panel with aggressive refresh
+		if(matchesDiv){
+			new MutationObserver(function(){
+				requestAnimationFrame(showChampion);
+			}).observe(matchesDiv, {childList: true, subtree: true, characterData: true});
+		}
+		if(tournamentPanel){
+			new MutationObserver(function(){
+				requestAnimationFrame(showChampion);
+			}).observe(tournamentPanel, {attributes: true, attributeFilter: ['class']});
+		}
+		
+		showChampion(); // Initial check
+	
+	
+	// Enhance match card rendering to show strategic explanations (once per match)
+	const enhanceMatchCards = function(){
+		try{
+			const matches = document.querySelectorAll('.match:not([data-myth-enhanced])');
+			matches.forEach(card => {
+				card.setAttribute('data-myth-enhanced', '1');
+				const p = card.querySelectorAll('p');
+				if(p.length >= 2){
+					const vsText = (p[0].textContent || '').trim();
+					const pair = vsText.split(' vs ').map(x => x.trim());
+					
+					// Find the winner from the .winner text
+					const winLine = card.querySelector('.winner');
+					const winnerText = (winLine?.textContent || '').trim();
+					let winner = '';
+					
+					// Extract winner name from patterns like "AI judge: Athena wins" or "AI judge: Athena advances"
+					const winMatch = winnerText.match(/AI judge:\s*([A-Za-z]+)/);
+					if(winMatch && winMatch[1]){
+						winner = winMatch[1];
+					}
+					
+					if(pair.length === 2 && winner){
+						const a = pair[0];
+						const b = pair[1];
+						const loser = (winner === a) ? b : a;
+						const contest = (document.getElementById('contest-type')||{}).value || 'fight';
+						
+						// Generate explanation with CORRECT winner and loser
+						const explanation = generateStrategicExplanation(winner, loser, contest);
+						
+						// Update win line with strategic explanation
+						if(winLine && explanation){
+							winLine.innerHTML = '<strong>⚔ ' + explanation + '</strong>';
+							winLine.style.cssText = 'display:block;padding:0.8rem;background:rgba(255,209,232,.5);border-radius:0.4rem;margin-top:0.6rem;line-height:1.6;font-size:0.95rem;color:#3d2863;';
+						}
+					}
+				}
+			});
+		}catch(e){ console.error('enhance match error', e); }
+	};
+	
+	// Watch for new match cards and enhance them
+	if(matchesDiv){
+		new MutationObserver(function(){ 
+			// Use requestAnimationFrame for smooth, non-blocking updates
+			requestAnimationFrame(enhanceMatchCards); 
+		}).observe(matchesDiv, {childList: true, subtree: true, characterData: false});
+	}
+	
+	// Initial enhancement with multiple attempts
+	setTimeout(enhanceMatchCards, 50);
+	setTimeout(enhanceMatchCards, 150);
+	setTimeout(enhanceMatchCards, 300);
+	
+	// Expose to character comparison tool
+	window.__mythGenerateExplanation = generateStrategicExplanation;
+})();
+</script>
+</body>
+</html>

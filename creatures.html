@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Creature Compendium — Mythly</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>⚡</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html {
+            background: linear-gradient(135deg, rgba(224, 239, 255, 0.88), rgba(239, 231, 255, 0.88)), url('mountolympus.jpg') center/cover fixed;
+            background-color: #e8f0ff;
+            overflow-x: hidden;
+        }
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: transparent;
+            color: #17251f;
+        }
+        .site-header {
+            display: none;
+        }
+        h1 {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin: 0;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            color: #0b3b1f;
+        }
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.5rem;
+        }
+        .top-nav a {
+            font-weight: 500;
+            text-decoration: none;
+            color: #0b3b1f;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+        }
+        .top-nav a:hover { filter: brightness(.7); text-decoration: underline; }
+        .subtitle {
+            display: none;
+        }
+        .subtitle p {
+            margin: 0;
+            font-weight: 500;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #0b3b1f;
+        }
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .page-title {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            text-align: center;
+            color: #0b3b1f;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .intro-text {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            border: 2px solid #8b7355;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #0b3b1f;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(200, 220, 200, 0.8);
+            border-color: #0b3b1f;
+        }
+        .creatures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .creature-card {
+            background: linear-gradient(135deg, rgba(240, 248, 255, 0.9), rgba(220, 240, 220, 0.9));
+            border: 2px solid #d8c5a0;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .creature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: #8b7355;
+        }
+        .creature-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0b3b1f;
+            margin-bottom: 0.5rem;
+        }
+        .creature-type {
+            font-size: 0.95rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 0.75rem;
+            background: rgba(139, 115, 85, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            display: inline-block;
+        }
+        .creature-realm {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        .creature-realm:before {
+            content: "📍 ";
+            margin-right: 0.5rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .stat {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            border: 1px solid #d8c5a0;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0b3b1f;
+        }
+        .creature-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .encounters-section {
+            background: rgba(245, 240, 230, 0.7);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+        .section-title {
+            font-weight: 600;
+            color: #0b3b1f;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .encounters-list {
+            font-size: 0.85rem;
+            color: #555;
+        }
+        .encounters-list li {
+            margin-bottom: 0.25rem;
+        }
+        .defeated-by {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(200, 100, 100, 0.1);
+            border-radius: 0.25rem;
+        }
+        .no-creatures {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            font-style: italic;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+        .modal-close:hover {
+            color: #0b3b1f;
+        }
+        @media (max-width: 768px) {
+            .creatures-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            body { padding: 1rem; margin: 1rem 0; }
+            .top-nav { gap: 1rem; }
+            .creature-card { padding: 1rem; }
+            button { min-height: 44px; padding: 0.6rem 1rem; }
+        }
+        @media (max-width: 480px) {
+            body { padding: 0.75rem; margin: 0.75rem 0; }
+            .top-nav { gap: 0.75rem; flex-wrap: wrap; }
+            .creature-card { padding: 0.8rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            button { min-height: 48px; padding: 0.7rem 0.9rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <h1>Mythly</h1>
+    </header>
+    <div class="subtitle">
+        <p>Discover the monsters, beasts, and creatures of mythology</p>
+    </div>
+
+    <main>
+        <h2 class="page-title">Creature Compendium</h2>
+        <p class="intro-text">A collection of legendary creatures, monsters, and divine beasts from Greek mythology</p>
+        
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All Creatures</button>
+            <button class="filter-btn" data-filter="Monster">Monsters</button>
+            <button class="filter-btn" data-filter="Dragon">Dragons</button>
+            <button class="filter-btn" data-filter="Divine">Divine Beings</button>
+        </div>
+
+        <div class="creatures-grid" id="creaturesGrid"></div>
+    </main>
+
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="mythly-database.js"></script>
+    <script>
+        (function() {
+            const grid = document.getElementById('creaturesGrid');
+            const modal = document.getElementById('detailsModal');
+            const modalClose = document.getElementById('modalClose');
+            const modalBody = document.getElementById('modalBody');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            let currentFilter = 'all';
+
+            // Render creature cards
+            function renderCreatures(filter = 'all') {
+                grid.innerHTML = '';
+                const creatures = MythlyDatabase.getAllCreatures();
+                
+                let filtered = creatures;
+                if (filter !== 'all') {
+                    if (filter === 'Divine') {
+                        filtered = creatures.filter(c => c.type.includes('Divine') || c.type === 'Divine Bird' || c.type === 'Divine Steed');
+                    } else {
+                        filtered = creatures.filter(c => c.type.includes(filter));
+                    }
+                }
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = '<div class="no-creatures">No creatures found in this category.</div>';
+                    return;
+                }
+
+                filtered.forEach(creature => {
+                    const card = document.createElement('div');
+                    card.className = 'creature-card';
+                    card.innerHTML = `
+                        <div class="creature-name">${creature.name}</div>
+                        <span class="creature-type">${creature.type}</span>
+                        <div class="creature-realm">${creature.realm}</div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat">
+                                <div class="stat-label">Strength</div>
+                                <div class="stat-value">${creature.strength}</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-label">Intelligence</div>
+                                <div class="stat-value">${creature.intelligence}</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-label">Magic</div>
+                                <div class="stat-value">${creature.magic}</div>
+                            </div>
+                        </div>
+
+                        <div class="creature-description">${creature.description}</div>
+                        
+                        <button style="width: 100%; padding: 0.5rem; background: rgba(200, 220, 200, 0.8); border: 1px solid #8b7355; border-radius: 0.5rem; cursor: pointer; font-family: 'Cormorant Garamond', serif; font-weight: 500; color: #0b3b1f;">View Details</button>
+                    `;
+                    card.addEventListener('click', () => showDetails(creature));
+                    grid.appendChild(card);
+                });
+            }
+
+            // Show modal with creature details
+            function showDetails(creature) {
+                let html = `
+                    <h2 style="color: #0b3b1f; margin-bottom: 1rem;">${creature.name}</h2>
+                    <p style="font-size: 1rem; margin-bottom: 1rem; color: #555;">
+                        <strong>Type:</strong> ${creature.type}<br>
+                        <strong>Realm:</strong> ${creature.realm}
+                    </p>
+
+                    <h3 style="color: #0b3b1f; margin-top: 1.5rem; margin-bottom: 0.75rem; font-size: 1.2rem;">Attributes</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="background: rgba(240, 248, 255, 0.7); padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                            <div style="font-size: 0.9rem; color: #999; margin-bottom: 0.5rem;">Strength</div>
+                            <div style="font-size: 1.8rem; font-weight: 600; color: #0b3b1f;">${creature.strength}/10</div>
+                        </div>
+                        <div style="background: rgba(240, 248, 255, 0.7); padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                            <div style="font-size: 0.9rem; color: #999; margin-bottom: 0.5rem;">Intelligence</div>
+                            <div style="font-size: 1.8rem; font-weight: 600; color: #0b3b1f;">${creature.intelligence}/10</div>
+                        </div>
+                        <div style="background: rgba(240, 248, 255, 0.7); padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                            <div style="font-size: 0.9rem; color: #999; margin-bottom: 0.5rem;">Magic</div>
+                            <div style="font-size: 1.8rem; font-weight: 600; color: #0b3b1f;">${creature.magic}/10</div>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #0b3b1f; margin-bottom: 0.75rem; font-size: 1.1rem;">Origin</h3>
+                    <p style="color: #555; margin-bottom: 1.5rem;">${creature.origin}</p>
+
+                    <h3 style="color: #0b3b1f; margin-bottom: 0.75rem; font-size: 1.1rem;">Description</h3>
+                    <p style="color: #555; line-height: 1.6; margin-bottom: 1.5rem;">${creature.description}</p>
+                `;
+
+                if (creature.famous_encounters && creature.famous_encounters.length > 0) {
+                    html += `
+                        <h3 style="color: #0b3b1f; margin-bottom: 0.75rem; font-size: 1.1rem;">Famous Encounters</h3>
+                        <ul style="color: #555; margin-bottom: 1.5rem; margin-left: 1.5rem;">
+                            ${creature.famous_encounters.map(enc => `<li style="margin-bottom: 0.5rem;">${enc}</li>`).join('')}
+                        </ul>
+                    `;
+                }
+
+                if (creature.defeated_by && creature.defeated_by.length > 0) {
+                    html += `
+                        <p style="background: rgba(200, 100, 100, 0.1); padding: 1rem; border-radius: 0.5rem; color: #555;">
+                            <strong>Defeated By:</strong> ${creature.defeated_by.join(', ')}
+                        </p>
+                    `;
+                }
+
+                modalBody.innerHTML = html;
+                modal.classList.add('active');
+            }
+
+            // Filter functionality
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    renderCreatures(currentFilter);
+                });
+            });
+
+            // Close modal
+            modalClose.addEventListener('click', () => modal.classList.remove('active'));
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.remove('active');
+            });
+
+            // Initial render
+            try {
+                if (MythlyDatabase && MythlyDatabase.getAllCreatures) {
+                    renderCreatures();
+                } else {
+                    console.error('MythlyDatabase not available');
+                    grid.innerHTML = '<div class="no-creatures">Error: Database not loaded</div>';
+                }
+            } catch(e) {
+                console.error('Creature rendering error:', e);
+                grid.innerHTML = '<div class="no-creatures">Error rendering creatures: ' + e.message + '</div>';
+            }
+        })();
+    </script>
+</body>
+</html>

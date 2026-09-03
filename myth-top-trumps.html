@@ -1,0 +1,660 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Myth Top Trumps</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg1:#243b6b;--bg2:#6b2fa3;--card:#fff2cc}
+  html{height:100%;background:radial-gradient(circle at 10% 10%, #243b6b 0%, #6b2fa3 25%, #ff7a7a 55%, #120018 100%);background-attachment:fixed;background-color:#120018}
+  body{min-height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;color:#fff2cc;background:radial-gradient(circle at 10% 10%, #243b6b 0%, #6b2fa3 25%, #ff7a7a 55%, #120018 100%);background-attachment:fixed;background-color:#120018}
+  .wrap{max-width:1100px;width:min(1100px, calc(100% - 32px));margin:20px auto;padding:16px;box-sizing:border-box;min-height:calc(100vh - 40px)}
+  header{display:flex;justify-content:space-between;align-items:center}
+  header h1{font-family:Arial,Helvetica,sans-serif;text-transform:uppercase;margin:0;font-size:36px;color:#d8b3ff;text-shadow:0 2px 8px rgba(0,0,0,0.6)}
+  .board{display:flex;gap:16px;margin-top:16px}
+  .column{flex:1;background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02)), rgba(255,255,255,0.02);padding:12px;border-radius:12px;min-height:360px;backdrop-filter: blur(6px)}
+  .card{background:linear-gradient(180deg,#fff2cc,#fff7e6);color:#071a3d;border-radius:8px;padding:12px;box-shadow:0 8px 30px rgba(107,47,163,0.25)}
+  .card h2{margin:0 0 8px 0}
+  .card h2 a{color:inherit;text-decoration:none}
+  .card h2 a:hover{text-decoration:underline}
+  .stat{display:flex;justify-content:space-between;padding:8px 10px;border-radius:6px;margin:6px 0;cursor:pointer;border-left:6px solid transparent;transition:transform .12s,box-shadow .12s}
+  .stat:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,0.15)}
+  .stat.disabled{opacity:0.5;pointer-events:none}
+  .stat span{font-weight:700}
+  .stat.chosen{outline:2px solid rgba(0,0,0,0.06);box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+  .stat.player-highlight{background:linear-gradient(90deg,rgba(255,250,230,0.9),rgba(255,245,210,0.9))}
+  .stat.ai-highlight{background:linear-gradient(90deg,rgba(230,245,255,0.9),rgba(210,235,255,0.9))}
+  .controls{display:flex;gap:8px;align-items:center}
+  button{background:#6b2fa3;border:none;color:#fff2cc;padding:8px 12px;border-radius:6px;cursor:pointer}
+  .small{font-size:13px;color:#ffd8a8}
+  .center{display:flex;flex-direction:column;align-items:center;justify-content:center}
+  #message{min-height:48px;margin-top:8px;color:#ffd;line-height:1.25}
+  .counts{display:flex;gap:12px;margin-top:8px}
+  .pot{background:rgba(255,255,255,0.03);padding:6px;border-radius:6px;margin-top:8px}
+  .card .desc{font-size:13px;color:#5a3b00;margin-bottom:6px}
+  /* per-character accent when rendering */
+  .accent-dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px;vertical-align:middle}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Myth Top Trumps</h1>
+      <div class="controls">
+        <div class="small">Player cards: <span id="player-count">0</span></div>
+        <div class="small">AI cards: <span id="ai-count">0</span></div>
+        <button id="restart">Restart</button>
+        <button id="start-btn">Start Playing</button>
+      </div>
+    </header>
+    <div class="board">
+      <div class="column">
+        <h3>Your Card</h3>
+        <div id="player-card-area" class="card">No card</div>
+        <div id="player-actions" style="margin-top:8px"></div>
+      </div>
+
+      <div class="column center">
+        <div class="small">Turn: <strong id="turn-owner">Player</strong></div>
+        <div id="message" class="small"></div>
+        <div class="pot" id="pot-area">Pot: 0</div>
+      </div>
+
+      <div class="column">
+        <h3>AI Card</h3>
+        <div id="ai-card-area" class="card">Face down</div>
+        <div style="margin-top:8px" class="small">(AI chooses when it's AI's turn)</div>
+      </div>
+    </div>
+  </div>
+<script>
+(() => {
+  // Deck of myth characters (expanded) with color accents
+  const deck = [
+    {id:'zeus', name:'Zeus', gen:3, Strength:9, Wisdom:5, Generation:3, Magic:9, Influence:10, desc:'King of the gods', color:'#ffd76a'},
+    {id:'hera', name:'Hera', gen:3, Strength:6, Wisdom:8, Generation:3, Magic:8, Influence:9, desc:'Queen of the gods', color:'#ff9bb3'},
+    {id:'poseidon', name:'Poseidon', gen:3, Strength:9, Wisdom:7, Generation:3, Magic:8, Influence:8, desc:'God of the sea', color:'#6fd0ff'},
+    {id:'hades', name:'Hades', gen:3, Strength:8, Wisdom:5, Generation:3, Magic:9, Influence:8, desc:'Lord of the Underworld', color:'#b29bff'},
+    {id:'athena', name:'Athena', gen:4, Strength:7, Wisdom:10, Generation:4, Magic:6, Influence:8, desc:'Goddess of wisdom', color:'#9ef0b8'},
+    {id:'ares', name:'Ares', gen:4, Strength:9, Wisdom:4, Generation:4, Magic:5, Influence:6, desc:'God of war', color:'#ff7a7a'},
+    {id:'aphrodite', name:'Aphrodite', gen:2, Strength:4, Wisdom:6, Generation:2, Magic:9, Influence:9, desc:'Goddess of love', color:'#ffc4e1'},
+    {id:'hermes', name:'Hermes', gen:4, Strength:5, Wisdom:7, Generation:4, Magic:6, Influence:8, desc:'Messenger and trickster', color:'#ffd9b3'},
+    {id:'apollo', name:'Apollo', gen:4, Strength:7, Wisdom:7, Generation:4, Magic:6, Influence:7, desc:'God of the sun and arts', color:'#ffe08a'},
+    {id:'dionysus', name:'Dionysus', gen:4, Strength:6, Wisdom:3, Generation:4, Magic:7, Influence:7, desc:'God of wine and revelry', color:'#d1b3ff'},
+    {id:'persephone', name:'Persephone', gen:4, Strength:2, Wisdom:7, Generation:4, Magic:8, Influence:6, desc:'Queen of the Underworld', color:'#ffd1a3'},
+    {id:'demeter', name:'Demeter', gen:3, Strength:6, Wisdom:8, Generation:3, Magic:7, Influence:7, desc:'Goddess of the harvest', color:'#dfff9b'},
+    {id:'hestia', name:'Hestia', gen:3, Strength:4, Wisdom:9, Generation:3, Magic:6, Influence:6, desc:'Goddess of the hearth', color:'#ffd8b3'},
+    {id:'hephaestus', name:'Hephaestus', gen:4, Strength:10, Wisdom:6, Generation:4, Magic:2, Influence:7, desc:'Smith of the gods', color:'#ffb38a'},
+    {id:'artemis', name:'Artemis', gen:4, Strength:7, Wisdom:8, Generation:4, Magic:7, Influence:7, desc:'Goddess of the hunt', color:'#b3e6ff'},
+    {id:'nike', name:'Nike', gen:4, Strength:6, Wisdom:5, Generation:4, Magic:7, Influence:6, desc:'Goddess of victory', color:'#ffd6a6'},
+    {id:'prometheus', name:'Prometheus', gen:3, Strength:5, Wisdom:9, Generation:3, Magic:7, Influence:6, desc:'Bearer of fire', color:'#ffc48f'},
+    {id:'atlas', name:'Atlas', gen:3, Strength:10, Wisdom:6, Generation:3, Magic:3, Influence:5, desc:'Bearer of the heavens', color:'#b3d1ff'},
+    {id:'eros', name:'Eros', gen:4, Strength:3, Wisdom:3, Generation:4, Magic:9, Influence:9, desc:'God of love', color:'#ffc4e1'},
+    {id:'nyx', name:'Nyx', gen:1, Strength:6, Wisdom:9, Generation:1, Magic:10, Influence:8, desc:'Goddess of night', color:'#c9b3ff'}
+  ];
+
+  let playerDeck = [], aiDeck = [], pot = [], turn = 'player'; // 'player' or 'ai'
+  let gameStarted = false;
+  // per-game stats
+  let totalRounds = 0, playerRoundWins = 0, aiRoundWins = 0, tieRounds = 0;
+  let roundsChosenByPlayer = 0, roundsChosenByAI = 0;
+  let statsHistory = []; // list of {round, pCount, aCount, pProb, aProb, chooser, result}
+  let startingStrengths = null; // { playerSum, aiSum, playerPct, aiPct }
+  let gameStarter = null; // 'player' or 'ai' — who started the game
+  // decision timing
+  let decisionStartTime = 0; // ms when player was prompted
+  let aiDecisionStart = 0;
+  let decisionTimes = { player: [], ai: [] };
+  let lastSummary = null;
+  // timing for game duration
+  let gameStartTime = 0, gameEndTime = 0;
+  // ratings (ELO-like) persisted in localStorage
+  let ratings = loadRatings();
+
+  const playerCardArea = document.getElementById('player-card-area');
+  const aiCardArea = document.getElementById('ai-card-area');
+  const playerCountEl = document.getElementById('player-count');
+  const aiCountEl = document.getElementById('ai-count');
+  const messageEl = document.getElementById('message');
+  const potArea = document.getElementById('pot-area');
+  const turnOwnerEl = document.getElementById('turn-owner');
+  const playerActions = document.getElementById('player-actions');
+  const restartBtn = document.getElementById('restart');
+  const startBtn = document.getElementById('start-btn');
+
+  // pages that exist in this workspace — used to control which cards get links
+  const availablePages = new Set([
+    'aphrodite.html','apollo.html','ares.html','artemis.html','athena.html','characters.html','demeter.html','eros.html','fonts-preview.html','fun.html','hades.html','hephaestus.html','hera.html','hermes.html','hestia.html','home.html','index.html','myth-postcards.html','myth-top-trumps-stats.html','myth-top-trumps.html','myths.html','oracle-duel.html','persephone.html','poseidon.html','quizzes.html','tome-puzzler.html','underworld-invasion.html','zeus.html'
+  ]);
+
+  function shuffle(arr){
+    const copy = arr.slice();
+    for(let i = copy.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function startGame(){
+    if(gameStarted) return;
+    gameStarted = true;
+    deal();
+    gameOver = false;
+    revealedThisRound = false;
+    message('');
+  }
+
+  function restartGame(){
+    gameStarted = true;
+    deal();
+    gameOver = false;
+    revealedThisRound = false;
+    message('Game restarted.');
+  }
+
+  function deal(){
+    const copy = shuffle(deck.slice());
+    playerDeck = copy.filter((_,i)=> i%2===0);
+    aiDeck = copy.filter((_,i)=> i%2===1);
+    pot = [];
+    // randomize starting player so user doesn't always start
+    turn = (Math.random() < 0.5) ? 'player' : 'ai';
+    // record who started this game (used for summary analytics)
+    gameStarter = turn;
+    // compute starting deck strength sums and percentages
+    const statsKeys = ['Strength','Wisdom','Generation','Magic','Influence'];
+    function deckStrength(d){ return d.reduce((acc,card)=> acc + statsKeys.reduce((s,k)=> s + (k==='Generation'? (card.gen||0) : (card[k]||0)), 0), 0); }
+    const pSum = deckStrength(playerDeck); const aSum = deckStrength(aiDeck);
+    const pPct = (pSum + aSum) ? Math.round((pSum / (pSum + aSum)) * 100) : 50;
+    const aPct = 100 - pPct;
+    startingStrengths = { playerSum: pSum, aiSum: aSum, playerPct: pPct, aiPct: aPct };
+    // reset stats for a fresh game
+    totalRounds = playerRoundWins = aiRoundWins = tieRounds = 0;
+    decisionTimes = { player: [], ai: [] };
+    gameStartTime = Date.now();
+    persistStats();
+    renderCounts();
+    updateBoard();
+    if(turn === 'player'){
+      message('New game started. You have the first choice.');
+      // start measuring decision time for player
+      decisionStartTime = Date.now();
+    } else {
+      message('New game started. AI has the first choice.');
+      // start measuring AI decision time and let AI play
+      aiDecisionStart = Date.now();
+      // small delay so UI updates before AI acts
+      setTimeout(()=>{ if(typeof aiChooseAndPlay === 'function') aiChooseAndPlay(); }, 500);
+    }
+  }
+
+  // --- Ratings / ELO helpers ---
+  function loadRatings(){
+    try{ const raw = localStorage.getItem('mythTopTrumpsRatings'); if(raw) return JSON.parse(raw); }catch(e){}
+    return { player: 1200 };
+  }
+
+  function saveRatings(){
+    try{ localStorage.setItem('mythTopTrumpsRatings', JSON.stringify(ratings)); }catch(e){}
+  }
+
+  // two-player ELO update: winner = 'player'|'ai'
+  // optional roundsCount increases K for quicker (low-round) wins
+  function updateElo(winner, roundsCount=null){
+    const Ra = ratings.player; const Rb = 1200; // fixed AI baseline rating
+    const Ea = 1 / (1 + Math.pow(10, (Rb - Ra) / 400));
+    const Eb = 1 - Ea;
+    let Sa = 0.5, Sb = 0.5;
+    if(winner === 'player'){ Sa = 1; Sb = 0; }
+    else if(winner === 'ai'){ Sa = 0; Sb = 1; }
+    // scale K based on rounds: fewer rounds => larger K
+    let K = 32;
+    if(typeof roundsCount === 'number'){
+      if(roundsCount <= 5) K = 48;
+      else if(roundsCount <= 10) K = 40;
+      else if(roundsCount <= 20) K = 32;
+      else if(roundsCount <= 40) K = 24;
+      else K = 16;
+    }
+    ratings.player = Math.round(Ra + K * (Sa - Ea));
+    saveRatings();
+  }
+
+  function top(deck){ return deck.length?deck[0]:null; }
+  function renderCard(el, card, reveal=true){
+    if(!card){ el.innerHTML = '<em>No card</em>'; return; }
+    if(!reveal){ el.innerHTML = '<em>Face down</em>'; return; }
+    const stats = ['Strength','Wisdom','Generation','Magic','Influence'];
+    let html = `<div>`;
+    // header with accent dot; only link if the page exists
+    const pageName = card.id + '.html';
+    html += `<div style="display:flex;align-items:center;margin-bottom:6px"><span class="accent-dot" style="background:${card.color}"></span>`;
+    if(availablePages.has(pageName)){
+      html += `<h2 style="margin:0;display:inline-block"><a class="card-link" href="${pageName}" target="_blank" rel="noopener">${card.name}</a></h2>`;
+    } else {
+      html += `<h2 style="margin:0;display:inline-block">${card.name}</h2>`;
+    }
+    html += `</div>`;
+    html += `<div class="desc">${card.desc}</div>`;
+    html += `<hr>`;
+    for(let s of stats){
+      const disabled = (turn!=='player' && el===playerCardArea) ? 'disabled' : '';
+      html += `<div class="stat ${disabled}" data-stat="${s}" style="border-left-color:${card.color}"><div>${s}</div><span>${card[s]}</span></div>`;
+    }
+    html += '</div>';
+    el.innerHTML = html;
+    // attach click handlers if it's player's visible card and player's turn
+    if(el===playerCardArea && turn==='player'){
+      const statEls = el.querySelectorAll('.stat');
+      statEls.forEach(se => se.addEventListener('click', ()=>{ const stat = se.dataset.stat; chooseStat(stat); }));
+    }
+  }
+
+  function renderCounts(){ playerCountEl.innerText = playerDeck.length; aiCountEl.innerText = aiDeck.length; potArea.innerText = 'Pot: ' + pot.length; }
+
+  function updateBoard(){
+    const playerRenderCard = (revealedThisRound && lastPCard) ? lastPCard : top(playerDeck);
+    const aiRenderCard = (revealedThisRound && lastACard) ? lastACard : top(aiDeck);
+    renderCard(playerCardArea, playerRenderCard, true);
+    // AI card face-down unless revealed
+    if(revealedThisRound){ renderCard(aiCardArea, aiRenderCard, true); } else { renderCard(aiCardArea, top(aiDeck), false); }
+    renderCounts(); turnOwnerEl.innerText = turn === 'player' ? 'Player' : 'AI';
+  }
+
+  let revealedThisRound = false;
+  let roundSettling = false; // when true, rounds are paused for reveal
+  let lastPCard = null;
+  let lastACard = null;
+  let tieAutoStat = null; // when a tie occurs, auto-select this stat next round
+
+  function message(txt){ messageEl.innerText = txt; }
+
+  function persistStats(){
+    const s = { totalRounds, playerRoundWins, aiRoundWins, tieRounds, roundsChosenByPlayer, roundsChosenByAI, statsHistory, startingStrengths, decisionTimes, summary: lastSummary, timestamp: Date.now() };
+    try{ localStorage.setItem('mythTopTrumpsStats', JSON.stringify(s)); }catch(e){}
+    try{ sessionStorage.setItem('mythTopTrumpsStats', JSON.stringify(s)); }catch(e){}
+  }
+
+  function showEndMessage(winner){
+    // big colorful message in the center column
+    const big = document.createElement('div');
+    big.style.padding = '18px'; big.style.borderRadius = '12px'; big.style.textAlign = 'center';
+    big.style.background = 'linear-gradient(90deg,#ffd67a,#ff9bb3)';
+    big.style.color = '#201020'; big.style.fontSize = '30px'; big.style.fontWeight = '800';
+    big.innerText = (winner==='player') ? 'YOU WIN THE GAME!' : 'AI WINS THE GAME';
+    // show stats button
+    const btn = document.createElement('button');
+    btn.id = 'show-stats'; btn.style.marginTop = '12px'; btn.style.padding = '10px 14px';
+    btn.style.background = 'linear-gradient(90deg,#6fd0ff,#9ef0b8)'; btn.style.color = '#201020'; btn.style.border = 'none'; btn.style.borderRadius = '10px';
+    btn.innerText = 'Show game stats';
+    btn.addEventListener('click', ()=>{ finalizeAndPersist(); window.location.href = 'myth-top-trumps-stats.html'; });
+    // clear message area and show big
+    messageEl.innerHTML = '';
+    // center the big message and button
+    messageEl.style.display = 'flex'; messageEl.style.flexDirection = 'column'; messageEl.style.alignItems = 'center';
+    messageEl.appendChild(big);
+    btn.style.display = 'inline-block'; btn.style.margin = '12px auto 0 auto';
+    messageEl.appendChild(btn);
+  }
+
+
+
+  function chooseStat(stat){
+    if(!gameStarted) return;
+    if(turn !== 'player') return;
+    if(roundSettling) return;
+    const pCard = top(playerDeck); const aCard = top(aiDeck);
+    if(!pCard || !aCard) return;
+    // record chooser
+    roundsChosenByPlayer++;
+    // record player's decision time
+    const playerDecisionMs = decisionStartTime ? (Date.now() - decisionStartTime) : 0;
+    decisionTimes.player.push(playerDecisionMs);
+    // reveal AI
+    revealedThisRound = true; updateBoard();
+    const pVal = (stat === 'Generation') ? pCard.gen : pCard[stat];
+    const aVal = (stat === 'Generation') ? aCard.gen : aCard[stat];
+    // highlight chosen stat on both cards
+    const pStatEl = playerCardArea.querySelector(`.stat[data-stat="${stat}"]`);
+    if(pStatEl) pStatEl.classList.add('player-highlight');
+    const aStatEl = aiCardArea.querySelector(`.stat[data-stat="${stat}"]`);
+    if(aStatEl) aStatEl.classList.add('ai-highlight');
+    message(`You chose ${stat}: ${pCard.name} (${pVal}) vs AI's ${aCard.name} (${aVal})`);
+    resolveRound(stat, pVal, aVal, false, playerDecisionMs);
+  }
+
+  function aiChooseAndPlay(){
+    // AI picks highest stat on its top card
+    if(roundSettling) return;
+    const aCard = top(aiDeck); if(!aCard) return;
+    const stats = ['Strength','Wisdom','Generation','Magic','Influence'];
+    let best = stats[0]; for(let s of stats){ const aval = (s==='Generation')? aCard.gen : aCard[s]; const bval = (best==='Generation')? aCard.gen : aCard[best]; if(aval > bval) best = s; }
+    // small delay for AI 'thinking'
+    aiDecisionStart = Date.now();
+    setTimeout(()=>{
+      const aiDecisionTime = Date.now() - aiDecisionStart;
+      message('AI chose ' + best);
+      // reveal player card and highlight the stat
+      // record chooser
+      roundsChosenByAI++;
+      // record AI decision time
+      decisionTimes.ai.push(aiDecisionTime);
+      revealedThisRound = true; updateBoard();
+      const pCard = top(playerDeck);
+      // highlight stat elements
+      const aStatEl = aiCardArea.querySelector(`.stat[data-stat="${best}"]`);
+      if(aStatEl) aStatEl.classList.add('ai-highlight');
+      const pStatEl = playerCardArea.querySelector(`.stat[data-stat="${best}"]`);
+      if(pStatEl) pStatEl.classList.add('player-highlight');
+      const pVal = (best === 'Generation') ? pCard.gen : pCard[best];
+      const aVal = (best === 'Generation') ? aCard.gen : aCard[best];
+      resolveRound(best, pVal, aVal, /*aiChosen=*/true, aiDecisionTime);
+    }, 700 + Math.random()*700);
+  }
+
+  function aiPlayStat(stat){
+    if(roundSettling) return;
+    const aCard = top(aiDeck); const pCard = top(playerDeck);
+    if(!aCard || !pCard) return;
+    roundsChosenByAI++;
+    // instantaneous AI decision for auto-play
+    decisionTimes.ai.push(0);
+    // reveal and highlight
+    revealedThisRound = true; updateBoard();
+    const aStatEl = aiCardArea.querySelector(`.stat[data-stat="${stat}"]`);
+    if(aStatEl) aStatEl.classList.add('ai-highlight');
+    const pStatEl = playerCardArea.querySelector(`.stat[data-stat="${stat}"]`);
+    if(pStatEl) pStatEl.classList.add('player-highlight');
+    message('AI chose ' + stat);
+    const pVal = (stat === 'Generation') ? pCard.gen : pCard[stat];
+    const aVal = (stat === 'Generation') ? aCard.gen : aCard[stat];
+    resolveRound(stat, pVal, aVal, /*aiChosen=*/true, 0);
+  }
+
+  // when the game finishes, analyze history for comebacks and blowouts and persist final summary
+  function finalizeAndPersist(){
+    const s = { totalRounds, playerRoundWins, aiRoundWins, tieRounds, roundsChosenByPlayer, roundsChosenByAI, statsHistory, startingStrengths, decisionTimes, timestamp: Date.now() };
+    // determine final winner
+    const winner = (aiDeck.length === 0) ? 'player' : (playerDeck.length === 0 ? 'ai' : null);
+    // comeback analysis: did final winner ever trail by >=20 percentage points at any snapshot before the end?
+    let comeback = false; let largestDeficit = 0;
+    if(winner){
+      for(const h of statsHistory){
+        const p = h.pProb; const a = h.aProb;
+        if(winner === 'player'){ const deficit = Math.max(0, a - p); if(deficit > largestDeficit) largestDeficit = deficit; }
+        if(winner === 'ai'){ const deficit = Math.max(0, p - a); if(deficit > largestDeficit) largestDeficit = deficit; }
+      }
+      comeback = largestDeficit >= 0.20; // >=20% behind at some point
+    }
+    // blowout: did the eventual winner ever hold >=75% of cards before the final snapshot (exclude final state)
+    let blowout = false; let maxWinnerPctBeforeEnd = 0;
+    if(winner && statsHistory.length){
+      for(const h of statsHistory){
+        const total = h.pCount + h.aCount; if(total<=0) continue;
+        const winnerPct = (winner === 'player') ? (h.pCount/total) : (h.aCount/total);
+        if(winnerPct > maxWinnerPctBeforeEnd) maxWinnerPctBeforeEnd = winnerPct;
+      }
+      blowout = maxWinnerPctBeforeEnd >= 0.75;
+    }
+    // compute starting-based win chances from historical aggregate ONLY
+    let startingWinChances = null;
+    try{
+      const aggRaw = localStorage.getItem('mythTopTrumpsStarterAggregate');
+      if(aggRaw){
+        const agg = JSON.parse(aggRaw);
+        // agg: { playerChooserRounds, playerChooserWins, aiChooserRounds, aiChooserWins }
+        if(agg){
+          const playerPct = (agg.playerChooserRounds && agg.playerChooserRounds>0) ? Math.round((agg.playerChooserWins / agg.playerChooserRounds) * 100) : null;
+          const aiPct = (agg.aiChooserRounds && agg.aiChooserRounds>0) ? Math.round((agg.aiChooserWins / agg.aiChooserRounds) * 100) : null;
+          startingWinChances = {
+            ifPlayerStarted: playerPct !== null ? { playerPct: playerPct, aiPct: 100 - playerPct } : null,
+            ifAiStarted: aiPct !== null ? { aiPct: aiPct, playerPct: 100 - aiPct } : null
+          };
+        }
+      }
+    }catch(e){ startingWinChances = null; }
+
+    // compute starting card strength from each player's opening deck only
+    let startingDeckWinChances = null;
+    try{
+      if(startingStrengths && typeof startingStrengths === 'object'){
+        const p = startingStrengths.playerSum || 0;
+        const a = startingStrengths.aiSum || 0;
+        if(p + a > 0){
+          const playerPct = Math.round((p / (p + a)) * 100);
+          const aiPct = 100 - playerPct;
+          startingDeckWinChances = { playerPct: playerPct, aiPct: aiPct, playerSum: p, aiSum: a };
+        }
+      }
+    }catch(e){ startingDeckWinChances = null; }
+
+    s.summary = { winner, comeback, largestDeficitPct: Math.round(largestDeficit*100), blowout, maxWinnerPctBeforeEnd: Math.round(maxWinnerPctBeforeEnd*100), starter: gameStarter, startingWinChances, startingDeckWinChances };
+    // keep a copy in memory so subsequent persistStats calls don't clobber it
+    lastSummary = s.summary;
+    // per-game derived stats
+    gameEndTime = Date.now();
+    const durationSec = Math.round((gameEndTime - gameStartTime) / 1000);
+    const roundsCount = totalRounds;
+    function avg(arr){ if(!arr||!arr.length) return 0; return Math.round((arr.reduce((a,b)=>a+b,0)/arr.length)); }
+    const avgPlayerDecision = avg(decisionTimes.player);
+    const avgAiDecision = avg(decisionTimes.ai);
+    const minMax = arr => { if(!arr||!arr.length) return {min:0,max:0}; return { min: Math.min(...arr), max: Math.max(...arr) }; };
+    const pDecMM = minMax(decisionTimes.player); const aiDecMM = minMax(decisionTimes.ai);
+    // closest round margin (non-tie rounds)
+    let closestMargin = null;
+    const statWinCounts = {};
+    let longestStreak = {who:null,len:0};
+    let curStreak = {who:null,len:0};
+    let maxLeadCount = 0; let maxLeadPct = 0; let maxLeadAt = null;
+    for(const h of statsHistory){
+      // margin
+      if(h.result && h.result !== 'tie'){
+        const m = Math.abs(h.pVal - h.aVal);
+        if(closestMargin === null || m < closestMargin) closestMargin = m;
+      }
+      // stat win counts
+      if(!statWinCounts[h.stat]) statWinCounts[h.stat] = {player:0,ai:0,tie:0};
+      if(h.result) statWinCounts[h.stat][h.result] = (statWinCounts[h.stat][h.result]||0) + 1;
+      // streak
+      if(h.result === curStreak.who){ curStreak.len++; }
+      else { curStreak.who = h.result; curStreak.len = (h.result==='tie'?0:1); }
+      if(curStreak.len > longestStreak.len && curStreak.who) longestStreak = { who: curStreak.who, len: curStreak.len };
+      // lead
+      const total = h.pCount + h.aCount; if(total>0){ const lead = Math.abs(h.pCount - h.aCount); if(lead > maxLeadCount){ maxLeadCount = lead; maxLeadPct = Math.round((Math.max(h.pCount,h.aCount)/total)*100); maxLeadAt = { round: h.round, pCount: h.pCount, aCount: h.aCount }; } }
+    }
+    const mostSuccessfulStat = Object.keys(statWinCounts).sort((a,b)=> (statWinCounts[b].player - statWinCounts[a].player))[0] || null;
+    s.perGame = { roundsCount, durationSec, avgPlayerDecisionMs: avgPlayerDecision, avgAiDecisionMs: avgAiDecision, playerDecisionMinMs: pDecMM.min, playerDecisionMaxMs: pDecMM.max, aiDecisionMinMs: aiDecMM.min, aiDecisionMaxMs: aiDecMM.max, closestMargin, statWinCounts, mostSuccessfulStat, longestStreak, maxLeadCount, maxLeadPct, maxLeadAt };
+    // update ratings if we have a definitive winner; scale by game duration
+    s.ratingsBefore = Object.assign({}, ratings);
+    if(winner) updateElo(winner, roundsCount);
+    s.ratingsAfter = Object.assign({}, ratings);
+    try{ localStorage.setItem('mythTopTrumpsStats', JSON.stringify(s)); }catch(e){}
+    try{ sessionStorage.setItem('mythTopTrumpsStats', JSON.stringify(s)); }catch(e){}
+
+    // Update historical starter aggregate so future games include this game's rounds
+    try{
+      const aggKey = 'mythTopTrumpsStarterAggregate';
+      const raw = localStorage.getItem(aggKey);
+      const agg = raw ? JSON.parse(raw) : { playerChooserRounds:0, playerChooserWins:0, aiChooserRounds:0, aiChooserWins:0 };
+      // compute this game's chooser counts
+      let thisPlayerChooserRounds = 0, thisPlayerChooserWins = 0, thisAiChooserRounds = 0, thisAiChooserWins = 0;
+      for(const h of statsHistory){
+        if(h.chooser === 'player'){
+          thisPlayerChooserRounds++;
+          if(h.result === 'player') thisPlayerChooserWins++;
+        } else if(h.chooser === 'ai'){
+          thisAiChooserRounds++;
+          if(h.result === 'ai') thisAiChooserWins++;
+        }
+      }
+      agg.playerChooserRounds = (agg.playerChooserRounds||0) + thisPlayerChooserRounds;
+      agg.playerChooserWins = (agg.playerChooserWins||0) + thisPlayerChooserWins;
+      agg.aiChooserRounds = (agg.aiChooserRounds||0) + thisAiChooserRounds;
+      agg.aiChooserWins = (agg.aiChooserWins||0) + thisAiChooserWins;
+      localStorage.setItem(aggKey, JSON.stringify(agg));
+    }catch(e){ /* ignore aggregate update errors */ }
+  }
+
+  function awardPotTo(winner){
+    if(!pot.length) return;
+    const cards = pot.slice();
+    pot = [];
+    if(winner === 'player'){
+      playerDeck = playerDeck.concat(cards);
+    } else if(winner === 'ai'){
+      aiDeck = aiDeck.concat(cards);
+    }
+  }
+
+  function resolveRound(stat, pVal, aVal, aiChosen=false, chooserDecisionMs=0){
+    // capture top cards for the reveal and move them into the shared pot for this round
+    const pCard = top(playerDeck); const aCard = top(aiDeck);
+    if(!pCard || !aCard) return;
+    lastPCard = pCard; lastACard = aCard;
+    const pCount = playerDeck.length; const aCount = aiDeck.length;
+    // remove the contested cards from both decks and place them in the pot
+    if(playerDeck.length) playerDeck.shift();
+    if(aiDeck.length) aiDeck.shift();
+    pot.push(pCard, aCard);
+    // update counts immediately so the UI reflects the current state
+    renderCounts();
+    // mark settling so no further interactions
+    roundSettling = true;
+    // show the revealed cards immediately
+    revealedThisRound = true; updateBoard();
+    totalRounds++;
+    // record pre-round snapshot for history (probability estimate based on deck sizes)
+    const pProb = (pCount + aCount) ? (pCount / (pCount + aCount)) : 0.5;
+    const aProb = 1 - pProb;
+    statsHistory.push({ round: totalRounds, pCount, aCount, pProb, aProb, chooser: turn, stat, pVal, aVal, chooserDecisionMs: chooserDecisionMs||0, result: null });
+    if(pVal > aVal){
+      message((aiChosen? 'AI chose ' : '') + `${stat}: You win the round!`);
+      playerRoundWins++;
+      // record result in history and persist
+      statsHistory[statsHistory.length-1].result = 'player';
+      persistStats();
+      // after delay, award the shared pot to the player
+      setTimeout(()=>{
+        awardPotTo('player');
+        renderCounts();
+        revealedThisRound = false;
+        lastPCard = lastACard = null;
+        roundSettling = false;
+        tieAutoStat = null;
+        // re-announce the round result so it remains visible after the pause
+        message((aiChosen? 'AI chose ' : '') + `${stat}: You win the round!`);
+        turn = 'player';
+        // start measuring player's decision time for next choice
+        decisionStartTime = Date.now();
+        checkWin(); updateBoard();
+        if(turn === 'ai' && !gameOver){ aiChooseAndPlay(); }
+      }, 4000);
+    } else if(aVal > pVal){
+      aiRoundWins++;
+      // record result in history and persist
+      statsHistory[statsHistory.length-1].result = 'ai';
+      persistStats();
+      message((aiChosen? 'AI chose ' : '') + `${stat}: AI wins the round.`);
+      setTimeout(()=>{
+        awardPotTo('ai');
+        renderCounts();
+        revealedThisRound = false;
+        lastPCard = lastACard = null;
+        roundSettling = false;
+        tieAutoStat = null;
+        // re-announce the round result so it remains visible after the pause
+        message((aiChosen? 'AI chose ' : '') + `${stat}: AI wins the round.`);
+        turn = 'ai';
+        // start measuring AI decision time for next choice (AI will set aiDecisionStart when thinking)
+        aiDecisionStart = Date.now();
+        checkWin(); updateBoard();
+        if(turn === 'ai' && !gameOver){ aiChooseAndPlay(); }
+      }, 4000);
+    } else {
+      // tie: the shared pot grows and the next round decides who takes it
+      tieRounds++;
+      // record tie and persist
+      statsHistory[statsHistory.length-1].result = 'tie';
+      persistStats();
+      message('Tie! Pot grows. Next round will decide the tie.');
+      // remember the stat so next round auto-selects the same category
+      tieAutoStat = stat;
+      setTimeout(()=>{
+      renderCounts();
+      revealedThisRound = false;
+      lastPCard = lastACard = null;
+      roundSettling = false;
+      // turn remains unchanged
+      checkWin(); updateBoard();
+        if(!gameOver){
+          // if there is a tieAutoStat, capture it and auto-select for the chooser
+          if(tieAutoStat){
+            const statToAuto = tieAutoStat;
+            // clear immediately so it isn't reused by other flows
+            tieAutoStat = null;
+            if(turn === 'player'){
+              // small delay for UI update
+              // start measuring player's decision time for the auto selection
+              decisionStartTime = Date.now();
+              setTimeout(()=>{ if(!gameOver) chooseStat(statToAuto); }, 250);
+            } else if(turn === 'ai'){
+              aiDecisionStart = Date.now();
+              setTimeout(()=>{ if(!gameOver) aiPlayStat(statToAuto); }, 250);
+            }
+          } else {
+            if(turn === 'ai') aiChooseAndPlay();
+          }
+        }
+      }, 4000);
+    }
+  }
+
+  let gameOver = false;
+  function checkWin(){
+    if(playerDeck.length === 0 && aiDeck.length === 0){
+      message('The pot is settled and the game is over.');
+      gameOver = true; revealedThisRound = false; updateBoard(); finalizeAndPersist(); showEndMessage('player');
+      return;
+    }
+    if(aiDeck.length === 0){ message('You win the game!'); gameOver=true; revealedThisRound = false; updateBoard(); finalizeAndPersist(); showEndMessage('player'); }
+    else if(playerDeck.length === 0){ message('AI wins the game.'); gameOver=true; revealedThisRound = false; updateBoard(); finalizeAndPersist(); showEndMessage('ai'); }
+  }
+
+  if(restartBtn){
+    restartBtn.addEventListener('click', restartGame);
+    restartBtn.onclick = restartGame;
+  }
+
+  if(startBtn){
+    startBtn.addEventListener('click', ()=>{
+      if(gameStarted) return;
+      startGame();
+      message('Game started.');
+    });
+    startBtn.onclick = ()=>{
+      if(gameStarted) return;
+      startGame();
+      message('Game started.');
+    };
+  }
+
+  window.mythTopTrumpsStart = startGame;
+  window.mythTopTrumpsRestart = restartGame;
+
+  // init
+  message('Click Start Playing to begin.');
+
+  // keyboard shortcuts: 1-5 choose stat when player's turn
+  window.addEventListener('keydown', e => {
+    if(gameOver) return;
+    if(turn === 'player'){
+      const map = { '1':'Strength','2':'Wisdom','3':'Generation','4':'Magic','5':'Influence' };
+      if(map[e.key]) chooseStat(map[e.key]);
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

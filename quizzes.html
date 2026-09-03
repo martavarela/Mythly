@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Quizzes — Mythly</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>⚡</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --title-size: clamp(2.5rem, 9vw, 6rem); --subtitle-size: clamp(1.2rem, 3vw, 1.8rem); --sticky-offset: 6rem; }
+        html { width: 100%; height: 100%; background: linear-gradient(135deg, rgba(224, 239, 255, 0.88), rgba(239, 231, 255, 0.88)), url('mountolympus.jpg') center/cover fixed no-repeat; background-attachment: fixed; background-color: #e8f0ff; overflow-x: hidden; }
+        body { font-family: Georgia, "Times New Roman", serif; width: 100%; height: 100%; margin: 2rem; background: transparent; color: #17251f; overflow-x: hidden; }
+        .site-header { position: relative; width: calc(100% - 4rem); }
+        .header-top { display: flex; align-items: center; justify-content: space-between; background: rgba(245,230,200,0.98); padding: 0.8rem 2rem; box-sizing: border-box; border-radius: .75rem .75rem 0 0; box-shadow: 0 14px 28px rgba(0,0,0,0.14); }
+        header h1 { font-family: 'Cormorant Garamond', serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; margin: 0; font-size: clamp(2rem, 6vw, 3.5rem); }
+        .subtitle { background: rgba(220,245,225,0.98); padding: 1.1rem 2rem; text-align: center; border-radius: 0 0 .75rem .75rem; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .subtitle p { margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.02em; font-size: var(--subtitle-size); color: #0b3b1f; }
+        .top-nav { display: flex; justify-content: flex-end; gap: 1.5rem; flex-wrap: wrap; padding: 0; position: relative; z-index: 1200; background: none; }
+        .top-nav a { font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.15em; text-decoration: none; color: #0b3b1f; padding: 0; background: none; border-radius: 0; border: none; font-size: clamp(1rem, 2.5vw, 1.3rem); }
+        .top-nav a:hover { filter: brightness(0.7); text-decoration: underline; }
+        .top-nav a:active { text-decoration: underline; }
+        main { max-width: 900px; margin: 2rem auto 3rem; padding: 0 1rem; }
+        .intro { margin-bottom: 2rem; text-align: center; }
+        .intro h2 { margin: 0 0 1rem; font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.02em; font-size: clamp(2rem, 4vw, 3.5rem); }
+        .quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .quiz-card { background: rgba(245,230,200,0.98); border: 2px solid #0b3b1f; border-radius: 1rem; padding: 1.8rem; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.08); cursor: pointer; transition: transform .2s ease, background .2s ease; }
+        .quiz-card:hover { transform: translateY(-4px); background: rgba(245,230,200,1); }
+        .quiz-card h3 { margin: 0 0 .75rem; font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.02em; font-size: 2rem; }
+        .quiz-card p { margin: 0; line-height: 1.5; }
+        .quiz-review { width: 100%; background: rgba(255,255,255,0.95); border-radius: 1rem; padding: 2rem; border: 1px solid #d8c5a0; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .quiz-title { margin: 0 0 1rem; font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.02em; font-size: clamp(2rem, 4vw, 3rem); text-align: center; }
+        .question { margin-bottom: 1.5rem; }
+        .question p { margin: 0 0 .75rem; font-size: 1.1rem; font-weight: 700; }
+        .options { list-style: none; padding: 0; margin: 0; }
+        .options li { margin-bottom: .75rem; }
+        .options label { display: flex; align-items: center; gap: .75rem; padding: .75rem 1rem; border-radius: .75rem; border: 1px solid transparent; transition: border .2s, background .2s; cursor: pointer; }
+        .options label:hover { background: #f3e7d2; }
+        .options input[type="radio"] { transform: scale(1.1); }
+        .submit-quiz-btn { font-family: Georgia, serif; font-size: 1.1rem; padding: .9rem 1.6rem; background: #0b3b1f; color: #fff; border: none; border-radius: .75rem; cursor: pointer; margin-top: 1rem; }
+        .submit-quiz-btn:hover { filter: brightness(1.15); }
+        .quiz-result { margin-top: 1.5rem; font-size: 1.2rem; font-weight: 700; }
+        .correct { color: #0b3b1f; }
+        .incorrect { color: #8a1c1c; }
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body { margin: 1rem; }
+            .top-nav { gap: 1rem; }
+            .quiz-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8rem; }
+            .quiz-card { padding: 1.2rem; }
+            button { min-height: 44px; padding: 0.6rem 1rem; }
+        }
+        @media (max-width: 480px) {
+            body { margin: 0.75rem; }
+            .top-nav { gap: 0.75rem; flex-wrap: wrap; }
+            .quiz-grid { grid-template-columns: 1fr; }
+            .quiz-card { padding: 1rem; }
+            button { min-height: 48px; padding: 0.7rem 0.9rem; font-size: 0.95rem; }
+            .options label { padding: 0.6rem 0.8rem; gap: 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <h1>Mythly</h1>
+            <nav class="top-nav" aria-label="Main navigation">
+                <a href="home.html">Home</a>
+                <a href="characters.html">Characters</a>
+                <a href="myths.html">Myths</a>
+                <a href="mythly-tools.html">Tools</a>
+                <a href="fun.html">Fun</a>
+                <a href="about.html">About</a>
+            </nav>
+        </div>
+        <div class="subtitle"><p>Test your knowledge of Greek mythology</p></div>
+    </header>
+    <main>
+        <section class="intro">
+            <h2>Choose a quiz</h2>
+            <p>Pick a topic from the quiz library. All available quizzes are listed below.</p>
+        </section>
+        <div class="quiz-grid">
+            <div class="quiz-card" data-quiz="trojan">
+                <h3>Trojan War Part 1</h3>
+                <p>Test your knowledge of the wedding, the apple, and the first moments of the story.</p>
+            </div>
+            <div class="quiz-card" data-quiz="trojan2">
+                <h3>Trojan War Part 2</h3>
+                <p>Quiz on Paris, his origin, the beauty contest, and the choices that follow.</p>
+            </div>
+            <div class="quiz-card" data-quiz="gods">
+                <h3>Gods &amp; Goddesses</h3>
+                <p>Answer questions about the major Olympian gods and the famous goddesses.</p>
+            </div>
+            <div class="quiz-card" data-quiz="gods2">
+                <h3>More Gods &amp; Goddesses</h3>
+                <p>Quiz the characters page details for Zeus, Hera, Athena, Poseidon, and more.</p>
+            </div>
+            <div class="quiz-card" data-quiz="oedipus">
+                <h3>The Fate of Oedipus</h3>
+                <p>Try a quiz about the prophecy, Oedipus's choices, and the ending of the story.</p>
+            </div>
+            <div class="quiz-card" data-quiz="oedipus2">
+                <h3>The Fate of Oedipus Part 2</h3>
+                <p>Quiz on the plague, Tiresias, Jocasta's secret, and the tragic revelation.</p>
+            </div>
+        </div>
+        <section class="quiz-review" id="quiz-review" style="display:none;">
+            <h2 class="quiz-title" id="quiz-title"></h2>
+            <p id="quiz-launch-text" style="margin-bottom:1.5rem; line-height:1.6;"></p>
+            <div class="quiz-container" id="quiz-container"></div>
+            <button id="submit-quiz" class="submit-quiz-btn" style="display:none;">Submit Answers</button>
+            <div id="quiz-result" class="quiz-result"></div>
+        </section>
+    </main>
+    <script>
+        const quizData = {
+            trojan: {
+                title: 'Trojan War Part 1',
+                description: 'Answer five questions about the wedding, the judgement, and the first part of the Trojan War story.',
+                questions: [
+                    {
+                        text: 'Eris was the goddess who caused the golden apple dispute. True or False?',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'What was written on the apple that caused the argument at the wedding?',
+                        options: ['For the strongest', 'For the wisest', 'For the fairest', 'For the bravest'],
+                        answer: 'c'
+                    },
+                    {
+                        text: 'Aphrodite insisted she was the true goddess of beauty during the argument. True or False?',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'Who did Zeus send to find the judge for the goddesses?',
+                        options: ['Apollo', 'Ares', 'Poseidon', 'Hermes'],
+                        answer: 'd'
+                    },
+                    {
+                        text: 'What kind of person did Zeus choose as the judge?',
+                        options: ['A powerful king', 'An ordinary shepherd', 'A famous warrior', 'A wise priest'],
+                        answer: 'b'
+                    }
+                ]
+            },
+            gods: {
+                title: 'Gods & Goddesses',
+                description: 'Answer five true or false questions about the major gods and goddesses of Greek myth.',
+                questions: [
+                    {
+                        text: 'Aphrodite is the goddess of love and beauty. True or False?',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'Hades rules the Underworld. True or False?',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'Hera is the wife of Zeus and queen of the gods. True or False?',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'Athena is the goddess of wisdom and strategy. True or False?',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'Poseidon is the god of the sea. True or False?',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'Ares is the goddess of war. True or False?',
+                        options: ['True', 'False'],
+                        answer: 'b'
+                    }
+                ]
+            },
+            gods2: {
+                title: 'More Gods & Goddesses',
+                description: 'Answer five questions based on the characters page details for the Olympian gods.',
+                questions: [
+                    {
+                        text: 'Which god is the ruler of Mount Olympus and the god of the sky and thunder?',
+                        options: ['Poseidon', 'Zeus', 'Hades', 'Apollo'],
+                        answer: 'b'
+                    },
+                    {
+                        text: 'Which goddess is the queen of the gods and the protector of marriage?',
+                        options: ['Aphrodite', 'Hera', 'Athena', 'Demeter'],
+                        answer: 'b'
+                    },
+                    {
+                        text: 'Which goddess sprang fully armed from Zeus’s head and is linked to wisdom and warcraft?',
+                        options: ['Artemis', 'Athena', 'Hera', 'Aphrodite'],
+                        answer: 'b'
+                    },
+                    {
+                        text: 'Which god is associated with the sea, earthquakes, and horses?',
+                        options: ['Hades', 'Dionysus', 'Poseidon', 'Ares'],
+                        answer: 'c'
+                    },
+                    {
+                        text: 'Which goddess gave up her spot on Olympus to avoid a civil war when Dionysus became a god?',
+                        options: ['Persephone', 'Hestia', 'Demeter', 'Hera'],
+                        answer: 'b'
+                    }
+                ]
+            },
+            oedipus: {
+                title: 'The Fate of Oedipus',
+                description: 'Answer five questions about the prophecy, the oracle, and the tragic ending of Oedipus.',
+                questions: [
+                    {
+                        text: 'Was King Laius worried that his son would grow up to kill him and marry Jocasta?',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'Did Oedipus grow up believing the king and queen of Corinth were his real parents?',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'Who told Oedipus about the prophecy?',
+                        options: ['The oracle at Delphi', 'A shepherd', 'The Sphinx', 'Jocasta'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'What did Oedipus do after hearing the prophecy?',
+                        options: ['He stayed in Corinth', 'He tried to avoid it by leaving', 'He became king of Thebes', 'He asked the gods for help'],
+                        answer: 'b'
+                    },
+                    {
+                        text: 'How did Oedipus end the story?',
+                        options: ['He became a hero', 'He married another queen', 'He blinded himself', 'He became a shepherd'],
+                        answer: 'c'
+                    }
+                ]
+            }
+            ,
+            trojan2: {
+                title: 'Trojan War Part 2',
+                description: 'Questions about Paris, his origin, the beauty contest, and the choice that changed everything.',
+                questions: [
+                    {
+                        text: 'Who told Paris that the goddesses wanted him to judge their beauty?',
+                        options: ['Zeus', 'Hermes', 'Apollo', 'Ares'],
+                        answer: 'b'
+                    },
+                    {
+                        text: 'Paris was the son of King Priam and Queen Hecuba of which city?',
+                        options: ['Sparta', 'Mycenae', 'Troy', 'Athens'],
+                        answer: 'c'
+                    },
+                    {
+                        text: 'True or False: Paris was abandoned at birth because of a prophecy.',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'Which goddess promised Paris the love of Helen if he chose her?',
+                        options: ['Hera', 'Athena', 'Artemis', 'Aphrodite'],
+                        answer: 'd'
+                    },
+                    {
+                        text: 'Who did Paris marry before he left for Sparta?',
+                        options: ['Helen', 'Oynone', 'Andromache', 'Cassandra'],
+                        answer: 'b'
+                    }
+                ]
+            },
+            oedipus2: {
+                title: 'The Fate of Oedipus Part 2',
+                description: 'Questions about the plague, Tiresias, Jocasta\'s secret, and the tragic revelation that ends the story.',
+                questions: [
+                    {
+                        text: 'What did Oedipus send Creon to investigate?',
+                        options: ['A missing sword', 'The cause of the plague', 'The death of the Sphinx', 'A stolen throne'],
+                        answer: 'b'
+                    },
+                    {
+                        text: 'Who was the blind prophet called upon to help solve the mystery of the plague?',
+                        options: ['Creon', 'Tiresias', 'Laius', 'Agileus'],
+                        answer: 'b'
+                    },
+                    {
+                        text: 'True or False: Oedipus accused Tiresias of conspiring with Creon to steal the throne.',
+                        options: ['True', 'False'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'According to Jocasta, how was Laius killed?',
+                        options: ['By a group of bandits where three roads meet', 'By his own son in Corinth', 'By the Sphinx', 'By a plague'],
+                        answer: 'a'
+                    },
+                    {
+                        text: 'Who revealed the truth about Oedipus\'s past by confirming he was the Thebian shepherd?',
+                        options: ['The Corinthian messenger', 'Creon', 'The servant Oedipus summoned', 'Tiresias'],
+                        answer: 'c'
+                    },
+                    {
+                        text: 'How did the story end for Jocasta and Oedipus?',
+                        options: ['They lived happily ever after', 'Jocasta hung herself and Oedipus blinded himself', 'They were exiled together', 'Oedipus killed Jocasta'],
+                        answer: 'b'
+                    }
+                ]
+            }
+        };
+
+        const cards = document.querySelectorAll('.quiz-card');
+        const review = document.getElementById('quiz-review');
+        const quizGrid = document.querySelector('.quiz-grid');
+        const title = document.getElementById('quiz-title');
+        const launchText = document.getElementById('quiz-launch-text');
+        const quizContainer = document.getElementById('quiz-container');
+        const submitButton = document.getElementById('submit-quiz');
+        const result = document.getElementById('quiz-result');
+        let activeQuiz = null;
+
+        function buildQuiz(quiz) {
+            quizContainer.innerHTML = '';
+            quiz.questions.forEach((question, index) => {
+                const questionEl = document.createElement('div');
+                questionEl.className = 'question';
+                questionEl.dataset.answer = question.answer;
+                questionEl.innerHTML = `
+                    <p>${index + 1}. ${question.text}</p>
+                    <ul class="options">
+                        ${question.options.map((option, optionIndex) => {
+                            const value = String.fromCharCode(97 + optionIndex);
+                            return `<li><label><input type="radio" name="q${index + 1}" value="${value}"> ${option}</label></li>`;
+                        }).join('')}
+                    </ul>
+                `;
+                quizContainer.appendChild(questionEl);
+            });
+        }
+
+        function resetQuiz() {
+            result.textContent = '';
+            result.className = 'quiz-result';
+            submitButton.style.display = 'none';
+        }
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const quizId = card.dataset.quiz;
+                const quiz = quizData[quizId];
+                activeQuiz = quiz;
+                // Hide the grid of squares and show the quiz review in its place
+                if (quizGrid) quizGrid.style.display = 'none';
+                // Insert the review section at the grid location so it occupies the same space
+                if (quizGrid && review.parentNode !== quizGrid.parentNode) {
+                    quizGrid.parentNode.insertBefore(review, quizGrid);
+                }
+                review.style.display = 'block';
+                title.textContent = quiz.title;
+                launchText.textContent = quiz.description;
+                buildQuiz(quiz);
+                resetQuiz();
+                submitButton.style.display = 'inline-block';
+            });
+        });
+
+        // Event delegation: ensure dynamically added or overlapping quiz-cards respond to clicks
+        if (quizGrid) {
+            quizGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.quiz-card');
+                if (!card) return;
+                const quizId = card.dataset.quiz;
+                const quiz = quizData[quizId];
+                if (!quiz) return;
+                activeQuiz = quiz;
+                // Hide the grid and insert review at its position
+                quizGrid.style.display = 'none';
+                if (review.parentNode !== quizGrid.parentNode) {
+                    quizGrid.parentNode.insertBefore(review, quizGrid);
+                }
+                review.style.display = 'block';
+                title.textContent = quiz.title;
+                launchText.textContent = quiz.description;
+                buildQuiz(quiz);
+                resetQuiz();
+                submitButton.style.display = 'inline-block';
+            });
+        }
+
+        submitButton.addEventListener('click', () => {
+            if (!activeQuiz) return;
+            const questions = quizContainer.querySelectorAll('.question');
+            let score = 0;
+            questions.forEach(question => {
+                const correct = question.dataset.answer;
+                const selected = question.querySelector('input[type="radio"]:checked');
+                if (selected && selected.value === correct) {
+                    score += 1;
+                }
+            });
+            result.textContent = `You scored ${score} out of ${questions.length}!`;
+            result.className = 'quiz-result ' + (score === questions.length ? 'correct' : 'incorrect');
+            if (score === questions.length) {
+                result.textContent += ' Perfect score! You know the story well.';
+            } else {
+                result.textContent += ' Try again to improve your score.';
+            }
+            // After showing the result briefly, restore the quiz squares and hide the review
+            setTimeout(() => {
+                if (review) review.style.display = 'none';
+                if (quizGrid) quizGrid.style.display = '';
+                // clear quiz container and reset UI
+                quizContainer.innerHTML = '';
+                submitButton.style.display = 'none';
+                result.textContent = '';
+                result.className = 'quiz-result';
+                activeQuiz = null;
+            }, 2500);
+        });
+    </script>
+</body>
+</html>

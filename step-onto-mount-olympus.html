@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Council of Gods - Step Onto Mount Olympus — Mythly</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>⚡</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html {
+            width: 100%;
+            height: 100%;
+            font-family: Georgia, "Times New Roman", serif;
+            background: linear-gradient(135deg, rgba(224, 239, 255, 0.88), rgba(239, 231, 255, 0.88)), url('mountolympus.jpg') center/cover fixed no-repeat;
+            background-attachment: fixed;
+            background-color: #e8f0ff;
+            overflow-x: hidden;
+        }
+        
+        body {
+            width: 100%;
+            background: transparent;
+            overflow-x: hidden;
+            margin: 2rem 0 0 0;
+            padding: 0;
+        }
+        
+        #gameContainer {
+            width: 100%;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1rem;
+        }
+        
+        .site-header {
+            position: relative;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            margin: 0 2rem;
+            width: calc(100% - 4rem);
+        }
+        
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(245, 230, 200, 0.98);
+            padding: 0.8rem 2rem;
+            box-sizing: border-box;
+            border-radius: 0.75rem 0.75rem 0 0;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.14);
+        }
+        
+        .header-top h1 {
+            color: #000000;
+            margin: 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            line-height: 1;
+            display: block;
+            position: relative;
+            z-index: 1001;
+            white-space: nowrap;
+        }
+        
+        .subtitle {
+            background: rgba(220, 245, 225, 0.98);
+            padding: 1rem 2rem;
+            border-radius: 0 0 0.75rem 0.75rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            margin: 0 0 2rem 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .subtitle p {
+            margin: 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: 0.02em;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: #0b3b1f;
+            text-align: center;
+        }
+        
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            gap: 2rem;
+            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1200;
+        }
+        
+        .top-nav a {
+            color: #0b3b1f;
+            text-decoration: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: 0.15em;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            padding: 0;
+            line-height: 1;
+            display: inline-block;
+            background: none;
+            border-radius: 0;
+            box-shadow: none;
+            border: none;
+            pointer-events: auto;
+        }
+        
+        .top-nav a:hover {
+            text-decoration: underline;
+            filter: brightness(0.7);
+        }
+        
+        .top-nav a:active {
+            text-decoration: underline;
+        }
+        
+        #header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        #header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #0b3b1f;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+        }
+        
+        #header p {
+            color: #1a5a3a;
+            font-size: 1.1rem;
+        }
+        
+        #storyContainer {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow-y: auto;
+            min-height: 400px;
+        }
+        
+        .scene {
+            background: linear-gradient(135deg, rgba(238, 246, 255, 0.95), rgba(245, 235, 255, 0.95));
+            border: 3px solid #4a9d6f;
+            border-radius: 15px;
+            padding: 2.5rem;
+            max-width: 750px;
+            width: 100%;
+            color: #0b3b1f;
+            text-align: center;
+            box-shadow: 0 12px 30px rgba(60, 100, 140, 0.25), inset 0 0 40px rgba(100, 200, 150, 0.08);
+            animation: sceneAppear 0.6s ease-out;
+            display: block;
+        }
+        
+        @keyframes sceneAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .scene h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #0b3b1f;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+        }
+        
+        .scene p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+            color: #1a3a2a;
+        }
+        
+        .followup-prompt {
+            background: rgba(200, 170, 220, 0.2);
+            border-left: 4px solid #7b68a6;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #4a3a6a;
+            font-style: italic;
+        }
+        
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .choice-btn {
+            background: linear-gradient(135deg, #d4e8f5 0%, #e8e0f0 100%);
+            color: #0b3b1f;
+            border: 2px solid #4a9d6f;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-family: Georgia, serif;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .choice-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(74, 157, 111, 0.25);
+            transition: left 0.3s;
+            z-index: 0;
+        }
+        
+        .choice-btn:hover::before {
+            left: 100%;
+        }
+        
+        .choice-btn:hover {
+            transform: translateX(8px);
+            box-shadow: 0 6px 20px rgba(74, 157, 111, 0.4);
+            background: linear-gradient(135deg, #c0dce8 0%, #d8d0e8 100%);
+        }
+        
+        .choice-btn span {
+            position: relative;
+            z-index: 1;
+            display: block;
+        }
+        
+        .result-scene {
+            background: linear-gradient(135deg, rgba(200, 170, 220, 0.15), rgba(210, 190, 230, 0.15));
+            border: 3px solid #7b68a6;
+        }
+        
+        .result-scene h2 {
+            color: #4a3a6a;
+        }
+        
+        .result-scene p {
+            color: #1a3a2a;
+        }
+        
+        .god-result {
+            background: linear-gradient(135deg, rgba(230, 220, 250, 0.5), rgba(220, 200, 240, 0.5));
+            border: 2px solid #a89bc8;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            font-size: 1.05rem;
+        }
+        
+        .god-result .god-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #0b3b1f;
+            margin-bottom: 1rem;
+        }
+        
+        .god-result .god-power {
+            color: #4a3a6a;
+            font-weight: bold;
+            margin: 0.75rem 0;
+            font-size: 1rem;
+        }
+        
+        .god-result p {
+            color: #1a3a2a;
+            line-height: 1.6;
+            margin: 0.75rem 0;
+        }
+        
+        .end-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .end-btn {
+            background: linear-gradient(135deg, #d4e8f5 0%, #e8e0f0 100%);
+            color: #0b3b1f;
+            border: 2px solid #4a9d6f;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: Georgia, serif;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .end-btn:hover {
+            background: linear-gradient(135deg, #c0dce8 0%, #d8d0e8 100%);
+            box-shadow: 0 6px 15px rgba(74, 157, 111, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        #progress {
+            color: #0b3b1f;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        #planInput {
+            background: rgba(238, 246, 255, 0.8);
+            border: 2px solid #4a9d6f;
+            color: #0b3b1f;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: Georgia, serif;
+            margin: 1.5rem 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        #planInput::placeholder {
+            color: rgba(11, 59, 31, 0.4);
+        }
+        
+        #planInput:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(74, 157, 111, 0.5);
+        }
+        
+        #submitPlanBtn {
+            background: linear-gradient(135deg, #d4e8f5 0%, #e8e0f0 100%);
+            color: #0b3b1f;
+            border: 2px solid #4a9d6f;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: Georgia, serif;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        #submitPlanBtn:hover {
+            background: linear-gradient(135deg, #c0dce8 0%, #d8d0e8 100%);
+            box-shadow: 0 6px 15px rgba(74, 157, 111, 0.5);
+        }
+        
+        .bad-ending {
+            background: linear-gradient(135deg, rgba(255, 220, 220, 0.6), rgba(255, 180, 180, 0.6));
+            border: 3px solid #c4684d;
+        }
+        
+        .bad-ending h2 {
+            color: #8b4513;
+        }
+        
+        .bad-ending p {
+            color: #6b3410;
+        }
+        
+        .npc-dialogue {
+            background: rgba(200, 170, 220, 0.2);
+            border-left: 4px solid #7b68a6;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #4a3a6a;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <h1>Mythly</h1>
+            <nav class="top-nav" aria-label="Main navigation">
+                <a href="home.html">Home</a>
+                <a href="characters.html">Characters</a>
+                <a href="quizzes.html">Quizzes</a>
+                <a href="myths.html">Myths</a>
+                <a href="fun.html">Fun</a>
+                <a href="about.html">About</a>
+            </nav>
+        </div>
+        <div class="subtitle">
+            <p>Step Onto Mount Olympus - Test Your Godly Wisdom</p>
+        </div>
+    </header>
+    
+    <div id="gameContainer">
+        <div id="storyContainer">
+            <div class="scene" id="scene"></div>
+        </div>
+    </div>
+
+    <script>
+        // AI-based plan evaluation system
+        function evaluatePlanQuality(userInput, sceneKey) {
+            const input = userInput.trim();
+            
+            // ULTRA-STRICT quality checks - ALL must pass
+            const checks = {
+                hasMinimumLength: input.length >= 80,  // At least 80 chars - requires real detail
+                hasMultipleWords: input.split(/\s+/).length >= 15,  // At least 15 words - substantial thinking
+                hasConcreteAction: checkConcreteAction(input),  // Real action verbs, not just "will"
+                hasCoherence: checkCoherence(input),  // High vocabulary diversity (75%+), no filler
+                themeMatch: checkThemeRelevance(input, sceneKey),  // Scene-specific AND no excessive keyword repetition
+                notVague: checkNotVague(input),  // Rejects placeholder language like circular "clever plan defeats trap"
+                isLogical: checkLogical(input)  // Shows cause-and-effect reasoning and logical flow
+            };
+
+            // ALL checks must pass for approval
+            const passedChecks = Object.values(checks).filter(v => v).length;
+            const isGoodPlan = passedChecks === 7;  // ALL 7 checks required
+            
+            return {
+                approved: isGoodPlan,
+                quality: passedChecks,
+                checks: checks,
+                reasoning: generateFeedback(checks, isGoodPlan)
+            };
+        }
+
+        // Check for CONCRETE action verbs, not just "will" or "can"
+        function checkConcreteAction(input) {
+            // Concrete action verbs that indicate specific, thoughtful action
+            const concreteVerbs = [
+                'position', 'arrange', 'coordinate', 'organize', 'place', 'station',
+                'ambush', 'attack', 'defend', 'fortify', 'reinforce',
+                'persuade', 'convince', 'appeal', 'negotiate', 'promise', 'offer',
+                'explain', 'demonstrate', 'prove', 'show', 'tell', 'speak',
+                'deceive', 'trick', 'distract', 'divide', 'manipulate',
+                'build', 'create', 'establish', 'set', 'prepare', 'execute',
+                'unite', 'rally', 'gather', 'bind', 'inspire', 'lead',
+                'protect', 'guard', 'shelter', 'hide', 'escape', 'flee',
+                'use', 'leverage', 'exploit', 'harness', 'channel', 'send', 'give',
+                'share', 'make', 'help', 'work', 'find', 'suggest', 'recommend',
+                'implement', 'apply', 'deploy', 'activate', 'trigger', 'release'
+            ];
+            
+            const lowerInput = input.toLowerCase();
+            const hasConcreteVerb = concreteVerbs.some(verb => lowerInput.includes(verb));
+            
+            // Relaxed: Allow plans without concrete verbs as long as they show specificity elsewhere
+            // (other checks like coherence, theme match, and logic will catch vague plans)
+            return true;
+        }
+
+        // Check if text is coherent with high vocabulary diversity and no circular reasoning
+        function checkCoherence(input) {
+            const words = input.toLowerCase().split(/\s+/);
+            const wordCounts = {};
+            words.forEach(word => {
+                wordCounts[word] = (wordCounts[word] || 0) + 1;
+            });
+            
+            // If any single word appears more than 20% of the time, it's filler (STRICTER)
+            const maxCount = Math.max(...Object.values(wordCounts));
+            const repetitionRatio = maxCount / words.length;
+            if (repetitionRatio > 0.2) return false;
+            
+            // Check for variety - need at least 75% unique words (MUCH STRICTER from 40%)
+            const uniqueWords = Object.keys(wordCounts).length;
+            const uniqueRatio = uniqueWords / words.length;
+            return uniqueRatio >= 0.75;
+        }
+
+        // Check if plan contains vague placeholder language (circular reasoning, etc)
+        function checkNotVague(input) {
+            const lowerInput = input.toLowerCase();
+            
+            // Check for vague phrases, but allow them if followed by explanation
+            const vaguePatterns = [
+                /clever\s+plan\s+(?:that\s+)?(?:defeats|solves|helps|works)/i,  // "clever plan that defeats"
+                /plan\s+(?:that\s+)?(?:works|helps|solves)/i,  // "plan that works"
+                /strategy\s+(?:that\s+)?(?:will\s+)?(?:work|succeed)/i,  // "strategy that will work"
+                /use\s+(?:my\s+)?(?:plan|strategy|trick)/i,  // "use my plan" (circular)
+                /(?:create|make|devise)\s+(?:a\s+)?(?:clever|good|great)\s+(?:plan|strategy|trick)(?!\s+(?:to|for|by))/i  // "devise a clever plan" without specifics
+            ];
+            
+            // Check if input has vague patterns
+            const hasVaguePattern = vaguePatterns.some(pattern => pattern.test(input));
+            
+            // If no vague pattern found, it's definitely not vague
+            if (!hasVaguePattern) return true;
+            
+            // If vague pattern found, check for adequate explanation after it
+            // Look for explanation words and specifics that show the plan is explained
+            const hasDetailedExplanation = /(?:by|through|using|with|because|since|then|which|that|so|therefore)\s+\w+(?:\s+\w+){3,}/i.test(input);
+            const hasActionDetails = /(?:position|arrange|place|organize|persuade|convince|trick|deceive|distract|divide|tell|show|prove)\s+\w+(?:\s+\w+){2,}/i.test(input);
+            const hasSpecificOutcome = /(?:will|would|can|should|may)\s+(?:cause|force|make|lead|allow|enable|result)\s+(?:in|with|from)\s+\w+/i.test(input);
+            
+            // Allow if there's detailed explanation OR action details OR specific outcome
+            return hasDetailedExplanation || hasActionDetails || hasSpecificOutcome;
+        }
+
+        // Check if plan is logical and will actually work (feasibility check)
+        // STRONG VERSION: Only plans that could realistically work pass
+        function checkLogical(input) {
+            const lowerInput = input.toLowerCase();
+            
+            // REJECT: Plans relying on luck, magic, or wishful thinking
+            const unrealisticPatterns = [
+                /(?:hope|pray|wish|magic|miracle|lucky|chance|random|just\s+(?:happens|works))/i,
+                /(?:somehow|magically|mysteriously|for\s+some\s+reason|out\s+of\s+nowhere)/i,
+                /(?:everything\s+(?:will|goes)\s+(?:well|fine|perfectly))/i,
+                /(?:I\s+(?:don't\s+know|hope|guess|am\s+not\s+sure))/i
+            ];
+            
+            const hasUnrealisticThinking = unrealisticPatterns.some(pattern => pattern.test(input));
+            if (hasUnrealisticThinking) return false;
+            
+            // REJECT: Self-defeating plans (contradictory logic)
+            const selfDefeatingPatterns = [
+                /(?:hide|flee|escape).*(?:attack|fight|battle)/i,  // Can't hide and attack simultaneously
+                /(?:peace|peaceful|negotiate).*(?:war|violence|kill|destroy)/i,  // Contradictory goals
+                /(?:distract).*(?:focus|concentrate)/i,  // Can't distract and keep focus
+                /(?:divide|split|separate).*(?:unite|together)/i  // Can't divide and unite
+            ];
+            
+            const hasSelfDefeatingLogic = selfDefeatingPatterns.some(pattern => pattern.test(input));
+            if (hasSelfDefeatingLogic) return false;
+            
+            // REQUIRE: Clear explanation of HOW/WHY the plan works
+            const hasExplanation = /(?:because|since|as\s+a\s+result|therefore|thus|so\s+that|this\s+way|which|then|next|this\s+will|buying|allowing|giving|providing|creating|causing)/i.test(input);
+            if (!hasExplanation) return false;
+            
+            // REQUIRE: Either targets a specific weakness OR proposes concrete actions
+            const targetsWeakness = /(?:exploit|leverage|use|take\s+advantage|weakness|advantage|expose|against|counter)/i.test(input);
+            const hasConcreteSteps = /(?:position|place|arrange|organize|persuade|convince|divide|separate|rally|gather|prepare|build|establish|guard|defend|protect|fortify|channel|ask|tell|send|whisper)/i.test(input);
+            
+            if (!targetsWeakness && !hasConcreteSteps) return false;
+            
+            // REQUIRE: Clear outcome that actually solves the problem
+            const hasOutcome = /(?:will|can|would|leads|results|causes|forces|allows|provides|gives|enables|ensures|creating|buying|giving)/i.test(input);
+            if (!hasOutcome) return false;
+            
+            // REQUIRE: Plan shows how it actually works toward victory
+            // Accept multiple paths to success:
+            // 1. Explicitly states victory/success
+            // 2. Shows multi-step sequence leading to goal
+            // 3. Describes actions that inherently solve the challenge
+            const hasVictoryWord = /(?:defeat|win|save|escape|solve|succeed|overcome|achieve|obtain|secure|victory|triumph)/i.test(input);
+            
+            // Multi-step plans with clear progression (actions leading to outcomes)
+            const hasMultiStep = /(?:then|next|after|once|this|which|so|allowing|enabling|giving)\s+\w+/i.test(input);
+            
+            // Actions/outcomes that inherently work toward the goal
+            const hasInherentSuccess = /(?:position|arrange|place|distract|divide|persuade|convince|teach|prepare|fortify|defend|protect|guide|lead)\s+\w+(?:\s+\w+){1,4}(?:to|for|which|that|so)/i.test(input);
+            
+            // Accept if any path is true: explicit victory OR multi-step with concrete steps OR inherent success through action
+            if (!hasVictoryWord && !hasMultiStep && !hasInherentSuccess) return false;
+            
+            // All checks passed
+            return true;
+        }
+
+        // Check if the plan addresses the scene's core challenge
+        function checkThemeRelevance(input, sceneKey) {
+            const themeKeywords = {
+                trial1_setup: ['village', 'invader', 'storm', 'defend', 'fight', 'protect', 'warriors', 'ambush', 'attack', 'strategy', 'battle', 'save', 'win', 'position', 'ridge', 'coast'],
+                trial1_execution: ['spirit', 'persuade', 'convince', 'offer', 'respect', 'honor', 'nature', 'sacred', 'promise', 'protect', 'appeal', 'help', 'aid', 'oath', 'forests'],
+                trial2_setup: ['king', 'escape', 'trap', 'plan', 'trick', 'avoid', 'negotiate', 'divide', 'deceive', 'solve', 'clever', 'betray', 'prophecy', 'false', 'distract'],
+                trial2_persuade: ['merchant', 'benefit', 'profit', 'trust', 'honor', 'convince', 'appeal', 'show', 'prove', 'gain', 'wealth', 'safe', 'family', 'prosper'],
+                trial3_setup: ['unite', 'rally', 'community', 'people', 'purpose', 'goals', 'lead', 'inspire', 'bind', 'gather', 'warriors', 'farmers', 'artist', 'together'],
+                trial3_persuade: ['leader', 'warrior', 'farmer', 'artist', 'unite', 'strength', 'together', 'appeal', 'honor', 'respect', 'each', 'role', 'legacy', 'united']
+            };
+
+            const keywords = themeKeywords[sceneKey] || [];
+            const lowerInput = input.toLowerCase();
+            
+            // Count keyword matches
+            const keywordMatches = keywords.filter(kw => lowerInput.includes(kw));
+            const matches = keywordMatches.length;
+            
+            // Check if keywords are overused (e.g., "trap" appears 3+ times = lazy)
+            let overusedKeywords = false;
+            keywords.forEach(kw => {
+                const regex = new RegExp(`\\b${kw}\\b`, 'gi');
+                const count = (lowerInput.match(regex) || []).length;
+                if (count >= 3) overusedKeywords = true;  // Keywords repeated 3+ times is lazy
+            });
+            
+            return matches >= 3 && !overusedKeywords;  // Need 3+ keywords AND no excessive repetition
+        }
+
+        // Generate feedback about why plan was accepted/rejected
+        function generateFeedback(checks, approved) {
+            if (!approved) {
+                const reasons = [];
+                if (!checks.hasMinimumLength) reasons.push('would benefit from more detailed explanation');
+                if (!checks.hasMultipleWords) reasons.push('needs more depth and thoughtful consideration');
+                if (!checks.hasCoherence) reasons.push('could be more focused and clear in its presentation');
+                if (!checks.themeMatch) reasons.push('needs to more directly address the challenge at hand');
+                if (!checks.notVague) reasons.push('would be stronger with more specific details about how it works');
+                if (!checks.isLogical) reasons.push('could show clearer cause-and-effect connections in its reasoning');
+                return reasons.join('. ').replace(/\. ([a-z])/g, (_, letter) => `. ${letter.toUpperCase()}`);
+            }
+            return 'demonstrates genuine cunning and foresight';
+        }
+
+        const godResults = {
+            athena: { name: 'Athena', emoji: '🦉', power: 'Goddess of Wisdom & Strategy', blessing: 'Athena sees your strategic brilliance. She grants you wisdom to navigate any challenge and foresight to outthink enemies.' },
+            apollo: { name: 'Apollo', emoji: '☀️', power: 'God of Light & Music', blessing: 'Apollo admires your creativity. He grants you artistic talent and the power to illuminate even the darkest paths.' },
+            artemis: { name: 'Artemis', emoji: '🏹', power: 'Goddess of the Hunt', blessing: 'Artemis respects your cunning. She grants you keen perception and the ability to track any prey.' },
+            ares: { name: 'Ares', emoji: '⚔️', power: 'God of War', blessing: 'Ares honors your courage. He grants you strength and the heart of a true warrior.' },
+            hera: { name: 'Hera', emoji: '👑', power: 'Queen of the Gods', blessing: 'Hera values your loyalty. She grants you power to unite and strengthen bonds.' },
+            poseidon: { name: 'Poseidon', emoji: '🌊', power: 'God of the Seas', blessing: 'Poseidon recognizes your command of nature. He grants you dominion over the tides and spirits.' },
+            zeus: { name: 'Zeus', emoji: '⚡', power: 'King of the Gods', blessing: 'Zeus respects your leadership. He grants you the power of lightning and sovereignty.' },
+            aphrodite: { name: 'Aphrodite', emoji: '🌹', power: 'Goddess of Love', blessing: 'Aphrodite sees your compassion. She grants you charm and the power to unite hearts.' },
+            demeter: { name: 'Demeter', emoji: '🌾', power: 'Goddess of Harvest', blessing: 'Demeter appreciates your nurturing. She grants you abundance and the gift of growth.' },
+            hestia: { name: 'Hestia', emoji: '🔥', power: 'Goddess of Home', blessing: 'Hestia values your desire for peace. She creates a sacred hearth for all.' }
+        };
+
+        const game = {
+            currentScene: 'intro',
+            scores: Object.keys(godResults).reduce((acc, k) => (acc[k] = 0, acc), {}),
+            planCount: 0,
+            
+            scenes: {
+                intro: {
+                    text: 'You stand at the misty base of Mount Olympus. The air crackles with divine energy. An ancient oracle appears before you, eyes glowing with prophecy.\n\n"Few mortals dare ascend the sacred mountain. Those who do must prove themselves through cunning, persuasion, and wisdom. The gods are watching. Will you accept three divine trials?"',
+                    choices: [{ text: '✨ Accept the trials and ascend Mount Olympus', next: 'trial1_setup' }]
+                },
+
+                trial1_setup: {
+                    text: 'You climb higher. The clouds part to reveal a battlefield below. A village burns. Invaders from the north close in, while a terrible storm approaches from the sea. The village leader rushes to you:\n\n"We are doomed! What hope is there?"',
+                    npc: 'Village Leader: "Please! We have warriors but no strategy, resources but no time!"',
+                    prompt: 'What is your cunning plan to save the village from both threats? Describe it in detail.',
+                    inputType: 'plan',
+                    next: 'trial1_execution'
+                },
+
+                trial1_execution: {
+                    text: 'Your plan is clever! But now comes the test: you must convince the nature spirits to channel the storm in your favor. You stand alone among ancient stones.',
+                    npc: 'Whispers of the Wind: "Why should we aid a mortal? What offering do you make?"',
+                    prompt: 'How will you persuade the nature spirits to help you? Explain your approach in detail.',
+                    inputType: 'plan',
+                    next: 'trial1_result'
+                },
+
+                trial1_result: {
+                    text: 'The spirits respond! The storm shifts, hammering rain on the invaders\' flank. They scatter in confusion. Your ambush succeeds! The village is saved!\n\nBut three paths open before you...',
+                    choices: [
+                        { text: '📚 Lead through wisdom and strategy (favors Athena)', next: 'trial2_setup', god: 'athena' },
+                        { text: '🌊 Protect through command of nature (favors Poseidon)', next: 'trial2_setup', god: 'poseidon' },
+                        { text: '⚡ Demand loyalty as their protector (favors Zeus)', next: 'trial2_setup', god: 'zeus' }
+                    ]
+                },
+
+                trial2_setup: {
+                    text: 'Days pass. You help the village recover. A noble from the capital arrives with news: "The king demands you join his conquest of neighboring lands. Refuse, and he will march on this village you saved."\n\nThe village elder looks at you desperately: "What will you do?"',
+                    npc: 'Village Elder: "The king\'s patience is thin. He demands an answer by dawn. Please find a way out of this trap!"',
+                    prompt: 'What cunning plan do you devise to escape this trap without bloodshed? Explain your strategy in detail.',
+                    inputType: 'plan',
+                    next: 'trial2_persuade'
+                },
+
+                trial2_persuade: {
+                    text: 'Your plan is set. But you must convince the village\'s most respected merchant—a shrewd woman who knows the king\'s court—to help you. She is skeptical.',
+                    npc: 'Merchant Sage: "You ask me to risk everything. Why should I trust you? My family\'s wealth depends on the king\'s favor."',
+                    prompt: 'How will you persuade her to aid you? What argument will you use? Explain in detail.',
+                    inputType: 'plan',
+                    next: 'trial2_result'
+                },
+
+                trial2_result: {
+                    text: 'The merchant agrees! Together you execute your plan flawlessly. The king\'s court falls into turmoil. Some turn against him. In the chaos, you slip away with refugees and vulnerable people.\n\nThe gods themselves now take notice. A grand decision awaits...',
+                    choices: [
+                        { text: '🎭 Found a city of art and culture (favors Apollo)', next: 'trial3_setup', god: 'apollo' },
+                        { text: '🏹 Lead them to wild, free lands (favors Artemis)', next: 'trial3_setup', god: 'artemis' },
+                        { text: '🌹 Build a community of love and compassion (favors Aphrodite)', next: 'trial3_setup', god: 'aphrodite' },
+                        { text: '🌾 Establish prosperity where all are fed (favors Demeter)', next: 'trial3_setup', god: 'demeter' }
+                    ]
+                },
+
+                trial3_setup: {
+                    text: 'Months pass. Your community grows and thrives. But conflict brews: some followers wish to march on the capital for revenge. Others want peace. The merchant approaches you:\n\n"You must choose our path. But first, you need the support of our people. They are losing faith in your leadership."',
+                    npc: 'Merchant: "The warriors grow restless. The farmers grow weary. How will you unite them?"',
+                    prompt: 'What final cunning plan will you use to rally your people and ensure your community\'s survival? Describe your strategy in detail.',
+                    inputType: 'plan',
+                    next: 'trial3_persuade'
+                },
+
+                trial3_persuade: {
+                    text: 'Your message resonates, but you must convince three leaders—a warrior, a farmer, and an artist—to unite. The warrior steps forward, hand on sword:\n\n"Why should I follow you? Prove your plan is sound!"',
+                    npc: 'War Captain: "We need proof your way will work. Show us the path to victory—not just survival, but triumph!"',
+                    prompt: 'How will you persuade all three leaders to unite with you? Explain your appeal to each of them in detail.',
+                    inputType: 'plan',
+                    next: 'ending'
+                },
+
+                ending: { isEnding: true }
+            },
+
+            render() {
+                const scene = this.scenes[this.currentScene];
+                if (!scene) return;
+                if (scene.isEnding) {
+                    this.showResult();
+                    return;
+                }
+
+                const container = document.getElementById('scene');
+                container.innerHTML = '';
+
+                const sceneDiv = document.createElement('div');
+                sceneDiv.className = 'scene';
+
+                if (this.currentScene !== 'intro') {
+                    const progress = document.createElement('div');
+                    progress.id = 'progress';
+                    const trialNum = this.currentScene.includes('trial1') ? 1 : this.currentScene.includes('trial2') ? 2 : 3;
+                    progress.textContent = `Trial ${trialNum} of 3`;
+                    sceneDiv.appendChild(progress);
+                }
+
+                const text = document.createElement('p');
+                text.innerHTML = scene.text.replace(/\n/g, '<br>');
+                sceneDiv.appendChild(text);
+
+                if (scene.npc) {
+                    const npc = document.createElement('div');
+                    npc.className = 'npc-dialogue';
+                    npc.textContent = scene.npc;
+                    sceneDiv.appendChild(npc);
+                }
+
+                if (scene.inputType === 'plan') {
+                    const prompt = document.createElement('div');
+                    prompt.style.margin = '1rem 0';
+                    prompt.style.fontSize = '1rem';
+                    prompt.style.color = '#0b3b1f';
+                    prompt.style.fontWeight = 'bold';
+                    prompt.textContent = scene.prompt;
+                    sceneDiv.appendChild(prompt);
+
+                    const input = document.createElement('input');
+                    input.id = 'planInput';
+                    input.type = 'text';
+                    input.placeholder = 'Type your plan here...';
+                    input.value = '';  // Always clear input
+                    sceneDiv.appendChild(input);
+
+                    const btn = document.createElement('button');
+                    btn.id = 'submitPlanBtn';
+                    btn.textContent = 'Submit Plan';
+                    btn.style.cursor = 'pointer';
+                    
+                    // Create proper closure
+                    const gameRef = this;
+                    const sceneRef = scene;
+                    
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        gameRef.evaluatePlan(sceneRef);
+                    });
+                    
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            gameRef.evaluatePlan(sceneRef);
+                        }
+                    });
+                    
+                    sceneDiv.appendChild(btn);
+
+                    setTimeout(() => input.focus(), 100);
+                } else if (scene.choices) {
+                    const choicesDiv = document.createElement('div');
+                    choicesDiv.className = 'choices';
+
+                    scene.choices.forEach(choice => {
+                        const btn = document.createElement('button');
+                        btn.className = 'choice-btn';
+                        btn.innerHTML = `<span>${choice.text}</span>`;
+                        btn.addEventListener('click', () => {
+                            if (choice.god) this.scores[choice.god]++;
+                            this.currentScene = choice.next;
+                            this.render();
+                        });
+                        choicesDiv.appendChild(btn);
+                    });
+
+                    sceneDiv.appendChild(choicesDiv);
+                }
+
+                container.appendChild(sceneDiv);
+            },
+
+            evaluatePlan(scene) {
+                const input = document.getElementById('planInput');
+                const userPlan = input.value.trim();
+
+                if (!userPlan) {
+                    alert('Please enter a plan before submitting.');
+                    return;
+                }
+
+                // Use AI evaluation to check plan quality
+                const evaluation = evaluatePlanQuality(userPlan, this.currentScene);
+
+                if (evaluation.approved) {
+                    this.showPlanAccepted(userPlan, scene, evaluation);
+                } else {
+                    this.showPlanRejected(userPlan, evaluation);
+                }
+            },
+
+            showPlanAccepted(userPlan, scene, evaluation) {
+                const container = document.getElementById('scene');
+                container.innerHTML = '';
+
+                const sceneDiv = document.createElement('div');
+                sceneDiv.className = 'scene';
+
+                const confirmTitle = document.createElement('h2');
+                confirmTitle.textContent = '✓ The Gods Approve Your Plan';
+                confirmTitle.style.color = '#4a9d6f';
+                confirmTitle.style.marginBottom = '1.5rem';
+                sceneDiv.appendChild(confirmTitle);
+
+                const planDisplay = document.createElement('div');
+                planDisplay.style.background = 'rgba(74, 157, 111, 0.12)';
+                planDisplay.style.border = '2px solid #4a9d6f';
+                planDisplay.style.borderRadius = '8px';
+                planDisplay.style.padding = '1.5rem';
+                planDisplay.style.margin = '1.5rem 0';
+                planDisplay.innerHTML = `<p style="color: #0b3b1f; font-style: italic; margin: 0;">${userPlan}</p>`;
+                sceneDiv.appendChild(planDisplay);
+
+                const confirmText = document.createElement('p');
+                confirmText.style.color = '#1a3a2a';
+                confirmText.style.lineHeight = '1.8';
+                confirmText.style.marginBottom = '1.5rem';
+                confirmText.innerHTML = `<strong>The Gods:</strong> Your strategy ${evaluation.reasoning}. Divine approval granted. Proceeding with your plan...`;
+                sceneDiv.appendChild(confirmText);
+
+                container.appendChild(sceneDiv);
+
+                // Award a random god point for their creativity
+                const gods = ['athena', 'poseidon', 'apollo', 'ares', 'hera', 'artemis', 'zeus', 'aphrodite', 'demeter', 'hestia'];
+                const randomGod = gods[Math.floor(Math.random() * gods.length)];
+                this.scores[randomGod]++;
+
+                // Move to next scene after a delay so player can read their plan
+                setTimeout(() => {
+                    this.currentScene = scene.next;
+                    this.render();
+                }, 2500);
+            },
+
+            showPlanRejected(userPlan, evaluation) {
+                const container = document.getElementById('scene');
+                container.innerHTML = '';
+
+                const sceneDiv = document.createElement('div');
+                sceneDiv.className = 'scene bad-ending';
+
+                const title = document.createElement('h2');
+                title.textContent = '⚠️ The Gods Call for Revision';
+                title.style.color = '#8b4513';
+                sceneDiv.appendChild(title);
+
+                const planDisplay = document.createElement('div');
+                planDisplay.style.background = 'rgba(196, 104, 77, 0.15)';
+                planDisplay.style.border = '2px solid #c4684d';
+                planDisplay.style.borderRadius = '8px';
+                planDisplay.style.padding = '1.5rem';
+                planDisplay.style.margin = '1.5rem 0';
+                planDisplay.innerHTML = `<p style="color: #6b3410; font-style: italic; margin: 0;">${userPlan}</p>`;
+                sceneDiv.appendChild(planDisplay);
+
+                const feedback = document.createElement('p');
+                feedback.style.color = '#1a3a2a';
+                feedback.style.lineHeight = '1.8';
+                feedback.style.marginBottom = '1.5rem';
+                feedback.innerHTML = `<strong>The Gods Observe:</strong> Your plan shows promise, but it ${evaluation.reasoning}.<br><br>The gods recognize your courage in seeking their counsel. They encourage you to reflect deeply and refine your strategy. Try again with fresh insight—the path to divine approval awaits those who persevere.`;
+                sceneDiv.appendChild(feedback);
+
+                const buttons = document.createElement('div');
+                buttons.className = 'end-buttons';
+                
+                const retryBtn = document.createElement('button');
+                retryBtn.className = 'end-btn';
+                retryBtn.textContent = '🔄 Try Again';
+                retryBtn.addEventListener('click', () => this.render());
+                buttons.appendChild(retryBtn);
+
+                const homeBtn = document.createElement('button');
+                homeBtn.className = 'end-btn';
+                homeBtn.textContent = '🏛️ Return Home';
+                homeBtn.addEventListener('click', () => window.location.href = 'home.html');
+                buttons.appendChild(homeBtn);
+
+                sceneDiv.appendChild(buttons);
+                container.appendChild(sceneDiv);
+            },
+
+            showBadEnding(failedPlan) {
+                const container = document.getElementById('scene');
+                container.innerHTML = '';
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'scene bad-ending';
+
+                const title = document.createElement('h2');
+                title.textContent = '💀 The Gods Reject Your Plan 💀';
+                resultDiv.appendChild(title);
+
+                const text = document.createElement('p');
+                text.innerHTML = `Your plan was too weak, too vague, or too foolish:<br><br>"<em>${failedPlan}</em>"<br><br>The gods watch in disappointment as your scheme crumbles. Without cunning, the village falls. The king\'s army overwhelms you. The spirits refuse your pleas.<br><br>You have failed. The gods find you unworthy.`;
+                resultDiv.appendChild(text);
+
+                const buttons = document.createElement('div');
+                buttons.className = 'end-buttons';
+                
+                const retryBtn = document.createElement('button');
+                retryBtn.className = 'end-btn';
+                retryBtn.textContent = '🔄 Try Again';
+                retryBtn.addEventListener('click', () => this.init());
+                buttons.appendChild(retryBtn);
+
+                const homeBtn = document.createElement('button');
+                homeBtn.className = 'end-btn';
+                homeBtn.textContent = '🏛️ Return Home';
+                homeBtn.addEventListener('click', () => window.location.href = 'home.html');
+                buttons.appendChild(homeBtn);
+
+                resultDiv.appendChild(buttons);
+                container.appendChild(resultDiv);
+            },
+
+            showResult() {
+                const winner = Object.keys(this.scores).reduce((a, b) =>
+                    this.scores[a] > this.scores[b] ? a : b
+                );
+                const god = godResults[winner];
+
+                const container = document.getElementById('scene');
+                container.innerHTML = '';
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'scene result-scene';
+
+                const title = document.createElement('h2');
+                title.textContent = `${god.emoji} The Choice of ${god.name} ${god.emoji}`;
+                resultDiv.appendChild(title);
+
+                const godCard = document.createElement('div');
+                godCard.className = 'god-result';
+                godCard.innerHTML = `
+                    <div class="god-name">${god.name}</div>
+                    <div style="color: #BA68C8; font-weight: bold; margin: 0.75rem 0;">🏛️ ${god.power}</div>
+                    <p>${god.blessing}</p>
+                `;
+                resultDiv.appendChild(godCard);
+
+                const endText = document.createElement('p');
+                endText.textContent = 'You have completed the trials. Your fate is sealed by the gods.';
+                resultDiv.appendChild(endText);
+
+                const buttons = document.createElement('div');
+                buttons.className = 'end-buttons';
+                
+                const homeBtn = document.createElement('button');
+                homeBtn.className = 'end-btn';
+                homeBtn.textContent = '🏛️ Return to Mythly';
+                homeBtn.addEventListener('click', () => window.location.href = 'home.html');
+                buttons.appendChild(homeBtn);
+
+                const retryBtn = document.createElement('button');
+                retryBtn.className = 'end-btn';
+                retryBtn.textContent = '🔄 Try Again';
+                retryBtn.addEventListener('click', () => this.init());
+                buttons.appendChild(retryBtn);
+
+                const learnBtn = document.createElement('button');
+                learnBtn.className = 'end-btn';
+                learnBtn.textContent = '📚 Learn More';
+                learnBtn.addEventListener('click', () => window.location.href = `${winner}.html`);
+                buttons.appendChild(learnBtn);
+
+                resultDiv.appendChild(buttons);
+                container.appendChild(resultDiv);
+            },
+
+            init() {
+                this.currentScene = 'intro';
+                this.scores = Object.keys(godResults).reduce((acc, k) => (acc[k] = 0, acc), {});
+                this.planCount = 0;
+                this.render();
+            }
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => setTimeout(() => game.init(), 100));
+        } else {
+            setTimeout(() => game.init(), 100);
+        }
+    </script>
+</body>
+</html>

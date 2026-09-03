@@ -1,0 +1,279 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Underworld Invasion — Prototype</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>⚡</text></svg>">
+  <style>
+    .top-nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1.5rem;
+      padding: 0.5rem 2rem;
+      background: linear-gradient(180deg, #120a1a, #23102a);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .top-nav a {
+      font-weight: 500;
+      text-decoration: none;
+      color: #ddd;
+      font-size: 0.9rem;
+      transition: opacity .2s;
+    }
+    .top-nav a:hover { 
+      opacity: 0.7;
+      text-decoration: underline; 
+    }
+    html,body{height:100%;margin:0;background:#0b0b0f;color:#fff;font-family:Arial,Helvetica,sans-serif}
+    .wrap{display:flex;flex-direction:column;height:100%}
+    header{padding:12px;text-align:center;background:linear-gradient(180deg,#120a1a, #23102a)}
+    canvas{flex:1;display:block;margin:0 auto;background:linear-gradient(#06060a,#0b0710)}
+    .hud{display:flex;justify-content:space-between;padding:10px 18px;background:rgba(0,0,0,0.2)}
+    .controls{font-size:14px;color:#ddd}
+    .big{font-size:20px;font-weight:700}
+    button{background:#32142a;border:1px solid #5a2a48;color:#fff;padding:.4rem .6rem;border-radius:.4rem}
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .big { font-size: 1.2rem; }
+        .controls { font-size: 0.85rem; }
+        button { min-height: 44px; padding: 0.6rem 0.8rem; font-size: 0.9rem; }
+    }
+    @media (max-width: 480px) {
+        .big { font-size: 1rem; }
+        .controls { font-size: 0.8rem; }
+        button { min-height: 48px; padding: 0.6rem; font-size: 0.85rem; }
+        header { padding: 8px; }
+        .top-nav { gap: 0.5rem; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav" aria-label="Main navigation">
+    <a href="home.html">Home</a>
+    <a href="characters.html">Characters</a>
+    <a href="quizzes.html">Quizzes</a>
+    <a href="myths.html">Myths</a>
+    <a href="mythly-tools.html">Tools</a>
+    <a href="fun.html">Fun</a>
+    <a href="about.html">About</a>
+  </nav>
+  <div class="wrap">
+    <header>
+      <div class="big">Underworld Invasion — Prototype</div>
+      <div style="font-size:12px;color:#cfc">Defend the center: press <strong>A</strong> to swing left, <strong>D</strong> to swing right, or click left/right halves.</div>
+    </header>
+    <div class="hud">
+      <div>Score: <span id="score">0</span></div>
+      <div class="controls">Lives: <span id="lives">3</span></div>
+      <div><button id="restart">Restart</button></div>
+    </div>
+    <canvas id="game" width="900" height="520"></canvas>
+  </div>
+<script>
+(() => {
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width, H = canvas.height;
+  function resize(){
+    const ratio = window.devicePixelRatio || 1;
+    const styleW = Math.min(window.innerWidth-40, 1000);
+    const styleH = Math.min(window.innerHeight-160, 720);
+    canvas.style.width = styleW + 'px';
+    canvas.style.height = styleH + 'px';
+    canvas.width = Math.floor(styleW * ratio);
+    canvas.height = Math.floor(styleH * ratio);
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    W = styleW; H = styleH;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const centerX = () => W/2;
+  const laneY = { left: H*0.35, right: H*0.65 };
+  const spawnDistance = Math.max(W*0.45, 200);
+
+  let monsters = [];
+  let lastSpawn = 0;
+  let spawnInterval = 400; // ms; fast
+  let monsterSpeed = 600; // pixels per second
+  let score = 0;
+  let lives = 3;
+  let running = true;
+
+  const scoreEl = document.getElementById('score');
+  const livesEl = document.getElementById('lives');
+  const restartBtn = document.getElementById('restart');
+  restartBtn.addEventListener('click', resetGame);
+
+  function randChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function spawn() {
+    // spawn on left or right edge
+    const side = Math.random() < 0.5 ? 'left' : 'right';
+    const y = laneY[side === 'left' ? 'left' : 'right'];
+    const x = side === 'left' ? -30 : W + 30;
+    const dir = side === 'left' ? 1 : -1;
+    const speed = monsterSpeed * (0.9 + Math.random()*0.4); // vary slightly
+    monsters.push({x,y,dir,speed,alive:true,hit:false});
+  }
+
+  function update(dt){
+    if(!running) return;
+    lastSpawn += dt*1000;
+    if(lastSpawn > spawnInterval){
+      lastSpawn = 0;
+      // increase difficulty slowly
+      spawnInterval = Math.max(120, spawnInterval - 2);
+      monsterSpeed = Math.min(1400, monsterSpeed + 6);
+      // spawn burst occasionally
+      const bursts = Math.random() < 0.2 ? 2 : 1;
+      for(let i=0;i<bursts;i++) spawn();
+    }
+    // move monsters
+    for(let m of monsters){
+      if(!m.alive) continue;
+      m.x += m.dir * m.speed * dt;
+      // check reach center
+      const reachX = centerX() - (m.dir>0 ? 18 : -18);
+      if((m.dir>0 && m.x >= reachX) || (m.dir<0 && m.x <= reachX)){
+        if(!m.hit){
+          // monster reached center
+          m.alive = false;
+          lives -= 1; livesEl.innerText = lives;
+          if(lives <= 0) gameOver();
+        }
+      }
+    }
+    // remove dead
+    monsters = monsters.filter(m => m.alive);
+  }
+
+  // axe state
+  let axe = { swinging:false, side:null, t:0, duration:140 }; // ms
+
+  function swing(side){
+    if(!running) return;
+    if(axe.swinging) return; // no double-swings
+    axe.swinging = true;
+    axe.side = side; // 'left' or 'right'
+    axe.t = 0;
+    // check hits immediately on swing start too
+    checkAxeHit();
+  }
+
+  function checkAxeHit(){
+    const arcRadius = 140; // px reach
+    const cx = centerX();
+    const sy = sideY(axe.side);
+    for(let m of monsters){
+      if(!m.alive) continue;
+      // is monster in same lane side?
+      const lane = (m.x < centerX()) ? 'left' : 'right';
+      if(lane !== axe.side) continue;
+      const dist = Math.abs(m.x - cx);
+      const dy = Math.abs(m.y - laneY[axe.side==='left' ? 'left' : 'right']);
+      if(dist <= arcRadius && dy < 30){
+        // hit
+        m.alive = false; m.hit = true; score += 10; scoreEl.innerText = score;
+      }
+    }
+  }
+
+  function sideY(side){ return side === 'left' ? laneY.left : laneY.right; }
+
+  function render(dt){
+    // clear
+    ctx.clearRect(0,0,W,H);
+    // draw lanes
+    ctx.fillStyle = 'rgba(200,200,255,0.02)';
+    ctx.fillRect(0, laneY.left-36, W, 72);
+    ctx.fillStyle = 'rgba(200,200,255,0.03)';
+    ctx.fillRect(0, laneY.right-36, W, 72);
+
+    // center guard
+    ctx.fillStyle = '#28121b';
+    ctx.beginPath();
+    ctx.arc(centerX(), H/2, 36, 0, Math.PI*2);
+    ctx.fill();
+
+    // draw monsters
+    for(let m of monsters){
+      ctx.fillStyle = m.hit ? '#9f3' : '#ff4d4d';
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, 18, 0, Math.PI*2);
+      ctx.fill();
+      // eyes
+      ctx.fillStyle = '#222'; ctx.fillRect(m.x-7, m.y-6, 4,4); ctx.fillRect(m.x+3, m.y-6, 4,4);
+    }
+
+    // draw axe pivot and handle
+    const cx = centerX();
+    const cy = H/2;
+    ctx.save();
+    ctx.translate(cx, cy);
+    // draw pivot
+    ctx.fillStyle = '#a67f52'; ctx.beginPath(); ctx.arc(0,0,8,0,Math.PI*2); ctx.fill();
+
+    // swing animation
+    if(axe.swinging){
+      axe.t += dt*1000;
+      const p = Math.min(1, axe.t / axe.duration);
+      // ease-out
+      const ease = 1 - Math.pow(1-p, 3);
+      const angle = (axe.side==='left' ? -1 : 1) * (Math.PI/2) * ease;
+      ctx.rotate(angle);
+      // handle
+      ctx.strokeStyle = '#ddd'; ctx.lineWidth = 8; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo((axe.side==='left' ? -1 : 1)*160, -10); ctx.stroke();
+      // blade
+      ctx.fillStyle = '#cfcfcf'; ctx.beginPath(); ctx.ellipse((axe.side==='left' ? -1 : 1)*160, -10, 18, 10, 0, 0, Math.PI*2); ctx.fill();
+      if(axe.t >= axe.duration){ axe.swinging = false; axe.t = 0; axe.side = null; }
+    } else {
+      // idle handle straight up
+      ctx.rotate(0);
+      ctx.strokeStyle = '#ddd'; ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,-160); ctx.stroke();
+      ctx.fillStyle = '#cfcfcf'; ctx.beginPath(); ctx.ellipse(0,-160,18,10,0,0,Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+
+    // HUD overlay
+    if(!running){
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillRect(0,0,W,H);
+      ctx.fillStyle = '#fff'; ctx.textAlign='center'; ctx.font='26px Arial';
+      ctx.fillText('Game Over — Score: ' + score, W/2, H/2 - 10);
+      ctx.font='16px Arial'; ctx.fillText('Click Restart to play again', W/2, H/2 + 20);
+    }
+  }
+
+  let last = performance.now();
+  function loop(now){
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    update(dt);
+    render(dt);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // input
+  window.addEventListener('keydown', e => {
+    if(e.key === 'a' || e.key === 'A') swing('left');
+    if(e.key === 'd' || e.key === 'D') swing('right');
+    if(e.key === ' '){ e.preventDefault(); swing('left'); setTimeout(()=>swing('right'), 140); }
+  });
+  canvas.addEventListener('pointerdown', e => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const side = x < rect.width/2 ? 'left' : 'right';
+    swing(side);
+  });
+
+  function gameOver(){ running = false; }
+  function resetGame(){ monsters = []; lastSpawn = 0; spawnInterval = 400; monsterSpeed = 600; score = 0; lives = 3; running = true; scoreEl.innerText = score; livesEl.innerText = lives; }
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,3055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Fun — Mythly</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>⚡</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --title-size: clamp(2.5rem, 9vw, 10rem);
+            --subtitle-size: clamp(1.2rem, 3vw, 2rem);
+            --sticky-offset: 6rem;
+        }
+        html {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(224, 239, 255, 0.88), rgba(239, 231, 255, 0.88)), url('mountolympus.jpg') center/cover fixed no-repeat;
+            background-attachment: fixed;
+            background-color: #e8f0ff;
+            overflow-x: hidden;
+        }
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+            width: calc(100% - 4rem);
+            height: 100%;
+            margin: 2rem;
+            line-height: 1.6;
+            background: transparent;
+            color: #17251f;
+            overflow-x: hidden;
+        }
+        .site-header { position: relative; display: flex; align-items: center; justify-content: space-between; background: rgba(245,230,200,0.98); padding: 1rem 2rem; box-sizing: border-box; border-radius: 0.75rem 0.75rem 0 0; width: 100%; }
+        h1 {
+            font-family: 'Cormorant Garamond', serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em;
+            margin: 0;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+        }
+        .subtitle {
+            background: rgba(220, 245, 225, 0.98);
+            padding: 1rem 2rem;
+            border-radius: 0 0 .75rem .75rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            margin-top: -1px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .subtitle p {
+            margin: 0;
+            font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.02em;
+            font-size: var(--subtitle-size);
+            color: #0b3b1f;
+            text-align: center;
+        }
+        .page-title {
+            font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.02em;
+            font-size: clamp(3rem, 6vw, 5rem);
+            text-align: center;
+            color: #0b3b1f !important;
+            margin: 2rem auto 1.5rem;
+            display: block;
+        }
+        h2.page-title {
+            color: rgb(170, 235, 175) !important;
+        }
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.5rem;
+            padding: 0;
+            position: relative;
+            background: none;
+            z-index: 1200;
+        }
+        .top-nav a {
+            font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.15em;
+            text-decoration: none;
+            color: #0b3b1f;
+            padding: 0;
+            background: none;
+            border-radius: 0;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            box-shadow: none;
+            border: none;
+        }
+        .top-nav a:hover { filter: brightness(.7); text-decoration: underline; }
+        .top-nav a:active { text-decoration: underline; }
+        main {
+            max-width: 1100px;
+            margin: 2.5rem auto;
+            padding: 0 1rem;
+            text-align: center;
+        }
+        .fun-section {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 2px solid #d8c5a0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .fun-section h3 { font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.02em; font-size: 2.5rem; color: #0b3b1f; margin-top: 0; }
+        .quiz-progress { margin: 0 0 1rem; font-size: 1rem; color: #52645a; }
+        .quiz-question { font-size: 1.4rem; margin-bottom: 1rem; }
+        .quiz-option {
+            display: block;
+            background: #fff;
+            border: 1px solid #d8c5a0;
+            padding: 1rem;
+            margin: 0.5rem auto;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            width: 80%;
+            max-width: 460px;
+            transition: background 0.2s;
+            font-family: Georgia, serif;
+            font-size: 1.1rem;
+        }
+        .quiz-option:hover { background: #f3e7d2; }
+        .quiz-actions {
+            margin-top: 1.25rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .game-btn {
+            font-family: Georgia, serif;
+            font-size: 1.05rem;
+            padding: 0.7rem 1.5rem;
+            background: #0b3b1f;
+            color: #fff;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        .game-btn.secondary { background: #6a4a1f; }
+        .fullscreen-link{display:inline-flex;align-items:center;gap:.45rem;padding:.65rem 1rem;border:1px solid rgba(107,47,163,.35);border-radius:.65rem;background:linear-gradient(135deg,#6b2fa3,#3d5fa8);color:#fff;text-decoration:none;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;letter-spacing:.04em;box-shadow:0 6px 14px rgba(61,95,168,.22);transition:transform .2s,box-shadow .2s,filter .2s}
+        .fullscreen-link:hover{transform:translateY(-2px);filter:brightness(1.1);box-shadow:0 9px 18px rgba(61,95,168,.3)}
+        .fullscreen-link:focus-visible{outline:3px solid #ffd1e8;outline-offset:3px}
+        .hidden { display: none; }
+        #quiz-result-area { font-size: 1.35rem; font-weight: bold; color: #0b3b1f; margin-top: 1rem; font-family: Georgia, "Times New Roman", serif; }
+        #quiz-result-area p { margin-top: 0.5rem; }
+        /* Ensure the Divine Parent result text uses the same serif site font */
+        #parent-name, #parent-description, #quiz-result-area { font-family: Georgia, "Times New Roman", serif; }
+        .tool-grid {
+            display: grid;
+            /* force each tool to its own row so widgets are full-width even at fullscreen */
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            margin-top: 1rem;
+        }
+        .tool-card {
+            background: rgba(255, 255, 255, 0.82);
+            border: 2px solid #d8c5a0;
+            border-radius: 1.25rem;
+            padding: 1.25rem;
+            text-align: left;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+        }
+        .fun-discovery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem;margin-top:1.5rem}
+        .fun-discovery-card{background:rgba(239,231,255,.78);border:1px solid rgba(107,47,163,.16);border-radius:1rem;padding:1.35rem;text-align:left;min-height:190px}
+        #fun-suggestions{grid-column:1/-1}
+        .fun-discovery-card h3{font-size:1.7rem;margin:.1rem 0 .4rem;color:#3d2863}
+        .fun-discovery-card p{margin:.35rem 0}
+        .fun-discovery-card button{margin-top:.5rem}
+        .fun-discovery-card textarea{width:100%;box-sizing:border-box;min-height:4rem;padding:.55rem;border:1px solid #b9a9d5;border-radius:.5rem;font:inherit}
+        .fun-discovery-card ul{padding-left:1.2rem;margin:.6rem 0 0}
+        .fun-badge{display:inline-block;margin:.25rem .25rem 0 0;padding:.35rem .55rem;border-radius:.5rem;background:rgba(255,209,232,.55);font-size:.9rem}
+        @media(max-width:760px){.fun-discovery-grid{grid-template-columns:1fr}#fun-suggestions{grid-column:auto}}
+        .tool-card h3 {
+            margin: 0 0 0.75rem;
+            font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.02em;
+            font-size: 2.1rem;
+            color: #0b3b1f;
+        }
+        .tool-card p {
+            margin-top: 0;
+        }
+        .tool-output {
+            margin-top: 1rem;
+            padding: 0.9rem 1rem;
+            background: rgba(245,230,200,0.55);
+            border-radius: 0.9rem;
+            border: 1px solid rgba(0,0,0,0.08);
+            min-height: 3.5rem;
+        }
+        .tool-output.small { min-height: 2.5rem; }
+        .rules-box {
+            margin-top: 1rem;
+            padding: 0.95rem 1rem;
+            background: rgba(245,230,200,0.55);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 0.9rem;
+            text-align: left;
+        }
+        .rules-box h4 {
+            margin: 0 0 0.5rem;
+            font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.02em;
+            font-size: 1.6rem;
+            color: #0b3b1f;
+        }
+        .rules-box ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+        .mini-select,
+        .mini-input {
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0.4rem 0 0.8rem;
+            padding: 0.75rem 0.85rem;
+            border-radius: 0.75rem;
+            border: 1px solid #cdbb9d;
+            font: inherit;
+            background: #fff;
+        }
+        .story-choices {
+            display: grid;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        .story-choices .game-btn {
+            width: 100%;
+        }
+        .map-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.65rem;
+            margin-top: 0.75rem;
+        }
+        .map-buttons .game-btn,
+        .story-choices .game-btn {
+            font-size: 1rem;
+            padding: 0.65rem 0.9rem;
+        }
+        .hero-options {
+            display: grid;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        .hero-options .quiz-option {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+        }
+        .hero-result {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+        .hero-result-title {
+            font-family: 'Cormorant Garamond', serif; font-weight: 500; text-transform: none; letter-spacing: 0.02em;
+            font-size: 2.5rem;
+            color: #0b3b1f;
+            margin: 0 0 0.4rem;
+        }
+        .sphinx-stage {
+            padding: 0.85rem 1rem;
+            border-radius: 0.9rem;
+            background: rgba(245,230,200,0.55);
+            border: 1px solid rgba(0,0,0,0.08);
+            margin-top: 0.75rem;
+        }
+        .sphinx-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+        .sphinx-actions .game-btn { flex: 1 1 140px; }
+        .fate-story {
+            margin-top: 0.75rem;
+            padding: 1rem;
+            border-radius: 0.9rem;
+            background: rgba(245,230,200,0.48);
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        .fate-controls {
+            display: grid;
+            gap: 0.75rem;
+            margin-top: 0.85rem;
+        }
+        .fate-controls .game-btn {
+            width: 100%;
+        }
+        .map-shell {
+            margin-top: 0.75rem;
+            border-radius: 1rem;
+            background: linear-gradient(180deg, #e8f2f8, #fdf4da);
+            border: 1px solid rgba(0,0,0,0.08);
+            padding: 0.75rem;
+        }
+        /* Ensure Leaflet controls sit above other UI and are clickable */
+        .leaflet-control { z-index: 2000 !important; pointer-events: auto !important; }
+        .leaflet-control-layers { background: rgba(255,255,255,0.95); }
+        .leaflet-topright { z-index: 2000 !important; }
+        /* Lighten Carto Dark tiles for readability (much lighter) */
+        .carto-dark-lighten { filter: brightness(2.2) contrast(1.02); }
+        #leaflet-map { width: 100%; height: 720px; border-radius: 0.75rem; }
+        .myth-map-svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .map-land { fill: #d6c08a; stroke: #8b7440; stroke-width: 3; }
+        .map-island { fill: #ccb06f; stroke: #8b7440; stroke-width: 2; }
+        .map-sea { fill: #cfe7f8; }
+        .map-pin circle { fill: #0b3b1f; stroke: #fff6df; stroke-width: 3; }
+        .map-pin text { fill: #173524; font-family: Georgia, serif; font-size: 14px; font-weight: 700; }
+        .map-pin { cursor: pointer; }
+        .map-pin:hover circle { fill: #6a4a1f; }
+        /* (debug visuals removed) */
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body { margin: 1rem; }
+            .top-nav { gap: 1rem; flex-wrap: wrap; }
+            .tool-card { padding: 1.5rem; }
+            button, .game-btn { min-height: 44px; padding: 0.6rem 1rem; }
+            iframe { height: 300px !important; }
+        }
+        @media (max-width: 480px) {
+            body { margin: 0.75rem; }
+            .top-nav { gap: 0.75rem; }
+            .tool-card { padding: 1rem; }
+            button, .game-btn { min-height: 48px; padding: 0.7rem 0.9rem; font-size: 0.95rem; }
+            .hero-options, .quiz-question { flex-wrap: wrap; }
+            iframe { height: 250px !important; }
+            .mini-input, .mini-select { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <h1>Mythly</h1>
+        <nav class="top-nav" aria-label="Main navigation">
+            <a href="home.html">Home</a>
+            <a href="characters.html">Characters</a>
+            <a href="quizzes.html">Quizzes</a>
+            <a href="myths.html">Myths</a>
+            <a href="mythly-tools.html">Tools</a>
+            <a href="about.html">About</a>
+        </nav>
+    </header>
+    <div class="subtitle"><p>Games and interactive fun</p></div>
+    <main>
+        
+
+        <!-- Personality Quiz -->
+        <section class="fun-section" id="parent-quiz">
+            <h3>Who is your Divine Parent?</h3>
+            <div id="quiz-content">
+                <p class="quiz-progress" id="quiz-progress"></p>
+                <p class="quiz-question" id="quiz-question"></p>
+                <div id="quiz-options"></div>
+            </div>
+            <div id="quiz-result-area" class="hidden">
+                <p>Your divine parent is: <span id="parent-name"></span>!</p>
+                <p id="parent-description"></p>
+                <button class="game-btn" onclick="resetQuiz()">Try Again</button>
+            </div>
+        </section>
+
+        <section class="fun-section">
+            <h3>More Myth Fun</h3>
+            <div class="tool-grid">
+                <div class="tool-card" id="hero-quiz-card">
+                    <h3>Which Hero Are You?</h3>
+                    <p>Answer a few questions and find your legendary match.</p>
+                    <div class="quiz-progress" id="hero-progress"></div>
+                    <div id="hero-quiz-question" class="quiz-question"></div>
+                    <div id="hero-options" class="hero-options"></div>
+                    <div id="hero-result" class="hero-result hidden"></div>
+                </div>
+
+                <div class="tool-card" id="sphinx-card">
+                    <h3>Riddle of the Sphinx</h3>
+                    <p>Answer each riddle and climb through the Sphinx’s levels.</p>
+                    <div class="sphinx-stage" id="sphinx-stage"></div>
+                    <div id="sphinx-question" class="quiz-question"></div>
+                    <div style="margin:.5rem 0;display:flex;align-items:center;gap:.5rem">
+                        <label for="sphinx-difficulty">Difficulty:</label>
+                        <select id="sphinx-difficulty" style="margin-left:.25rem">
+                            <option value="all">All</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                        <button id="sphinx-reset-used" class="game-btn" type="button" style="margin-left:8px;padding:.25rem .5rem;font-size:.9rem">Reset used</button>
+                        <div id="sphinx-current-level" style="margin-left:8px;font-size:.9rem;color:#333"></div>
+                    </div>
+                    <input id="sphinx-answer" class="mini-input" type="text" placeholder="Type your answer here">
+                    <div class="sphinx-actions">
+                        <button class="game-btn" type="button" id="sphinx-btn">Check Answer</button>
+                        <button class="game-btn secondary" type="button" id="sphinx-skip">Skip</button>
+                        <button class="game-btn secondary" type="button" id="sphinx-next" style="display:none;">Next Riddle</button>
+                    </div>
+                    <div class="tool-output" id="sphinx-output"></div>
+                    
+                </div>
+
+                <div class="tool-card" id="fate-card">
+                    <h3>Choose the Fate</h3>
+                    <p>Your choices shape the story. Pick a path and see how the myth unfolds.</p>
+                    <div class="fate-story" id="fate-story"></div>
+                        <div id="fate-riddle" class="sphinx-stage hidden">
+                            <div id="fate-riddle-question" class="quiz-question"></div>
+                            <input id="fate-riddle-input" class="mini-input" type="text" placeholder="Type your answer here">
+                            <div id="fate-riddle-options" class="story-choices"></div>
+                            <div class="sphinx-actions">
+                                <button class="game-btn" type="button" id="fate-riddle-submit">Submit</button>
+                                <button class="game-btn secondary" type="button" id="fate-riddle-skip">Skip</button>
+                            </div>
+                            <div id="fate-riddle-output" class="tool-output small"></div>
+                        </div>
+                        <div class="fate-controls" id="fate-choices"></div>
+                    <div class="quiz-actions"></div>
+                </div>
+
+                    <div class="tool-card" id="coolest-god-card">
+                    <h3>Which Greek god is the best?</h3>
+                    <p>Pick your favourite and see who is winning.</p>
+                    <div class="quiz-question">Choose one:</div>
+                    <div id="coolest-options" class="hero-options"></div>
+                    <div class="quiz-actions">
+                        <button class="game-btn secondary" type="button" id="coolest-show-chart">Show pie chart</button>
+                    </div>
+                    <div class="tool-output hidden" id="coolest-chart-container" style="padding-top:.5rem;">
+                        <canvas id="coolest-chart" width="780" height="780" style="width:100%;max-width:780px;height:auto;display:block;margin:0 auto;"></canvas>
+                        <div id="coolest-chart-legend" class="small" style="margin-top:.75rem;"></div>
+                    </div>
+                </div>
+
+                <div class="tool-card" id="best-hero-card">
+                    <h3>Which Greek hero is the best?</h3>
+                    <p>Cast your vote for the legendary hero you admire most.</p>
+                    <div class="quiz-question">Choose one:</div>
+                    <div id="hero-poll-options" class="hero-options"></div>
+                    <div class="quiz-actions">
+                        <button class="game-btn secondary" type="button" id="hero-poll-show-chart">Show pie chart</button>
+                    </div>
+                    <div class="tool-output hidden" id="hero-poll-chart-container" style="padding-top:.5rem;">
+                        <canvas id="hero-poll-chart" width="780" height="780" style="width:100%;max-width:780px;height:auto;display:block;margin:0 auto;"></canvas>
+                        <div id="hero-poll-chart-legend" class="small" style="margin-top:.75rem;"></div>
+                    </div>
+                </div>
+
+                <div class="tool-card" id="guess-monster-card">
+                    <h3>Guess the Monster</h3>
+                    <p>Choose an easy or hard set of clues and race to name as many creatures as possible in one minute.</p>
+                    <div style="margin:.5rem 0;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+                        <label for="monster-difficulty">Difficulty:</label>
+                        <select id="monster-difficulty" class="mini-select" style="margin:0;max-width:180px">
+                            <option value="easy">Easy</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    <div style="margin:.5rem 0;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+                        <label for="monster-player-name">Name:</label>
+                        <input id="monster-player-name" class="mini-input" type="text" placeholder="Type your name" style="max-width:180px;margin:0" value="">
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="game-btn" type="button" id="monster-start-btn">Start playing</button>
+                        <button class="game-btn secondary hidden" type="button" id="monster-restart-btn">Restart</button>
+                        <button class="game-btn secondary" type="button" id="monster-show-leaderboard-btn">Show leaderboard</button>
+                    </div>
+                    <div id="monster-game-area" class="hidden">
+                        <div class="tool-output small" id="monster-guess-timer">Time left: 1:00</div>
+                        <div class="tool-output small" id="monster-guess-score">Score: 0</div>
+                        <div class="tool-output small" id="monster-guess-clue"></div>
+                        <input id="monster-guess-input" class="mini-input" type="text" placeholder="Type your guess here">
+                        <div class="quiz-actions">
+                            <button class="game-btn" type="button" id="monster-guess-check">Check answer</button>
+                            <button class="game-btn secondary" type="button" id="monster-guess-next">Next monster</button>
+                        </div>
+                        <div class="tool-output small" id="monster-guess-feedback"></div>
+                    </div>
+                    <div class="tool-output small hidden" id="monster-guess-summary" style="margin-top:.75rem"></div>
+                    <div id="monster-leaderboard-panel" class="hidden" style="margin-top:.75rem">
+                        <strong>Leaderboard</strong>
+                        <ol id="monster-leaderboard" class="small"></ol>
+                    </div>
+                </div>
+
+                <div class="tool-card" id="did-you-know-card">
+                    <h3>Did you know?</h3>
+                    <p>Fun myth facts to learn while you explore.</p>
+                    <div class="tool-output small" id="did-you-know-output"></div>
+                    <div class="quiz-actions">
+                        <button class="game-btn secondary" type="button" id="did-you-know-next">Another fact</button>
+                    </div>
+                </div>
+
+                <div class="fun-discovery-grid">
+                    <section class="fun-discovery-card" id="fun-daily-myth">
+                        <h3>Daily Myth</h3>
+                        <p id="fun-daily-text"></p>
+                        <button class="game-btn secondary" type="button" id="fun-daily-next">Another myth</button>
+                    </section>
+                    <section class="fun-discovery-card" id="fun-achievements">
+                        <h3>Achievements</h3>
+                        <p>Little milestones for exploring Mythly.</p>
+                        <div id="fun-badges"></div>
+                    </section>
+                    <section class="fun-discovery-card" id="fun-suggestions">
+                        <h3>Suggest a Myth</h3>
+                        <p>What should we add next?</p>
+                        <form id="fun-suggestion-form"><textarea id="fun-suggestion-input" maxlength="240" required placeholder="A hero, monster, place, or story..."></textarea><button class="game-btn" type="submit">Save suggestion</button></form>
+                        <ul id="fun-suggestion-list"></ul>
+                    </section>
+                </div>
+
+                <div class="tool-card" id="myth-top-trumps-card">
+                    <h3>Myth Top Trumps</h3>
+                    <p>Play a quick Top Trumps duel against the AI.</p>
+                    <p><a class="fullscreen-link" href="myth-top-trumps.html" target="_blank" rel="noopener">Open in full screen</a></p>
+                    <iframe src="myth-top-trumps.html" style="width:100%;height:360px;border:0;margin-top:.5rem" title="Myth Top Trumps preview"></iframe>
+                    <div class="rules-box">
+                        <h4>How to play</h4>
+                        <ul>
+                            <li>Each round, you and the AI each reveal one card.</li>
+                            <li>Sometimes the AI chooses the category, and sometimes you choose it.</li>
+                            <li>When it is your turn to choose, click the category you want to compare, such as Strength or Wisdom.</li>
+                            <li>The winner of the round gets to choose the category for the next round.</li>
+                            <li>After a category is chosen, both cards are compared using that stat.</li>
+                            <li>All categories are scored out of 10 except Generation, which is scored out of 4.</li>
+                            <li>The higher value wins the round and the winning player takes the cards.</li>
+                            <li>If the values are the same, those cards are set aside and the next card from each player is revealed. They use the same category as they did in the tied round. The person who has the higher value that time wins the cards played that round and in the tied round(s).</li>
+                            <li>Keep playing until one player has no cards left, and that player wins the game.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tool-card" id="map-card">
+                    <h3>Myth Map</h3>
+                    <p>Click the places on the map to reveal facts about the ancient world.</p>
+                    <div class="map-shell">
+                        <div id="leaflet-map" role="img" aria-label="Interactive map of Greece centered on myth locations"></div>
+                    </div>
+                    <div class="tool-output" id="map-output"></div>
+                </div>
+
+                <div class="tool-card" id="creatures-card">
+                    <h3>Creature Compendium</h3>
+                    <p>Discover legendary monsters and divine creatures from Greek mythology. Learn about the Minotaur, Medusa, Hydra, and more!</p>
+                    <p><a class="fullscreen-link" href="creatures.html" target="_blank" rel="noopener">Explore Creatures</a></p>
+                </div>
+
+                
+                </div>
+                
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Minimal safe initializer to avoid runtime errors while troubleshooting.
+        (function safeInit(){
+            try {
+                console.log('Fun page: safeInit executed');
+            } catch (e) {
+                console.error('safeInit error', e);
+            }
+        })();
+    </script>
+    
+    <script>
+        try {
+
+        // --- Hero quiz data and renderer (simple fallback) ---
+        const heroResults = {
+            achilles: { name: 'Achilles', description: 'Brave and fierce — a hero of great strength.' },
+            odysseus: { name: 'Odysseus', description: 'Clever and resourceful, a keen strategist.' },
+            heracles: { name: 'Heracles', description: 'Strong and determined, always up for a trial.' },
+            perseus: { name: 'Perseus', description: 'Bold adventurer with a sharp mind.' }
+        };
+
+        const heroQuestions = [
+            { q: 'Pick an ideal challenge:', opts: [{t:'Battle a beast',k:'achilles'},{t:'Outwit a foe',k:'odysseus'},{t:'Complete a trial',k:'heracles'},{t:'Rescue someone',k:'perseus'}] },
+            { q: 'Choose a virtue:', opts: [{t:'Courage',k:'achilles'},{t:'Cunning',k:'odysseus'},{t:'Endurance',k:'heracles'},{t:'Honor',k:'perseus'}] },
+            { q: 'Which skill do you rely on most?', opts: [{t:'Strength',k:'heracles'},{t:'Guile',k:'odysseus'},{t:'Speed',k:'achilles'},{t:'Resourcefulness',k:'perseus'}] },
+            { q: 'Preferred companion on a quest:', opts: [{t:'A fierce champion',k:'achilles'},{t:'A clever scout',k:'odysseus'},{t:'A loyal giant',k:'heracles'},{t:'A swift messenger',k:'perseus'}] },
+            { q: 'What would you risk everything for?', opts: [{t:'Glory',k:'achilles'},{t:'A clever plan',k:'odysseus'},{t:'A sacred duty',k:'heracles'},{t:'To save a loved one',k:'perseus'}] },
+            { q: 'What tempts you most?', opts: [{t:'Fame',k:'achilles'},{t:'Curiosity',k:'odysseus'},{t:'A final challenge',k:'heracles'},{t:'Love and honor',k:'perseus'}] }
+        ];
+
+        let heroQuestionIndex = 0;
+        const heroScores = Object.keys(heroResults).reduce((acc,k)=> (acc[k]=0,acc),{});
+        const heroProgress = document.getElementById('hero-progress');
+        const heroQuizQuestion = document.getElementById('hero-quiz-question');
+        const heroOptions = document.getElementById('hero-options');
+        const heroResult = document.getElementById('hero-result');
+
+        function renderHeroQuiz() {
+            if (!heroQuizQuestion || !heroOptions) return;
+            if (heroResult) heroResult.classList.add('hidden');
+            const hq = heroQuestions[heroQuestionIndex];
+            if (heroProgress) heroProgress.innerText = `Question ${heroQuestionIndex+1} of ${heroQuestions.length}`;
+            heroQuizQuestion.innerText = hq.q;
+            heroOptions.innerHTML = '';
+            hq.opts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = opt.t;
+                btn.addEventListener('click', () => {
+                    heroScores[opt.k] = (heroScores[opt.k] || 0) + 1;
+                    heroQuestionIndex += 1;
+                    if (heroQuestionIndex >= heroQuestions.length) showHeroResult(); else renderHeroQuiz();
+                });
+                heroOptions.appendChild(btn);
+            });
+        }
+
+        // --- Divine Parent quiz (simple fallback) ---
+        const parentProfiles = {
+            zeus: { name: 'Zeus', desc: 'Powerful ruler of the gods: bold and commanding.' },
+            athena: { name: 'Athena', desc: 'Wise and strategic: thoughtful and fair.' },
+            poseidon: { name: 'Poseidon', desc: 'Unpredictable and strong: loyal and forceful.' },
+            aphrodite: { name: 'Aphrodite', desc: 'Warm and charming: passionate and kind.' }
+        };
+
+        const parentQuestions = [
+            { q: 'Pick a favorite place:', opts: [{t:'Mountaintop',k:'zeus'},{t:'Sea',k:'poseidon'},{t:'Olive Grove',k:'athena'},{t:'Garden',k:'aphrodite'}] },
+            { q: 'Pick a guide:', opts: [{t:'Eagle',k:'zeus'},{t:'Horse',k:'poseidon'},{t:'Owl',k:'athena'},{t:'Dove',k:'aphrodite'}] },
+            { q: 'Choose a virtue you admire:', opts: [{t:'Authority',k:'zeus'},{t:'Wisdom',k:'athena'},{t:'Loyalty',k:'poseidon'},{t:'Beauty',k:'aphrodite'}] },
+            { q: 'Pick a symbol you feel drawn to:', opts: [{t:'Lightning bolt',k:'zeus'},{t:'Trident',k:'poseidon'},{t:'Helmet/olive',k:'athena'},{t:'Rose',k:'aphrodite'}] },
+            { q: 'Choose a preferred pastime:', opts: [{t:'Hosting feasts',k:'zeus'},{t:'Sailing or fishing',k:'poseidon'},{t:'Studying strategy',k:'athena'},{t:'Making art',k:'aphrodite'}] },
+            { q: 'Which offering would you leave at a shrine?', opts: [{t:'A carved statue',k:'zeus'},{t:'A shell or fish',k:'poseidon'},{t:'An olive branch',k:'athena'},{t:'A scented oil',k:'aphrodite'}] }
+        ];
+
+        let parentIndex = 0;
+        const parentScores = Object.keys(parentProfiles).reduce((acc,k)=> (acc[k]=0,acc),{});
+        const quizQuestionEl = document.getElementById('quiz-question');
+        const quizOptionsEl = document.getElementById('quiz-options');
+        const quizProgressEl = document.getElementById('quiz-progress');
+
+        function renderParentQuestion() {
+            if (!quizQuestionEl || !quizOptionsEl) return;
+            if (quizProgressEl) quizProgressEl.innerText = `Question ${parentIndex+1} of ${parentQuestions.length}`;
+            const pq = parentQuestions[parentIndex];
+            quizQuestionEl.innerText = pq.q;
+            quizOptionsEl.innerHTML = '';
+            pq.opts.forEach(opt => {
+                const b = document.createElement('button');
+                b.className = 'quiz-option';
+                b.innerText = opt.t;
+                b.addEventListener('click', () => selectParentOption(opt.k));
+                quizOptionsEl.appendChild(b);
+            });
+        }
+
+        function selectParentOption(key) {
+            parentScores[key] = (parentScores[key] || 0) + 1;
+            parentIndex += 1;
+            if (parentIndex >= parentQuestions.length) showParentResult(); else renderParentQuestion();
+        }
+
+        function showParentResult() {
+            const winner = Object.keys(parentScores).reduce((a,b)=> parentScores[a]>=parentScores[b]?a:b);
+            const prof = parentProfiles[winner];
+            const parentNameEl = document.getElementById('parent-name'); if (parentNameEl) parentNameEl.innerText = prof.name;
+            const parentDescEl = document.getElementById('parent-description'); if (parentDescEl) parentDescEl.innerText = prof.desc;
+            const quizResultArea = document.getElementById('quiz-result-area'); if (quizResultArea) quizResultArea.classList.remove('hidden');
+            const quizContent = document.getElementById('quiz-content'); if (quizContent) quizContent.classList.add('hidden');
+        }
+
+        function resetQuiz() {
+            parentIndex = 0;
+            Object.keys(parentScores).forEach(k => parentScores[k]=0);
+            const quizResultArea = document.getElementById('quiz-result-area'); if (quizResultArea) quizResultArea.classList.add('hidden');
+            const quizContent = document.getElementById('quiz-content'); if (quizContent) quizContent.classList.remove('hidden');
+            renderParentQuestion();
+        }
+
+        function showHeroResult() {
+            let winner = 'achilles';
+            Object.entries(heroScores).forEach(([key, value]) => {
+                if (value > heroScores[winner]) {
+                    winner = key;
+                }
+            });
+
+            const result = heroResults[winner];
+            heroProgress.innerText = 'Quiz complete.';
+            heroQuizQuestion.innerText = '';
+            heroOptions.innerHTML = '';
+            heroResult.classList.remove('hidden');
+            heroResult.innerHTML = `
+                <p class="hero-result-title">You are ${result.name}!</p>
+                <p>${result.description}</p>
+                <button class="game-btn" type="button" id="hero-restart">Try Again</button>
+            `;
+            document.getElementById('hero-restart').addEventListener('click', resetHeroQuiz);
+        }
+
+        function resetHeroQuiz() {
+            heroQuestionIndex = 0;
+            Object.keys(heroScores).forEach((key) => { heroScores[key] = 0; });
+            renderHeroQuiz();
+        }
+
+        const coolestGods = [
+            { key: 'zeus', name: 'Zeus' },
+            { key: 'hera', name: 'Hera' },
+            { key: 'poseidon', name: 'Poseidon' },
+            { key: 'demeter', name: 'Demeter' },
+            { key: 'athena', name: 'Athena' },
+            { key: 'apollo', name: 'Apollo' },
+            { key: 'artemis', name: 'Artemis' },
+            { key: 'ares', name: 'Ares' },
+            { key: 'hephaestus', name: 'Hephaestus' },
+            { key: 'aphrodite', name: 'Aphrodite' },
+            { key: 'hermes', name: 'Hermes' },
+            { key: 'dionysus', name: 'Dionysus' },
+            { key: 'hestia', name: 'Hestia' },
+            { key: 'hades', name: 'Hades' },
+            { key: 'persephone', name: 'Persephone' },
+            {key:  'eros', name: 'Eros' }
+        ];
+        const coolestStorageKey = 'mythly-coolest-god-votes';
+        const monsterGuessPool = {
+            easy: [
+                { name: 'Minotaur', clue: 'I am half-man and half-bull, and I lurk inside a maze.' },
+                { name: 'Hydra', clue: 'I have many heads, and when one is cut off, two grow back in its place.' },
+                { name: 'Sphinx', clue: 'I ask riddles and devour those who answer badly.' },
+                { name: 'Cerberus', clue: 'I am a three-headed hound guarding the gates of the underworld.' },
+                { name: 'Chimera', clue: 'I am made of lion, goat, and serpent parts, and I breathe fire.' },
+                { name: 'Medusa', clue: 'My gaze can turn people to stone.' },
+                { name: 'Cyclops', clue: 'I have one giant eye in the middle of my forehead.' },
+                { name: 'Pegasus', clue: 'I am a winged horse that sprang from the blood of a monster.' },
+                { name: 'Phoenix', clue: 'I burn to ashes and rise again from the fire.' },
+                { name: 'Harpy', clue: 'I am a bird-woman who swoops from the sky and snatches prey.' },
+                { name: 'Siren', clue: 'I lure sailors to destruction with my enchanting song.' },
+                { name: 'Gorgon', clue: 'I am one of three sisters with snakes for hair.' },
+                { name: 'Kraken', clue: 'I am a giant sea monster that can drag ships beneath the waves.' },
+                { name: 'Manticore', clue: 'I have a lion’s body, a human face, and a tail tipped with spines.' },
+                { name: 'Basilisk', clue: 'I am a serpent with a deadly stare and a reputation for killing with one look.' },
+                { name: 'Typhon', clue: 'I am a storm giant whose roar can shake the world.' },
+                { name: 'Lamia', clue: 'I am a child-devouring monster with the body of a woman and the hunger of a beast.' },
+                { name: 'Orthrus', clue: 'I am a two-headed dog that guards the realm of monsters.' },
+                { name: 'Nemean Lion', clue: 'My hide is so tough that ordinary weapons cannot pierce it.' },
+                { name: 'Hecatoncheires', clue: 'I have a hundred hands and a terrible strength.' },
+                { name: 'Mimic', clue: 'I can appear as a harmless object until I leap at my prey.' },
+                { name: 'Arachne', clue: 'I am a mortal weaver whose pride rivals that of the gods.' },
+                { name: 'Werewolf', clue: 'I am a human who turns into a beast under the light of the moon.' },
+                { name: 'Troll', clue: 'I am a giant creature of the northern wilds who thrives on brute strength.' },
+                { name: 'Yeti', clue: 'I am a huge snow-dwelling creature of Himalayan legend.' },
+                { name: 'Dragon', clue: 'I am a winged reptile of fire, gold, and ancient treasure.' },
+                { name: 'Ogre', clue: 'I am a giant, fierce brute from old folklore.' },
+                { name: 'Witch', clue: 'I use spells and potions to bend fate and fear.' },
+                { name: 'Ghost', clue: 'I haunt the living as a wandering spirit of the dead.' },
+                { name: 'Vampire', clue: 'I feed on blood and thrive in the night.' }
+            ],
+            hard: [
+                { name: 'Dracaena', clue: 'I am a serpent-bodied monster whose lower half is a snake and whose upper half is a woman.' },
+                { name: 'Empousai', clue: 'I am a shape-shifting demon and one of Hecate’s vampire servants, with a fiery leg and a hunger for the living.' },
+                { name: 'Empusa', clue: 'I am a shape-shifting demon who can appear as a beautiful woman and feed on flesh.' },
+                { name: 'Lernaean Hydra', clue: 'I am the many-headed serpent from the swamp of Lerna, whose heads regrow after each cut.' },
+                { name: 'Geryon', clue: 'I am a three-bodied giant whose cattle are guarded by a watchdog and a herdsman.' },
+                { name: 'Sphinx', clue: 'I am a winged riddler from the wastes of Thebes who destroys those who answer wrongly.' },
+                { name: 'Echidna', clue: 'I am a half-woman, half-serpent mother of many monsters.' },
+                { name: 'Orthrus', clue: 'I am the two-headed hound that guards the underworld’s gates.' },
+                { name: 'Chimera', clue: 'I am a fire-breathing monster with lion, goat, and serpent features.' },
+                { name: 'Amphisbaena', clue: 'I have a head at both ends and move like a serpent with double danger.' },
+                { name: 'Ammut', clue: 'I am a weighty crocodile-headed demon who devours the hearts of the unworthy in Egyptian myth.' },
+                { name: 'Manticore', clue: 'I have the body of a lion, the face of a man, and a spined tail.' },
+                { name: 'Basilisk', clue: 'I am a reptile whose gaze can kill and whose breath carries corruption.' },
+                { name: 'Scylla', clue: 'I am a sea monster with six heads and a lair among rocks and whirlpools.' },
+                { name: 'Charybdis', clue: 'I am a monstrous whirlpool that swallows the sea and all who sail too close.' },
+                { name: 'Lamia', clue: 'I am a child-devouring monster with the face of a woman and the appetite of a beast.' },
+                { name: 'Arachne', clue: 'I am a mortal weaver whose art challenged the goddess of wisdom herself.' },
+                { name: 'Asterius', clue: 'I am the Minotaur’s name in some stories, a monster of the labyrinth and the bull.' },
+                { name: 'Siren', clue: 'My song is so beautiful that ships are lured onto the rocks.' },
+                { name: 'Harpy', clue: 'I am a winged snatcher from the storm-wind and the grave.' },
+                { name: 'Ceryneian Hind', clue: 'I am a sacred deer with bronze hooves and a silver horn.' },
+                { name: 'Nemean Lion', clue: 'My hide is invulnerable, so I must be strangled rather than pierced.' },
+                { name: 'Erymanthian Boar', clue: 'I am a monstrous boar that terrorises the forests of Arcadia.' },
+                { name: 'Stymphalian Birds', clue: 'I am a flock of metal-beaked birds that rain death from the sky.' },
+                { name: 'Keres', clue: 'I am a death spirit who spreads plague and doom.' },
+                { name: 'Mormo', clue: 'I am a ghostly bogeymonster used to frighten children in ancient tales.' },
+                { name: 'Hecatoncheires', clue: 'I am a giant with fifty heads and a hundred arms.' },
+                { name: 'Calydonian Boar', clue: 'I am a giant boar that ravages fields and hunts men.' },
+                { name: 'Gorgon', clue: 'My sight can turn the bold to stone, and my hair is made of serpents.' },
+                { name: 'Hydra', clue: 'I am a serpent whose heads multiply when cut, making me a terrible enemy.' },
+                { name: 'Medusa', clue: 'I am the mortal Gorgon whose stare can freeze living flesh.' },
+                { name: 'Typhon', clue: 'I am a storm giant so vast that even the gods once feared me.' },
+                { name: 'Ladon', clue: 'I am the dragon who guards the golden apples of the Hesperides.' },
+                { name: 'Ipotane', clue: 'I am a horse-headed beast from myth that can terrorise the wilds.' },
+                { name: 'Draugr', clue: 'I am a dead warrior risen from the grave to haunt the living.' },
+                { name: 'Wendigo', clue: 'I am a spirit of starvation and winter that haunts the forest.' },
+                { name: 'Mongrel', clue: 'I am a beast of mixed form in old legends, part dog, part nightmare.' },
+                { name: 'Selkie', clue: 'I appear as a seal at sea but can shed my skin and become human on shore.' }
+            ]
+        };
+        let monsterGuessIndex = 0;
+        let monsterGuessDifficulty = 'easy';
+        let monsterGuessActive = false;
+        let monsterGuessTimeLeft = 60;
+        let monsterGuessScore = 0;
+        let monsterGuessTimerId = null;
+        let monsterGuessAdvanceTimeoutId = null;
+        let monsterGuessOrder = [];
+        const heroPollHeroes = [
+            { key: 'achilles', name: 'Achilles' },
+            { key: 'odysseus', name: 'Odysseus' },
+            { key: 'heracles', name: 'Heracles' },
+            { key: 'perseus', name: 'Perseus' },
+            { key: 'theseus', name: 'Theseus' },
+            { key: 'jason', name: 'Jason' }
+        ];
+        const heroPollStorageKey = 'mythly-best-hero-votes';
+        const heroPollUserVoteKey = 'mythly-best-hero-user-vote';
+        const coolestOptionsEl = document.getElementById('coolest-options');
+        const coolestShowChartBtn = document.getElementById('coolest-show-chart');
+        const coolestChartContainer = document.getElementById('coolest-chart-container');
+        const coolestChartCanvas = document.getElementById('coolest-chart');
+        const coolestChartLegend = document.getElementById('coolest-chart-legend');
+        const didYouKnowOutput = document.getElementById('did-you-know-output');
+        const didYouKnowNextBtn = document.getElementById('did-you-know-next');
+        const didYouKnowFacts = [
+            'Apollo was not just the god of the sun; he was also the god of music, healing, archery, and prophecy.',
+            'Athena sprang fully grown and armed from Zeus’s head after he swallowed her mother Metis.',
+            'Ares was not very popular even among the gods — the Greeks often preferred Athena’s strategic side of war.',
+            'Hera was both Zeus’s wife and his sister, which was normal among the Olympians.',
+            'Poseidon created the first horse and was worshipped as the protector of sailors and earthquakes.',
+            'Aphrodite was said to have been born from sea foam after Uranus was cast into the sea.',
+            'Hermes was so clever as a baby that he stole Apollo’s cattle and invented the lyre on the same day.',
+            'Demeter once stopped all crops from growing until her daughter Persephone returned from the underworld.',
+            'Hades had a helmet of invisibility, which he lent to heroes like Perseus and the gods in battle.',
+            'The ancient Greeks believed the Milky Way was the milk of Hera spilt across the sky.',
+            'Arachne challenged Athena to a weaving contest and was turned into a spider when she won.',
+            'The Trojan horse trick that ended Troy was built by the clever Greeks under Odysseus’s plan.',
+            'Aphrodite made the Trojan prince Paris fall in love with Helen, starting the Trojan War.',
+            'The Oracle at Delphi spoke for Apollo through a priestess called the Pythia who chewed laurel and breathed vapors.',
+            'There were originally twelve main Olympian gods, but Hestia gave up her spot to Dionysus in some tales.',
+            'During the festival of Dionysus, men and women danced wildly and sometimes dressed as animals.',
+            'The labyrinth of Crete was so complex that even its creator Daedalus barely escaped from it.',
+            'Midas was granted the golden touch, but it became a curse when he turned his own food into gold.',
+            'The phoenix is a mythic bird that is reborn from its own ashes every few hundred years.',
+            'Nemean Lion’s hide was impenetrable, so Heracles strangled it and wore it as armor.',
+            'Pegasus sprang from Medusa’s neck when Perseus cut off her head.',
+            'The river Styx was considered sacred and literally made gods swear unbreakable oaths.',
+            'Orpheus could charm rocks, forests, and even Hades with his music when he tried to rescue Eurydice.',
+            'Sleeping in the Temple of Asclepius was an ancient healing ritual called incubation.',
+            'The Greeks thought that thunder and lightning were signs of Zeus throwing his thunderbolts.',
+            'Jason’s ship, the Argo, had a talking prow that could warn the crew of danger.',
+            'The first woman Pandora opened a jar and released all the world’s troubles, leaving only hope inside.',
+            'Sisyphus was punished to push a boulder uphill forever because he tricked the gods.',
+            'Tantalus stood in a pool of water beneath fruit trees but could not drink or eat as punishment.',
+            'The goddess Nike personified victory and flew around battlefields blessing winners.',
+            'Eros, the god of love, could make people fall in love with his golden arrow or hate with his lead arrow.',
+            'The first Olympic Games were held to honor Zeus and featured chariot racing, wrestling, and foot races.',
+            'A cyclops is a giant with a single eye, and one of them, Polyphemus, was blinded by Odysseus.',
+            'Nereids were sea nymphs who helped sailors and were said to be the daughters of Nereus.',
+            'The giant Antaeus was unbeatable while touching the earth, but Hercules lifted him away to defeat him.',
+            'Arachne was a mortal weaver who dared to boast her skill was better than Athena’s and was punished for her pride.',
+            'The goddess Iris was a rainbow messenger who delivered messages for Hera and Zeus.',
+            'Cassandra could see the future clearly, but Apollo cursed her so no one would believe her warnings.',
+            'The Gorgons were three sisters with snakes for hair; Medusa was the only mortal one.',
+            'The Greeks imagined the world as a disk surrounded by the river Okeanos, where the sun sailed around each day.',
+            'The goddess Selene drove a moon chariot through the sky, accompanied by her lover Endymion.',
+            'The River Lethe in the underworld caused souls to forget their past lives before rebirth.',
+            'The shield of Achilles was forged by Hephaestus and described in great detail in the Iliad.',
+            'The apple of discord caused a fight between Athena, Hera, and Aphrodite and led to the Trojan War.',
+            'The hero Bellerophon rode Pegasus and defeated the fire-breathing Chimera.',
+            'The goddess Hestia was the keeper of the hearth and protected family life and homes.',
+            'The Muses were nine sisters who inspired music, dance, poetry, and history.',
+            'Dionysus was the son of Zeus and the mortal princess Semele, and he was born after Zeus saved him from Semele’s fiery death.',
+            'The Naiads were freshwater nymphs who watched over springs, rivers, and fountains.',
+            'Prometheus stole fire from the gods and gave it to humans, for which he was chained to a rock.',
+            'The goddess Demeter disguised herself as an old woman when searching for Persephone.',
+            'Ares and Aphrodite had a secret affair that was exposed by the clever god Hephaestus.',
+            'Hermes invented the alphabet, numbers, boxing, and the lyre in some versions of his myths.',
+            'The hero Theseus defeated the Minotaur with the help of Ariadne’s thread.',
+            'The Sirens lured sailors to shipwreck with songs so enchanting no one could resist them.',
+            'Hephaestus made magical weapons and armor for gods and heroes, including Achilles’ armor.',
+            'The goddess Gaia was the Earth itself, and her children included the Titans and the Cyclopes.',
+            'Zeus disguised himself as a swan to seduce Leda and a bull to carry Europa away.',
+            'Medea helped Jason steal the Golden Fleece and later used magic to take revenge on him.',
+            'The three Fates measured, spun, and cut the thread of every mortal life.',
+            'The hero Perseus used a polished shield to avoid looking at Medusa directly.',
+            'Athena was the goddess of wisdom, but she also invented the flute, the bridle, and the potter’s wheel.',
+            'Artemis was protector of wildlife, and she punished hunters who were cruel to animals.',
+            'The ancient Greeks believed that comets were omens sent by the gods.',
+            'The myth of the Titans tells how Zeus led a war against the older generation of gods.',
+            'The Labyrinth was so difficult that even Daedalus barely escaped after building it.',
+            'The hero Orpheus lost Eurydice again when he looked back at her as they left the underworld.',
+            'The goddess Hera could be jealous and sometimes punished Zeus’s lovers and their children.',
+            'Atlas was forced to hold up the sky as punishment for his role in the Titan rebellion.',
+            'Helen of Troy was called the most beautiful woman in the world, and her abduction sparked a huge war.',
+            'Hermes guided dead souls to the underworld with his winged sandals.',
+            'The god Pan had the legs and horns of a goat and made the sound “panic” in lonely places.',
+            'The story of Cupid and Psyche mixes Roman and Greek myth and became a classic love tale.',
+            'The goddess Nemesis punished people who became too proud or arrogant.',
+            'The Moirai were the three Fates: Clotho spun life, Lachesis measured it, and Atropos cut it.',
+            'The hero Odysseus spent ten years wandering the seas after the Trojan War before reaching home.',
+            'The Greek hero Atalanta was raised by bears and became one of the fastest hunters on Earth.',
+            'The golden apples of the Hesperides were guarded by a dragon and stolen by Heracles.',
+            'The Phoenix was said to live 500 years, then burn itself and rise again from the ashes.',
+            'Typhon was a monstrous storm giant so terrible even Zeus needed all his thunderbolts to defeat him.',
+            'The goddess Iris delivered messages not only for Zeus but also for many of the other gods.',
+            'The goddess Demeter created the first harvest festival after Persephone returned from the underworld.',
+            'The river Phlegethon in the underworld flowed with fire rather than water.',
+            'The Cyclops Polyphemus fell in love with the sea nymph Galatea in later myths.',
+            'The goddess Athena created the olive tree as a gift to the city of Athens.',
+            'Homer’s epics, the Iliad and Odyssey, were probably sung by rhapsodes in ancient Greece.',
+            'Sphinxes were dangerous creatures that asked riddles and ate those who answered wrong.',
+            'The hero Bellerophon nearly flew to Mount Olympus on Pegasus but was thrown off by Zeus.',
+            'The goddess Artemis could turn mortals into animals or stars if they displeased her.',
+            'The Greek hero Jason assembled heroes from all over Greece to sail on the Argo.',
+            'The Greek gods often took human form and mingled among mortals to test or trick them.',
+            'Narcissus fell in love with his own reflection and turned into a flower after wasting away.',
+            'The hero Heracles was fed divine milk as a baby, which is why he grew so strong.',
+            'The Cretan bull was a monster that Heracles had to capture as one of his labors.',
+            'The goddess Demeter was so sad at Persephone’s absence that winter came to the world.',
+            'The god Apollo drove a chariot of fire across the sky to pull the sun each day.',
+            'The Muses were patrons of every art, including history, astronomy, and dance.',
+            'The goddess Athena was also called Pallas Athena, and one explanation says she accidentally killed her friend Pallas.',
+            'The wooden horse used to invade Troy was built to hide the Greek soldiers inside.',
+            'The god Hephaestus was lame, but he was the greatest craftsman among gods and giants.',
+            'The story of Demeter and Persephone is one of the oldest myths explaining the change of seasons.',
+            'Spartans trained from childhood to be soldiers and were famous for their discipline.',
+            'Circe was a witch who turned Odysseus’s men into pigs before his cleverness saved them.',
+            'The island of Delos was sacred because it was the birthplace of Artemis and Apollo.',
+            'The goddess Athena gave the Greek hero Perseus a polished shield to face Medusa safely.',
+            'The hero Theseus used a ball of thread called “clew” to find his way out of the Labyrinth.',
+            'The goddess Aphrodite could make anyone fall instantly in love with the one she chose.',
+            'The river Lethe in the underworld caused the dead to forget their past before rebirth.',
+            'The Argonauts’ ship Argo had a magic beam from the oak of Dodona that could speak and give advice.',
+            'Zeus changed into a shower of gold to visit Danae when she was hidden in a bronze chamber.',
+            'The goddess Athena was born the same day as Apollo in some versions of the myth.',
+            'The hero Perseus received winged sandals from Hermes to fly and escape from Medusa’s sisters.',
+            'The goddess Demeter hid in disguise among mortals to learn why crops were failing.',
+            'The goddess Hera used peacocks as her sacred birds after one gave her its eyes.',
+            'The god Apollo’s son Asclepius became the greatest healer, and temples were built to cure the sick.',
+            'The goddess Artemis once turned her own hunter companion Orion into a constellation.',
+            'The goddess Athena punished Arachne for disrespecting the gods, but the story also celebrates craft and creativity.',
+            'The Greek hero Odysseus was known for his cleverness and for the phrase “outsmarting his enemies.”',
+            'The story of the golden fleece is a symbol of kingship, adventure, and betrayal.',
+            'The god Poseidon created horses when he struck the earth with his trident.',
+            'The goddess Aphrodite had a magical girdle that made anyone she desired fall in love.',
+            'The hero Perseus used the head of Medusa as a weapon even after he cut it off.',
+            'The goddess Athena was the patron goddess of Athens and won the city in a contest by gifting the olive tree.',
+            'The giant Polyphemus lived in a cave and ate sheep until Odysseus tricked him with wine.',
+            'The goddess Artemis protected children but also punished those who broke her sacred laws.',
+            'The goddess Hera could cause storms or sickness when she was angry about Zeus’s behaviour.',
+            'The island of Delos was once carried through the sea until it found a permanent home where Artemis was born.',
+            'The god Apollo fought the giant Python at Delphi and made the site sacred to prophecy.',
+            'The Greek gods sometimes punished mortals for pride by making their lives very difficult.',
+            'The hero Heracles had to clean the Augean stables in a single day by rerouting rivers.',
+            'The goddess Athena invented the plough, the trumpet, and the chariot according to some stories.',
+            'The goddess Artemis had a band of huntress followers who lived by her strict rules.',
+            'The goddess Aphrodite was once married to Hephaestus but had many other lovers including Ares.',
+            'The hero Theseus became king of Athens after defeating the Minotaur in the Labyrinth.',
+            'The river Styx surrounded the underworld and was deadly if a mortal touched it.',
+            'Zeus once turned into a black bull to carry away Europa across the sea.',
+            'The goddess Athena helped heroes like Perseus, Odysseus, and Jason when they showed respect to the gods.',
+            'The myth of Narcissus teaches that falling in love with yourself can lead to loneliness.',
+            'The goddess Artemis helped mothers in childbirth and watched over newborn babies.',
+            'The hero Odysseus spent seven years trapped on the island of the nymph Calypso before he was allowed to leave.',
+            'Persephone became queen of the underworld but still spent part of every year above ground with her mother.',
+            'The goddess Athena was associated with reason, courage, and the arts of peace as well as war.',
+            'The hero Heracles completed twelve impossible labours to atone for a terrible mistake the gods made him commit.',
+            'The god Hermes could move between the world of gods, humans, and the dead, acting as a guide in all realms.'
+        ];
+
+        function loadCoolestVotes() {
+            try {
+                return JSON.parse(localStorage.getItem(coolestStorageKey) || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveCoolestVotes(votes) {
+            try {
+                localStorage.setItem(coolestStorageKey, JSON.stringify(votes));
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        const coolestUserVoteKey = 'mythly-coolest-god-user-vote';
+        function loadCoolestUserVote() {
+            try {
+                return localStorage.getItem(coolestUserVoteKey) || null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function saveCoolestUserVote(key) {
+            try {
+                localStorage.setItem(coolestUserVoteKey, key);
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        function hasVotedCoolestGod() {
+            return !!loadCoolestUserVote();
+        }
+
+        const coolestChartColors = [
+            '#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E8684A', '#6DC8EC', '#9270CA', '#FF9D4D', '#269A99', '#FF99C3', '#A0D8F1', '#FF7A45', '#8D8DFF', '#B6A2DE', '#FF99AC', '#FFBB96'
+        ];
+        const heroPollChartColors = [
+            '#0b3b1f', '#6a4a1f', '#5B8FF9', '#D9782D', '#E8684A', '#9270CA'
+        ];
+
+        let lastCoolestSignature = '';
+        let lastHeroPollSignature = '';
+
+        function refreshPollViews() {
+            const coolestSignature = JSON.stringify(loadCoolestVotes()) + '|' + (loadCoolestUserVote() || '');
+            const heroSignature = JSON.stringify(loadHeroPollVotes()) + '|' + (loadHeroPollUserVote() || '');
+            if (coolestSignature !== lastCoolestSignature) {
+                try { renderCoolestPoll(); } catch (e) { console.error('refresh coolest poll', e); }
+                lastCoolestSignature = coolestSignature;
+            }
+            if (heroSignature !== lastHeroPollSignature) {
+                try { renderHeroPoll(); } catch (e) { console.error('refresh hero poll', e); }
+                lastHeroPollSignature = heroSignature;
+            }
+        }
+
+        window.__refreshPollViews = refreshPollViews;
+
+        function renderCoolestPoll() {
+            if (!coolestOptionsEl) return;
+            const userVote = loadCoolestUserVote();
+            coolestOptionsEl.innerHTML = '';
+            coolestGods.forEach(god => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'quiz-option';
+                button.innerText = god.name;
+                button.disabled = !!userVote;
+                if (!userVote) {
+                    button.addEventListener('click', () => voteCoolestGod(god.key));
+                }
+                coolestOptionsEl.appendChild(button);
+            });
+            updateCoolestChart();
+        }
+
+        function voteCoolestGod(key) {
+            if (hasVotedCoolestGod()) return;
+            const votes = loadCoolestVotes();
+            votes[key] = (votes[key] || 0) + 1;
+            saveCoolestVotes(votes);
+            saveCoolestUserVote(key);
+            refreshPollViews();
+        }
+
+        function getCoolestVoteSummary() {
+            const votes = loadCoolestVotes();
+            return coolestGods.map((god, idx) => ({
+                key: god.key,
+                name: god.name,
+                count: votes[god.key] || 0,
+                color: coolestChartColors[idx % coolestChartColors.length]
+            }));
+        }
+
+        function updateCoolestChart() {
+            if (!coolestChartCanvas || !coolestChartLegend) return;
+            const summary = getCoolestVoteSummary();
+            const total = summary.reduce((sum, item) => sum + item.count, 0);
+            const ctx = coolestChartCanvas.getContext('2d');
+            ctx.clearRect(0, 0, coolestChartCanvas.width, coolestChartCanvas.height);
+            if (total === 0) {
+                coolestChartLegend.innerHTML = '<em>No votes yet to show.</em>';
+                return;
+            }
+            const centerX = coolestChartCanvas.width / 2;
+            const centerY = coolestChartCanvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 10;
+            let startAngle = -Math.PI / 2;
+            summary.forEach(item => {
+                if (!item.count) return;
+                const slice = (item.count / total) * Math.PI * 2;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, startAngle + slice);
+                ctx.closePath();
+                ctx.fillStyle = item.color;
+                ctx.fill();
+
+                const midAngle = startAngle + slice / 2;
+                const textRadius = radius * 0.6;
+                const textX = centerX + Math.cos(midAngle) * textRadius;
+                const textY = centerY + Math.sin(midAngle) * textRadius;
+                const pct = total ? Math.round((item.count / total) * 100) : 0;
+                const label = `${item.name.toUpperCase()} ${pct}%`;
+                const maxTextWidth = Math.max(32, slice * textRadius * 0.85);
+                const maxTextHeight = radius * 0.18;
+                let fontSize = Math.min(40, Math.floor(maxTextHeight));
+                ctx.font = `900 ${fontSize}px sans-serif`;
+                while (fontSize > 10 && ctx.measureText(label).width > maxTextWidth) {
+                    fontSize -= 1;
+                    ctx.font = `900 ${fontSize}px sans-serif`;
+                }
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(label, textX, textY);
+
+                startAngle += slice;
+            });
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            coolestChartLegend.innerHTML = '';
+        }
+
+        function toggleCoolestChart() {
+            if (!coolestChartContainer || !coolestShowChartBtn) return;
+            const isVisible = !coolestChartContainer.classList.contains('hidden');
+            if (isVisible) {
+                coolestChartContainer.classList.add('hidden');
+                coolestShowChartBtn.innerText = 'Show pie chart';
+            } else {
+                updateCoolestChart();
+                coolestChartContainer.classList.remove('hidden');
+                coolestShowChartBtn.innerText = 'Hide pie chart';
+            }
+        }
+
+        const coolestVotesResetKey = 'mythly-coolest-god-votes-reset-v2';
+        function ensureCoolestVotesResetOnce() {
+            try {
+                if (!localStorage.getItem(coolestVotesResetKey)) {
+                    saveCoolestVotes({});
+                    localStorage.setItem(coolestVotesResetKey, 'true');
+                }
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        function renderDidYouKnow() {
+            if (!didYouKnowOutput) return;
+            const fact = didYouKnowFacts[Math.floor(Math.random() * didYouKnowFacts.length)];
+            didYouKnowOutput.innerHTML = `<strong>Did you know?</strong> ${fact}`;
+        }
+
+        function initCoolestAndFacts() {
+            ensureCoolestVotesResetOnce();
+            renderCoolestPoll();
+            renderDidYouKnow();
+            if (coolestShowChartBtn) coolestShowChartBtn.addEventListener('click', toggleCoolestChart);
+            if (didYouKnowNextBtn) didYouKnowNextBtn.addEventListener('click', renderDidYouKnow);
+        }
+
+        const heroPollOptionsEl = document.getElementById('hero-poll-options');
+        const heroPollShowChartBtn = document.getElementById('hero-poll-show-chart');
+        const heroPollChartContainer = document.getElementById('hero-poll-chart-container');
+        const heroPollChartCanvas = document.getElementById('hero-poll-chart');
+        const heroPollChartLegend = document.getElementById('hero-poll-chart-legend');
+        const monsterGuessClueEl = document.getElementById('monster-guess-clue');
+        const monsterGuessInputEl = document.getElementById('monster-guess-input');
+        const monsterGuessFeedbackEl = document.getElementById('monster-guess-feedback');
+        const monsterGuessCheckBtn = document.getElementById('monster-guess-check');
+        const monsterGuessNextBtn = document.getElementById('monster-guess-next');
+        const monsterDifficultySelect = document.getElementById('monster-difficulty');
+        const monsterStartBtn = document.getElementById('monster-start-btn');
+        const monsterRestartBtn = document.getElementById('monster-restart-btn');
+        const monsterShowLeaderboardBtn = document.getElementById('monster-show-leaderboard-btn');
+        const monsterGameAreaEl = document.getElementById('monster-game-area');
+        const monsterTimerEl = document.getElementById('monster-guess-timer');
+        const monsterScoreEl = document.getElementById('monster-guess-score');
+        const monsterSummaryEl = document.getElementById('monster-guess-summary');
+        const monsterLeaderboardPanelEl = document.getElementById('monster-leaderboard-panel');
+        const monsterLeaderboardEl = document.getElementById('monster-leaderboard');
+        const monsterPlayerNameEl = document.getElementById('monster-player-name');
+        const monsterLeaderboardStorageKey = 'mythly-monster-leaderboard-v1';
+
+        function loadHeroPollVotes() {
+            try {
+                return JSON.parse(localStorage.getItem(heroPollStorageKey) || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveHeroPollVotes(votes) {
+            try {
+                localStorage.setItem(heroPollStorageKey, JSON.stringify(votes));
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        function loadHeroPollUserVote() {
+            try {
+                return localStorage.getItem(heroPollUserVoteKey) || null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function saveHeroPollUserVote(key) {
+            try {
+                localStorage.setItem(heroPollUserVoteKey, key);
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        function hasVotedHeroPoll() {
+            return !!loadHeroPollUserVote();
+        }
+
+        function renderHeroPoll() {
+            if (!heroPollOptionsEl) return;
+            const userVote = loadHeroPollUserVote();
+            heroPollOptionsEl.innerHTML = '';
+            heroPollHeroes.forEach(hero => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'quiz-option';
+                button.innerText = hero.name;
+                button.disabled = !!userVote;
+                if (!userVote) {
+                    button.addEventListener('click', () => voteHeroPoll(hero.key));
+                }
+                heroPollOptionsEl.appendChild(button);
+            });
+            updateHeroPollChart();
+        }
+
+        function voteHeroPoll(key) {
+            if (hasVotedHeroPoll()) return;
+            const votes = loadHeroPollVotes();
+            votes[key] = (votes[key] || 0) + 1;
+            saveHeroPollVotes(votes);
+            saveHeroPollUserVote(key);
+            refreshPollViews();
+        }
+
+        function getHeroPollSummary() {
+            const votes = loadHeroPollVotes();
+            return heroPollHeroes.map((hero, idx) => ({
+                key: hero.key,
+                name: hero.name,
+                count: votes[hero.key] || 0,
+                color: heroPollChartColors[idx % heroPollChartColors.length]
+            }));
+        }
+
+        function updateHeroPollChart() {
+            if (!heroPollChartCanvas || !heroPollChartLegend) return;
+            const summary = getHeroPollSummary();
+            const total = summary.reduce((sum, item) => sum + item.count, 0);
+            const ctx = heroPollChartCanvas.getContext('2d');
+            ctx.clearRect(0, 0, heroPollChartCanvas.width, heroPollChartCanvas.height);
+            if (total === 0) {
+                heroPollChartLegend.innerHTML = '<em>No votes yet to show.</em>';
+                return;
+            }
+            const centerX = heroPollChartCanvas.width / 2;
+            const centerY = heroPollChartCanvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 10;
+            let startAngle = -Math.PI / 2;
+            summary.forEach(item => {
+                if (!item.count) return;
+                const slice = (item.count / total) * Math.PI * 2;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, startAngle + slice);
+                ctx.closePath();
+                ctx.fillStyle = item.color;
+                ctx.fill();
+
+                const midAngle = startAngle + slice / 2;
+                const textRadius = radius * 0.6;
+                const textX = centerX + Math.cos(midAngle) * textRadius;
+                const textY = centerY + Math.sin(midAngle) * textRadius;
+                const pct = total ? Math.round((item.count / total) * 100) : 0;
+                const label = `${item.name.toUpperCase()} ${pct}%`;
+                const maxTextWidth = Math.max(32, slice * textRadius * 0.85);
+                const maxTextHeight = radius * 0.18;
+                let fontSize = Math.min(40, Math.floor(maxTextHeight));
+                ctx.font = `900 ${fontSize}px sans-serif`;
+                while (fontSize > 10 && ctx.measureText(label).width > maxTextWidth) {
+                    fontSize -= 1;
+                    ctx.font = `900 ${fontSize}px sans-serif`;
+                }
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(label, textX, textY);
+                startAngle += slice;
+            });
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            heroPollChartLegend.innerHTML = '';
+        }
+
+        function toggleHeroPollChart() {
+            if (!heroPollChartContainer || !heroPollShowChartBtn) return;
+            const isVisible = !heroPollChartContainer.classList.contains('hidden');
+            if (isVisible) {
+                heroPollChartContainer.classList.add('hidden');
+                heroPollShowChartBtn.innerText = 'Show pie chart';
+            } else {
+                updateHeroPollChart();
+                heroPollChartContainer.classList.remove('hidden');
+                heroPollShowChartBtn.innerText = 'Hide pie chart';
+            }
+        }
+
+        function initHeroPoll() {
+            renderHeroPoll();
+            if (heroPollShowChartBtn) heroPollShowChartBtn.addEventListener('click', toggleHeroPollChart);
+        }
+
+        function loadMonsterLeaderboard() {
+            try {
+                return JSON.parse(localStorage.getItem(monsterLeaderboardStorageKey) || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function clearMonsterLeaderboard() {
+            try {
+                localStorage.removeItem(monsterLeaderboardStorageKey);
+            } catch (e) {
+                // ignore storage errors
+            }
+            renderMonsterLeaderboard();
+        }
+
+        function saveMonsterLeaderboard(entries) {
+            const sortedEntries = (entries || [])
+                .slice()
+                .sort((a, b) => b.score - a.score);
+            try {
+                localStorage.setItem(monsterLeaderboardStorageKey, JSON.stringify(sortedEntries));
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        function renderMonsterLeaderboard() {
+            if (!monsterLeaderboardEl) return;
+            const entries = loadMonsterLeaderboard().slice().sort((a, b) => b.score - a.score).slice(0, 5);
+            monsterLeaderboardEl.innerHTML = '';
+            if (!entries.length) {
+                monsterLeaderboardEl.innerHTML = '<li>No scores yet.</li>';
+                return;
+            }
+            entries.forEach((entry, index) => {
+                const item = document.createElement('li');
+                item.innerHTML = `<strong>${index + 1}. ${entry.name}</strong> — ${entry.score} correct`;
+                monsterLeaderboardEl.appendChild(item);
+            });
+        }
+
+        function toggleMonsterLeaderboard() {
+            if (!monsterLeaderboardPanelEl || !monsterShowLeaderboardBtn) return;
+            const isVisible = !monsterLeaderboardPanelEl.classList.contains('hidden');
+            if (isVisible) {
+                monsterLeaderboardPanelEl.classList.add('hidden');
+                monsterShowLeaderboardBtn.innerText = 'Show leaderboard';
+            } else {
+                monsterLeaderboardPanelEl.classList.remove('hidden');
+                monsterShowLeaderboardBtn.innerText = 'Hide leaderboard';
+            }
+        }
+
+        function formatMonsterTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateMonsterGameUi() {
+            if (monsterTimerEl) {
+                monsterTimerEl.innerText = monsterGuessActive ? `Time left: ${formatMonsterTime(monsterGuessTimeLeft)}` : 'Time left: 1:00';
+            }
+            if (monsterScoreEl) {
+                monsterScoreEl.innerText = `Score: ${monsterGuessScore}`;
+            }
+            if (monsterGameAreaEl) {
+                if (monsterGuessActive) {
+                    monsterGameAreaEl.classList.remove('hidden');
+                } else {
+                    monsterGameAreaEl.classList.add('hidden');
+                }
+            }
+            if (monsterRestartBtn) {
+                monsterRestartBtn.classList.toggle('hidden', !monsterGuessActive);
+            }
+        }
+
+        function getMonsterGuessList() {
+            return monsterGuessPool[monsterGuessDifficulty] || monsterGuessPool.easy;
+        }
+
+        function normalizeMonsterGuess(value) {
+            return (value || '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, ' ')
+                .trim()
+                .replace(/\s+/g, ' ');
+        }
+
+        function stripMonsterNameExtras(value) {
+            const normalized = normalizeMonsterGuess(value);
+            if (!normalized) return '';
+            const words = normalized.split(' ').filter(Boolean);
+            const ignoredWords = new Set(['the', 'a', 'an', 'of', 'lernean', 'lernaean', 'greek', 'ancient', 'mythical']);
+            return words.filter(word => !ignoredWords.has(word)).join(' ');
+        }
+
+        function levenshteinDistance(a, b) {
+            const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+            for (let i = 0; i <= a.length; i += 1) dp[i][0] = i;
+            for (let j = 0; j <= b.length; j += 1) dp[0][j] = j;
+            for (let i = 1; i <= a.length; i += 1) {
+                for (let j = 1; j <= b.length; j += 1) {
+                    const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                    dp[i][j] = Math.min(
+                        dp[i - 1][j] + 1,
+                        dp[i][j - 1] + 1,
+                        dp[i - 1][j - 1] + cost
+                    );
+                }
+            }
+            return dp[a.length][b.length];
+        }
+
+        function isMonsterGuessCorrect(guess, answer) {
+            const normalizedGuess = stripMonsterNameExtras(guess);
+            const normalizedAnswer = stripMonsterNameExtras(answer);
+            if (!normalizedGuess || !normalizedAnswer) return false;
+            if (normalizedGuess === normalizedAnswer) return true;
+            if (normalizedGuess === normalizedAnswer.replace(/s$/, '')) return true;
+            if (normalizedAnswer === normalizedGuess.replace(/s$/, '')) return true;
+            if (normalizedGuess.startsWith(normalizedAnswer) || normalizedAnswer.startsWith(normalizedGuess)) return true;
+            return levenshteinDistance(normalizedGuess, normalizedAnswer) <= 2;
+        }
+
+        function shuffleMonsterOrder(monsters) {
+            const order = Array.from({ length: monsters.length }, (_, index) => index);
+            for (let i = order.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [order[i], order[j]] = [order[j], order[i]];
+            }
+            return order;
+        }
+
+        function buildMonsterGuessOrder() {
+            const monsters = getMonsterGuessList();
+            if (!monsters.length) {
+                monsterGuessOrder = [];
+                return;
+            }
+            monsterGuessOrder = shuffleMonsterOrder(monsters);
+            monsterGuessIndex = 0;
+        }
+
+        function getCurrentMonster() {
+            const monsters = getMonsterGuessList();
+            if (!monsters.length) return null;
+            if (!monsterGuessOrder.length || monsterGuessOrder.length !== monsters.length) {
+                buildMonsterGuessOrder();
+            }
+            const orderIndex = monsterGuessIndex % monsterGuessOrder.length;
+            return monsters[monsterGuessOrder[orderIndex]];
+        }
+
+        function renderMonsterGuess() {
+            if (!monsterGuessClueEl || !monsterGuessInputEl || !monsterGuessFeedbackEl) return;
+            const monsters = getMonsterGuessList();
+            if (!monsters.length) return;
+            if (!monsterGuessOrder.length || monsterGuessOrder.length !== monsters.length) {
+                buildMonsterGuessOrder();
+            }
+            const currentMonster = getCurrentMonster();
+            if (!currentMonster) return;
+            monsterGuessClueEl.innerText = currentMonster.clue;
+            monsterGuessInputEl.value = '';
+            monsterGuessFeedbackEl.innerText = monsterGuessActive ? 'Take a guess!' : 'Start playing to begin the one-minute challenge.';
+            monsterGuessFeedbackEl.style.color = '#0b3b1f';
+        }
+
+        function saveMonsterChallengeScore() {
+            const name = (monsterPlayerNameEl && monsterPlayerNameEl.value ? monsterPlayerNameEl.value : '').trim() || 'Player';
+            const entries = loadMonsterLeaderboard();
+            entries.push({ name, score: monsterGuessScore });
+            entries.sort((a, b) => b.score - a.score);
+            saveMonsterLeaderboard(entries);
+            renderMonsterLeaderboard();
+            if (monsterSummaryEl) {
+                monsterSummaryEl.innerHTML = `<strong>Time's up!</strong> ${name} finished with <strong>${monsterGuessScore}</strong> correct answer${monsterGuessScore === 1 ? '' : 's'}.`;
+                monsterSummaryEl.classList.remove('hidden');
+            }
+        }
+
+        function resetMonsterGuessGame() {
+            if (monsterGuessTimerId) {
+                clearInterval(monsterGuessTimerId);
+                monsterGuessTimerId = null;
+            }
+            if (monsterGuessAdvanceTimeoutId) {
+                clearTimeout(monsterGuessAdvanceTimeoutId);
+                monsterGuessAdvanceTimeoutId = null;
+            }
+            monsterGuessActive = false;
+            monsterGuessTimeLeft = 60;
+            monsterGuessScore = 0;
+            monsterGuessIndex = 0;
+            buildMonsterGuessOrder();
+            if (monsterSummaryEl) {
+                monsterSummaryEl.innerHTML = '';
+                monsterSummaryEl.classList.add('hidden');
+            }
+            if (monsterGuessFeedbackEl) {
+                monsterGuessFeedbackEl.innerText = 'Start playing to begin the one-minute challenge.';
+                monsterGuessFeedbackEl.style.color = '#0b3b1f';
+            }
+            updateMonsterGameUi();
+            renderMonsterGuess();
+        }
+
+        function endMonsterGuessGame() {
+            if (monsterGuessTimerId) {
+                clearInterval(monsterGuessTimerId);
+                monsterGuessTimerId = null;
+            }
+            if (monsterGuessAdvanceTimeoutId) {
+                clearTimeout(monsterGuessAdvanceTimeoutId);
+                monsterGuessAdvanceTimeoutId = null;
+            }
+            monsterGuessActive = false;
+            updateMonsterGameUi();
+            saveMonsterChallengeScore();
+        }
+
+        function startMonsterGuessGame() {
+            if (monsterGuessActive) return;
+            if (monsterGuessAdvanceTimeoutId) {
+                clearTimeout(monsterGuessAdvanceTimeoutId);
+                monsterGuessAdvanceTimeoutId = null;
+            }
+            if (monsterGuessTimerId) {
+                clearInterval(monsterGuessTimerId);
+            }
+            monsterGuessActive = true;
+            monsterGuessTimeLeft = 60;
+            monsterGuessScore = 0;
+            monsterGuessIndex = 0;
+            buildMonsterGuessOrder();
+            if (monsterSummaryEl) {
+                monsterSummaryEl.innerHTML = '';
+                monsterSummaryEl.classList.add('hidden');
+            }
+            if (monsterGuessFeedbackEl) {
+                monsterGuessFeedbackEl.innerText = 'Take a guess!';
+                monsterGuessFeedbackEl.style.color = '#0b3b1f';
+            }
+            if (monsterDifficultySelect) {
+                monsterGuessDifficulty = monsterDifficultySelect.value;
+            }
+            updateMonsterGameUi();
+            renderMonsterGuess();
+            monsterGuessTimerId = setInterval(() => {
+                monsterGuessTimeLeft -= 1;
+                updateMonsterGameUi();
+                if (monsterGuessTimeLeft <= 0) {
+                    endMonsterGuessGame();
+                }
+            }, 1000);
+        }
+
+        function checkMonsterGuess() {
+            if (!monsterGuessActive || !monsterGuessInputEl || !monsterGuessFeedbackEl) return;
+            const currentMonster = getCurrentMonster();
+            if (!currentMonster) return;
+            const guess = monsterGuessInputEl.value.trim();
+            const answer = currentMonster.name;
+            if (isMonsterGuessCorrect(guess, answer)) {
+                monsterGuessScore += 1;
+                updateMonsterGameUi();
+                monsterGuessFeedbackEl.innerText = `Correct! It is ${currentMonster.name}.`;
+                monsterGuessFeedbackEl.style.color = '#0b3b1f';
+                monsterGuessAdvanceTimeoutId = setTimeout(() => {
+                    nextMonsterGuess();
+                }, 650);
+            } else {
+                monsterGuessFeedbackEl.innerText = `Not quite — the answer is ${currentMonster.name}.`;
+                monsterGuessFeedbackEl.style.color = '#6a4a1f';
+            }
+        }
+
+        function nextMonsterGuess() {
+            if (!monsterGuessActive) return;
+            const monsters = getMonsterGuessList();
+            if (!monsters.length) return;
+            monsterGuessIndex = (monsterGuessIndex + 1) % monsters.length;
+            if (monsterGuessIndex === 0) {
+                buildMonsterGuessOrder();
+            }
+            renderMonsterGuess();
+        }
+
+        function initMonsterGuess() {
+            renderMonsterGuess();
+            renderMonsterLeaderboard();
+            updateMonsterGameUi();
+            if (monsterGuessCheckBtn) monsterGuessCheckBtn.addEventListener('click', checkMonsterGuess);
+            if (monsterGuessNextBtn) monsterGuessNextBtn.addEventListener('click', nextMonsterGuess);
+            if (monsterStartBtn) monsterStartBtn.addEventListener('click', startMonsterGuessGame);
+            if (monsterRestartBtn) monsterRestartBtn.addEventListener('click', resetMonsterGuessGame);
+            if (monsterShowLeaderboardBtn) monsterShowLeaderboardBtn.addEventListener('click', toggleMonsterLeaderboard);
+            if (monsterDifficultySelect) {
+                monsterDifficultySelect.addEventListener('change', (event) => {
+                    monsterGuessDifficulty = event.target.value;
+                    buildMonsterGuessOrder();
+                    renderMonsterGuess();
+                });
+            }
+            if (monsterGuessInputEl) {
+                monsterGuessInputEl.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        checkMonsterGuess();
+                    }
+                });
+            }
+        }
+
+        function initQuizzesOnDomReady() {
+            try { renderParentQuestion(); } catch (e) { console.error('init parent quiz', e); }
+            try { renderHeroQuiz(); } catch (e) { console.error('init hero quiz', e); }
+            try { initCoolestAndFacts(); } catch (e) { console.error('init coolest and facts', e); }
+            try { initHeroPoll(); } catch (e) { console.error('init hero poll', e); }
+            try { initMonsterGuess(); } catch (e) { console.error('init monster guess', e); }
+            window.addEventListener('storage', refreshPollViews);
+            window.addEventListener('focus', refreshPollViews);
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    refreshPollViews();
+                }
+            });
+            setInterval(refreshPollViews, 1500);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initQuizzesOnDomReady);
+        } else {
+            initQuizzesOnDomReady();
+        }
+
+        // renderHeroQuiz() will be called on DOM ready by initQuizzesOnDomReady
+        /* Sphinx Logic */
+        const sphinxPool = [
+            { question: 'What walks on four legs in the morning, two legs at noon, and three legs at night?', answers: ['human', 'person', 'a human being'], success: 'Correct. The Sphinx lets you pass to the next level.', difficulty: 'easy' },
+            { question: 'What can speak without a mouth and hear without ears?', answers: ['echo'], success: 'Correct. The Sphinx narrows its eyes and asks another.', difficulty: 'easy' },
+            { question: 'What has to be broken before you can use it?', answers: ['egg', 'an egg'], success: 'Correct. You have outsmarted the Sphinx.', difficulty: 'easy' },
+            { question: 'What has one eye but cannot see?', answers: ['needle', 'a needle'], success: 'Correct. The Sphinx purrs with approval.', difficulty: 'easy' },
+            { question: 'What gets wetter as it dries?', answers: ['towel', 'a towel'], success: 'Correct. The Sphinx is annoyed but impressed.', difficulty: 'easy' },
+            { question: 'What belongs to you but is used more by others?', answers: ['name', 'your name'], success: 'Correct. Your wit wins another point.', difficulty: 'easy' },
+
+            { question: 'What has cities, but no houses; forests, but no trees; and water, but no fish?', answers: ['map', 'a map'], success: 'Correct. The Sphinx steps aside again.', difficulty: 'medium' },
+            { question: 'What goes up but never comes down?', answers: ['age', 'your age', 'ages'], success: 'Correct. Another riddle solved.', difficulty: 'medium' },
+            { question: 'What has keys but opens no locks?', answers: ['piano', 'a piano'], success: 'Correct. The Sphinx hums at the answer.', difficulty: 'medium' },
+            { question: 'What has many teeth but cannot bite?', answers: ['comb', 'a comb'], success: 'Correct. The Sphinx bares no fangs now.', difficulty: 'medium' },
+            { question: 'What has a neck but no head?', answers: ['bottle', 'a bottle'], success: 'Correct. The Sphinx gives a slow nod.', difficulty: 'medium' },
+            { question: 'What comes once in a minute, twice in a moment, but never in a thousand years?', answers: ['m', 'the letter m'], success: 'Correct. A clever twist indeed.', difficulty: 'medium' },
+            { question: 'What has to be filled before you can use it?', answers: ['teapot', 'a teapot'], success: 'Correct. The Sphinx is baffled by your wisdom.', difficulty: 'medium' },
+            { question: 'What can travel around the world while staying in a corner?', answers: ['stamp', 'a stamp'], success: 'Correct. The Sphinx watches your cleverness spread.', difficulty: 'medium' },
+            { question: 'What gets broken without being held?', answers: ['promise', 'a promise'], success: 'Correct. The Sphinx is impressed by the answer.', difficulty: 'medium' },
+
+            { question: 'What has branches, but no fruit, trunk, or leaves?', answers: ['bank', 'a bank'], success: 'Correct. The Sphinx paces aside.', difficulty: 'hard' },
+            { question: 'What can you catch but not throw?', answers: ['cold', 'a cold'], success: 'Correct. The Sphinx shivers in approval.', difficulty: 'hard' },
+            { question: 'What is so fragile that saying its name breaks it?', answers: ['silence'], success: 'Correct. The Sphinx narrows its eyes in surprise.', difficulty: 'hard' },
+            { question: 'The more you take, the more you leave behind. What am I?', answers: ['footsteps', 'steps'], success: 'Correct. Your footprints mark a clever path.', difficulty: 'hard' },
+            { question: 'I shave every day, but my beard stays. Who am I?', answers: ['barber'], success: 'Correct. The Sphinx chuckles at the riddle.', difficulty: 'hard' },
+            { question: 'I am not alive, but I grow; I don\'t have lungs, but I need air; what am I?', answers: ['fire'], success: 'Correct. The Sphinx smiles at the flames of your wit.', difficulty: 'hard' },
+            { question: 'I have a mouth but never speak, I run but never walk. What am I?', answers: ['river', 'a river'], success: 'Correct. The Sphinx murmurs like flowing water.', difficulty: 'hard' },
+            { question: 'What can fill a room but takes up no space?', answers: ['light'], success: 'Correct. Even the Sphinx cannot hide from light.', difficulty: 'hard' },
+            { question: 'What has a head but no body?', answers: ['coin', 'a coin'], success: 'Correct. The Sphinx smiles at your subtle mind.', difficulty: 'hard' },
+            { question: 'What can be cracked, made, told, and played?', answers: ['joke', 'a joke'], success: 'Correct. The Sphinx chuckles at the riddle.', difficulty: 'hard' },
+            { question: 'What do you throw away when you need it, but take back when you don\'t?', answers: ['anchor', 'an anchor'], success: 'Correct. The Sphinx nods as the answer drops anchor.', difficulty: 'hard' }
+        ];
+            // (No extra generated riddles added — using the original pool only)
+        let sphinxQuestions = [];
+        let sphinxLevel = 0;
+        const sphinxUsedStorageKey = 'mythly-sphinx-used-questions';
+        // Declare UI refs early to avoid TDZ / ReferenceError when accessed before wiring
+        let sphinxStage = document.getElementById('sphinx-stage');
+        let sphinxBtn = document.getElementById('sphinx-btn');
+        let sphinxQuestion = null;
+        let sphinxAnswer = null;
+        let sphinxDifficultySelect = null;
+        let sphinxResetUsedBtn = null;
+        let sphinxCurrentLevel = null;
+        let sphinxOutput = null;
+        let sphinxNext = null;
+        let sphinxSkip = null;
+
+        // Initialize achievement stats UI
+        loadSphinxStats();
+        updateSphinxBadgesUI();
+
+        function sphinxBtnHandler() {
+            if (!Array.isArray(sphinxQuestions) || sphinxQuestions.length === 0) {
+                if (sphinxOutput) sphinxOutput.innerText = 'No riddle to answer.';
+                return;
+            }
+            const stage = sphinxQuestions[sphinxLevel] || sphinxQuestions[0];
+            if (!stage) {
+                if (sphinxOutput) sphinxOutput.innerText = 'No riddle to answer.';
+                return;
+            }
+            const guess = (sphinxAnswer && sphinxAnswer.value) ? sphinxAnswer.value.trim().toLowerCase() : '';
+            if (stage.answers && stage.answers.some((answer) => guess === answer)) {
+                if (sphinxOutput) sphinxOutput.innerText = stage.success;
+                // immediately record this solved riddle
+                sphinxRunCorrect += 1;
+                noteSphinxSolved(stage.difficulty || 'medium', false);
+                // If this was the last question in the set, finish the run now
+                if (sphinxLevel >= sphinxQuestions.length - 1) {
+                    if (sphinxQuestion) sphinxQuestion.innerText = 'You escaped the Sphinx and won the challenge!';
+                    if (sphinxStage) sphinxStage.innerText = 'Complete';
+                    if (sphinxCurrentLevel) sphinxCurrentLevel.innerText = 'Complete';
+                    if (sphinxBtn) sphinxBtn.style.display = 'none';
+                    if (sphinxNext) sphinxNext.style.display = 'none';
+                    if (sphinxSkip) sphinxSkip.style.display = 'none';
+                    // if the run had no mistakes or skips, award a perfect run
+                    if (sphinxRunPerfect && sphinxRunCorrect === sphinxQuestions.length) {
+                        sphinxStats.perfectRuns = (sphinxStats.perfectRuns || 0) + 1;
+                        saveSphinxStats();
+                        updateSphinxBadgesUI();
+                    }
+                } else {
+                    // Not the final question: reveal the Next button and wait for the user to advance.
+                    if (sphinxNext) sphinxNext.style.display = 'inline-block';
+                    if (sphinxBtn) sphinxBtn.style.display = 'none';
+                    // Keep the displayed question text and level until the user clicks Next,
+                    // avoiding a mismatch between question text and displayed level.
+                }
+            } else {
+                if (sphinxOutput) sphinxOutput.innerText = 'Incorrect. The Sphinx demands another attempt.';
+                // mark run as imperfect
+                sphinxRunPerfect = false;
+            }
+        }
+
+        function attachSphinxBtn() {
+            sphinxBtn = document.getElementById('sphinx-btn');
+            if (sphinxBtn && !sphinxBtn._sphinxWired) {
+                sphinxBtn.addEventListener('click', sphinxBtnHandler);
+                sphinxBtn._sphinxWired = true;
+            }
+        }
+
+        attachSphinxBtn();
+
+        function resetSphinxQuestions() {
+            // Build a local view of used questions and filter the pool by difficulty
+            let usedQuestionsLocal = [];
+            try { usedQuestionsLocal = JSON.parse(localStorage.getItem(sphinxUsedStorageKey) || '[]') || []; } catch (e) { usedQuestionsLocal = []; }
+            const difficulty = (sphinxDifficultySelect && sphinxDifficultySelect.value) ? sphinxDifficultySelect.value : 'medium';
+            let poolFiltered = Array.isArray(sphinxPool) ? sphinxPool.filter(q => !q || difficulty === 'all' || (q.difficulty === difficulty)) : [];
+            // exclude already-used questions when possible
+            const unused = poolFiltered.filter(q => q && !usedQuestionsLocal.includes(q.question));
+            const poolToUse = unused.length >= 6 ? unused : poolFiltered.length >= 6 ? poolFiltered : sphinxPool.slice();
+
+            // simple shuffle
+            const sampled = poolToUse.slice().sort(() => Math.random() - 0.5);
+            const seen = new Set();
+            const picked = [];
+            for (let i = 0; i < sampled.length && picked.length < 6; i++) {
+                const q = sampled[i];
+                const key = q && q.question ? q.question : JSON.stringify(q);
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    picked.push(q);
+                }
+            }
+            sphinxQuestions = picked;
+            if (!Array.isArray(sphinxQuestions) || sphinxQuestions.length === 0) {
+                sphinxQuestions = (Array.isArray(sphinxPool) ? sphinxPool.slice() : []).slice(0, 6);
+            }
+
+            // persist used list (merge)
+            const updatedUsedQuestions = Array.from(new Set([...(usedQuestionsLocal || []), ...sphinxQuestions.map(e => e && e.question).filter(Boolean)]));
+            try { localStorage.setItem(sphinxUsedStorageKey, JSON.stringify(updatedUsedQuestions)); } catch (e) { /* ignore */ }
+
+            sphinxLevel = 0;
+            sphinxRunCorrect = 0;
+            sphinxRunPerfect = true;
+        }
+
+        // When user changes difficulty, reset the question set and render immediately
+        function wireDifficultyChange() {
+            if (sphinxDifficultySelect) {
+                sphinxDifficultySelect.addEventListener('change', () => {
+                    resetSphinxQuestions();
+                    renderSphinx();
+                });
+            }
+        }
+
+        function renderSphinx(message = '') {
+            if (!Array.isArray(sphinxQuestions) || sphinxQuestions.length === 0) {
+                // Defensive fallback: ensure we have something to show
+                sphinxQuestions = (Array.isArray(sphinxPool) ? sphinxPool.slice(0, 3) : []);
+                if (!Array.isArray(sphinxQuestions) || sphinxQuestions.length === 0) {
+                    if (sphinxStage) sphinxStage.innerText = 'No riddles available.';
+                    if (sphinxQuestion) sphinxQuestion.innerText = '';
+                    if (sphinxAnswer) sphinxAnswer.value = '';
+                    if (sphinxOutput) sphinxOutput.innerText = message || 'Please refresh the page to try again.';
+                    if (sphinxNext) sphinxNext.style.display = 'none';
+                    if (sphinxSkip) sphinxSkip.style.display = 'none';
+                    const btn = document.getElementById('sphinx-btn');
+                    if (btn) btn.style.display = 'none';
+                    return;
+                }
+                // note: we fell back to the primary pool
+                if (sphinxOutput) sphinxOutput.innerText = 'Using fallback riddles from the main pool.';
+            }
+            // Clamp sphinxLevel into valid range
+            if (typeof sphinxLevel !== 'number' || sphinxLevel < 0) sphinxLevel = 0;
+            if (sphinxLevel >= sphinxQuestions.length) sphinxLevel = Math.max(0, sphinxQuestions.length - 1);
+            const stage = sphinxQuestions[sphinxLevel] || sphinxQuestions[0];
+            if (sphinxStage) sphinxStage.innerText = `Level ${sphinxLevel + 1} of ${sphinxQuestions.length}`;
+            if (sphinxCurrentLevel) sphinxCurrentLevel.innerText = `Level ${sphinxLevel + 1} / ${sphinxQuestions.length}`;
+            if (sphinxQuestion) {
+                const qtext = stage && stage.question ? stage.question : '(riddle unavailable)';
+                sphinxQuestion.innerText = qtext;
+                try { sphinxQuestion.classList.remove('hidden'); sphinxQuestion.style.display = ''; } catch(e) {}
+                if ((!stage || !stage.question) && sphinxOutput) sphinxOutput.innerText = 'Riddle text missing for the selected question.';
+            }
+            if (sphinxAnswer) {
+                sphinxAnswer.value = '';
+                try { sphinxAnswer.classList.remove('hidden'); sphinxAnswer.style.display = ''; } catch(e) {}
+            }
+            if (sphinxOutput) {
+                sphinxOutput.innerText = message;
+                try { sphinxOutput.classList.remove('hidden'); sphinxOutput.style.display = ''; } catch(e) {}
+            }
+            if (sphinxNext) sphinxNext.style.display = 'none';
+            if (sphinxSkip) sphinxSkip.style.display = 'inline-block';
+            const btn = document.getElementById('sphinx-btn');
+            if (btn) btn.style.display = 'inline-block';
+        }
+
+        // Initialize achievement stats UI
+        loadSphinxStats();
+        updateSphinxBadgesUI();
+
+        function wireControls() {
+            // re-query controls because DOM might not have been ready earlier
+            sphinxStage = document.getElementById('sphinx-stage');
+            sphinxQuestion = document.getElementById('sphinx-question');
+            sphinxAnswer = document.getElementById('sphinx-answer');
+            sphinxDifficultySelect = document.getElementById('sphinx-difficulty');
+            sphinxResetUsedBtn = document.getElementById('sphinx-reset-used');
+            sphinxCurrentLevel = document.getElementById('sphinx-current-level');
+            sphinxOutput = document.getElementById('sphinx-output');
+            sphinxNext = document.getElementById('sphinx-next');
+            sphinxSkip = document.getElementById('sphinx-skip');
+            const btn = document.getElementById('sphinx-btn');
+            // attach listeners already present in code by reusing existing wiring
+            if (btn && !btn._sphinxWired) {
+                btn._sphinxWired = true;
+            }
+        }
+
+        
+        
+        function initSphinxOnDomReady() {
+            // ensure controls and listeners are wired and then initialize UI
+            wireControls();
+            attachSphinxBtn();
+            wireDifficultyChange();
+            // attach next/skip listeners if available
+            if (sphinxNext && !sphinxNext._sphinxWired) {
+                sphinxNext.addEventListener('click', () => {
+                    // advance to the next level then render; mirror skip behavior for completion
+                    sphinxLevel += 1;
+                    if (sphinxLevel >= sphinxQuestions.length) {
+                        if (sphinxQuestion) sphinxQuestion.innerText = 'You escaped the Sphinx and won the challenge!';
+                        if (sphinxStage) sphinxStage.innerText = 'Complete';
+                        if (sphinxCurrentLevel) sphinxCurrentLevel.innerText = 'Complete';
+                        if (sphinxBtn) sphinxBtn.style.display = 'none';
+                        if (sphinxNext) sphinxNext.style.display = 'none';
+                        if (sphinxSkip) sphinxSkip.style.display = 'none';
+                    } else {
+                        renderSphinx();
+                    }
+                });
+                sphinxNext._sphinxWired = true;
+            }
+            if (sphinxSkip && !sphinxSkip._sphinxWired) {
+                sphinxSkip.addEventListener('click', () => {
+                    const stage = sphinxQuestions[sphinxLevel];
+                    sphinxRunPerfect = false;
+                    sphinxLevel += 1;
+                    if (sphinxLevel >= sphinxQuestions.length) {
+                        if (sphinxQuestion) sphinxQuestion.innerText = 'You escaped the Sphinx and won the challenge!';
+                        if (sphinxStage) sphinxStage.innerText = 'Complete';
+                        if (sphinxCurrentLevel) sphinxCurrentLevel.innerText = 'Complete';
+                        if (sphinxBtn) sphinxBtn.style.display = 'none';
+                        if (sphinxNext) sphinxNext.style.display = 'none';
+                        if (sphinxSkip) sphinxSkip.style.display = 'none';
+                        if (sphinxOutput) sphinxOutput.innerText = `Skipped. The correct answer was: ${stage && stage.answers ? stage.answers[0] : ''}.`;
+                    } else {
+                        renderSphinx(`Skipped. The correct answer was: ${stage && stage.answers ? stage.answers[0] : ''}.`);
+                    }
+                });
+                sphinxSkip._sphinxWired = true;
+            }
+            if (sphinxResetUsedBtn && !sphinxResetUsedBtn._sphinxWired) {
+                sphinxResetUsedBtn.addEventListener('click', () => {
+                    try { localStorage.removeItem(sphinxUsedStorageKey); } catch (e) { }
+                    resetSphinxQuestions();
+                    renderSphinx('Used questions cleared.');
+                });
+                sphinxResetUsedBtn._sphinxWired = true;
+            }
+            // final init
+            resetSphinxQuestions();
+            loadSphinxStats();
+            updateSphinxBadgesUI();
+            renderSphinx();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSphinxOnDomReady);
+        } else {
+            initSphinxOnDomReady();
+        }
+
+        // Extra safety: if DOM readiness wiring missed for any reason, try again shortly.
+        setTimeout(() => {
+            try {
+                initSphinxOnDomReady();
+                renderSphinx();
+            } catch (e) {
+                // ignore
+            }
+        }, 300);
+
+        // Update debug banner if present
+        function updateDebugBanner() {
+            const b = document.getElementById('debug-banner');
+            if (!b) return;
+            b.style.display = 'block';
+            const poolCount = Array.isArray(sphinxPool) ? sphinxPool.length : 0;
+            const picked = Array.isArray(sphinxQuestions) ? sphinxQuestions.length : 0;
+            b.innerText = `JS debug: pool=${poolCount} picked=${picked} level=${sphinxLevel}`;
+        }
+
+        // call after initialization or immediately if DOM already ready
+        if (document.readyState !== 'loading') updateDebugBanner();
+
+        /* Fate Branching Logic */
+        const fateNodes = {
+            start: {
+                text: 'You stand at a crossroads outside Delphi. Where do you go?',
+                choices: [
+                    { label: 'Climb the mountain road', next: 'mountain-chain-1' },
+                    { label: 'Sail to the islands', next: 'sea-chain-1' },
+                    { label: 'Enter the dark forest', next: 'forest-chain-1' },
+                        { label: 'Visit the busy village', next: 'village-chain-1' }
+                ]
+            },
+            mountain: {
+                text: 'An eagle blocks your way. What do you do?',
+                choices: [
+                    { label: 'Offer a prayer to Zeus', next: 'zeus-ending' },
+                    { label: 'Follow a hidden goat path', next: 'goat-path' },
+                    { label: 'Search for a mountain cave', next: 'mountain-cave' },
+                    { label: 'Chase the eagle into the cliffs', next: 'cliff-fall-ending' }
+                ]
+            },
+            sea: {
+                text: 'A storm rises over the water. What do you do?',
+                choices: [
+                    { label: 'Call on Poseidon', next: 'poseidon-ending' },
+                    { label: 'Head toward a glowing island', next: 'island' },
+                    { label: 'Follow the dolphins', next: 'dolphin-path' },
+                    { label: 'Challenge the storm alone', next: 'storm-ending' }
+                ]
+            },
+            forest: {
+                text: 'A nymph offers you a lantern. What do you do?',
+                choices: [
+                    { label: 'Accept the lantern', next: 'lantern' },
+                    { label: 'Follow the path alone', next: 'hermes-ending' },
+                    { label: 'Follow the owl through the trees', next: 'owl-path' },
+                    { label: 'Ignore the nymph and disturb the grove', next: 'grove-curse-ending' }
+                ]
+            },
+            village: {
+                text: 'The village market is alive with music and incense. Where do you go?',
+                choices: [
+                    { label: 'Join the feast', next: 'dionysus-ending' },
+                    { label: 'Visit the blacksmith', next: 'hephaestus-ending' },
+                    { label: 'Enter the temple', next: 'temple-riddle' },
+                    { label: 'Steal from the market stalls', next: 'caught-ending' }
+                ]
+            },
+            'goat-path': {
+                text: 'The goat path leads to an ancient shrine. A carved plaque shows a riddle in archaic script. Do you try to solve it?',
+                choices: [
+                    { label: 'Solve the riddle', next: 'riddle-hero' },
+                    { label: 'Turn back with the treasure map', next: 'map-ending' },
+                    { label: 'Break the shrine seal', next: 'curse-ending' }
+                ]
+            },
+            'riddle-hero': {
+                riddle: {
+                    question: 'Not a name but a force: I lift the unliftable, bend iron to will, and carry burdens many call impossible. Heroes wear me, but I am not a man. What am I?',
+                    answers: ['strength', 'might', 'force'],
+                    successNext: 'heracles-ally',
+                    failNext: 'goat-path-fail'
+                }
+            },
+            'goat-path-fail': {
+                text: 'You fail to read the plaque correctly; a guardian vine springs from the stone and chases you back down the path. You return empty-handed.'
+            },
+            'heracles-ally': {
+                text: 'You answer correctly. A marble statuette of Heracles tilts and reveals a worn leather strap — a token of a friend. Do you follow the ribbon deeper or keep it as a charm?',
+                choices: [
+                    { label: 'Follow the ribbon deeper', next: 'heracles-quest' },
+                    { label: 'Keep the charm and go home', next: 'map-ending' }
+                ]
+            },
+            'heracles-quest': {
+                text: 'Deeper in the shrine you find an old map with markings to Nemea and a note: "Only the clever may pass." A second riddle blocks the next door.',
+                choices: [
+                    { label: 'Attempt the riddle', next: 'riddle-lion' },
+                    { label: 'Sneak around the door', next: 'clue-sneak' }
+                ]
+            },
+            'riddle-lion': {
+                riddle: {
+                    question: 'I am fierce with golden mane, my skin could not be pierced; I was felled by which hero?',
+                    answers: ['heracles', 'hercules', 'herakles'],
+                    successNext: 'nemean-treasure',
+                    failNext: 'heracles-quest-fail'
+                }
+            },
+            'nemean-treasure': {
+                text: 'You pass the riddle and find an old flask containing a heroic tale and a clue to a hidden trial at Nemea.',
+                choices: [
+                    { label: 'Inspect the flask and follow the clue', next: 'nemean-riddle' },
+                    { label: 'Pocket the flask and leave', next: 'map-ending' }
+                ]
+            },
+            'nemean-riddle': {
+                riddle: {
+                    question: 'I have cities but no houses, forests without trees, and rivers without water. What am I?',
+                    answers: ['map'],
+                    successNext: 'nemean-portal',
+                    failNext: 'heracles-quest-fail'
+                }
+            },
+            'nemean-portal': {
+                riddle: {
+                    question: 'Three doors stand before you. Left always lies, center sometimes tells truth, right always tells the truth. Which door leads out? (left/center/right)',
+                    answers: ['right'],
+                    successNext: 'minotaur-approach',
+                    failNext: 'heracles-quest-fail'
+                }
+            },
+            'minotaur-approach': {
+                text: 'You step through the right door and enter a winding passage. A final test awaits to prove your cunning before the trial.',
+                choices: [
+                    { label: 'Face the maze trial', next: 'minotaur-trial' },
+                    { label: 'Search for another route', next: 'clue-sneak' }
+                ]
+            },
+            'minotaur-trial': {
+                riddle: {
+                    question: 'Theseus used a simple tool to find his way back through a twisting maze. What was it?',
+                    answers: ['thread', 'yarn'],
+                    successNext: 'minotaur-finish',
+                    failNext: 'heracles-quest-fail'
+                }
+            },
+            'minotaur-finish': {
+                text: 'You use the thread and light your path, and the labyrinth yields its secret. Your cleverness wins the day.',
+                choices: [
+                    { label: 'Search the hidden chamber', next: 'minotaur-epilogue' },
+                    { label: 'Leave the labyrinth quietly', next: 'map-ending' }
+                ]
+            },
+            'minotaur-epilogue': {
+                riddle: {
+                    question: 'I have keys but no locks, space but no rooms. You can enter but cannot go outside. What am I?',
+                    answers: ['keyboard'],
+                    successNext: 'minotaur-legend',
+                    failNext: 'heracles-quest-fail'
+                }
+            },
+            'minotaur-legend': { text: 'You solve the clever puzzle and find an old label pointing to a hero’s resting place; the labyrinth yields more legend.' },
+            'heracles-quest-fail': { text: 'The lock seals with a whisper. The shrine returns to sleep and you find yourself back at the crossroads.' },
+            'clue-sneak': {
+                text: 'You sneak and find a small grotto with an inscription that hints the answer: the Nemean Lion. A hidden notch in the stone suggests a further puzzle.',
+                choices: [
+                    { label: 'Study the notch', next: 'nemean-riddle' },
+                    { label: 'Mark the grotto and leave', next: 'map-ending' }
+                ]
+            },
+            'temple-riddle': {
+                riddle: {
+                    question: 'Which goddess is patron of wisdom and war, often associated with the olive and the owl?',
+                    answers: ['athena'],
+                    successNext: 'temple-ally',
+                    failNext: 'temple-fail'
+                }
+            },
+            'temple-fail': { text: 'The priests shake their heads and the temple doors close for the day. You leave wiser about humility.' },
+            'temple-ally': {
+                text: 'The temple opens and an acolyte gives you a small votive olive. "You have the favor of Athena," they whisper. A panel on the altar asks one more test.',
+                choices: [
+                    { label: 'Answer the altar test', next: 'riddle-olive' },
+                    { label: 'Take the olive and leave', next: 'athena-ending' }
+                ]
+            },
+            'mountain-cave': {
+                text: 'Inside the cave, moonlight reveals a stone altar. What do you do?',
+                choices: [
+                    { label: 'Leave an offering and listen', next: 'oracle-ending' },
+                    { label: 'Take the crowned helm', next: 'hades-ending' },
+                    { label: 'Smash the altar', next: 'curse-ending' }
+                ]
+            },
+            island: {
+                text: 'On the island, an old mariner challenges you with a riddle about voyages and fleece. Do you accept?',
+                choices: [
+                    { label: 'Answer the mariner', next: 'riddle-colchis' },
+                    { label: 'Search the shore for clues', next: 'treasure-ending' },
+                    { label: 'Leave the island', next: 'map-ending' }
+                ]
+            },
+            'riddle-colchis': {
+                riddle: {
+                    question: 'At the edge of the known sea lies a land where the Golden Fleece rested — what is its name?',
+                    answers: ['colchis'],
+                    successNext: 'colchis-ally',
+                    failNext: 'island-fail'
+                }
+            },
+            'island-fail': {
+                text: 'The mariner laughs and says the sea keeps its secrets from those who guess poorly. He offers you a simpler puzzle as a consolation — do you accept?',
+                choices: [
+                    { label: 'Accept the consolation puzzle', next: 'mariner-consolation' },
+                    { label: 'Leave the island', next: 'map-ending' }
+                ]
+            },
+            'mariner-consolation': {
+                riddle: {
+                    question: 'I can be broken but never held; I can be told but never seen. What am I?',
+                    answers: ['promise', 'a promise'],
+                    successNext: 'colchis-ally',
+                    failNext: 'map-ending'
+                }
+            },
+            'colchis-ally': {
+                text: 'You name Colchis and the mariner nods. He shows you an old map that hints at the Argonauts’ route and a test of cleverness ahead.',
+                choices: [
+                    { label: 'Follow the map', next: 'argonauts-question' },
+                    { label: 'Sell the map and return home', next: 'map-ending' }
+                ]
+            },
+            'argonauts-question': {
+                riddle: {
+                    question: 'To claim the Argonauts’ path, name their leader who sought the Golden Fleece.',
+                    answers: ['jason'],
+                    successNext: 'argonauts-voyage',
+                    failNext: 'island-fail'
+                }
+            },
+            'argonauts-voyage': {
+                text: 'The mariner grins and points the way; the map shows a cunning test in the hills of Colchis. One last riddle guards the route.',
+                choices: [
+                    { label: 'Face the riddle', next: 'argonauts-fleece' },
+                    { label: 'Hide the map and explore quietly', next: 'treasure-ending' }
+                ]
+            },
+            'argonauts-fleece': {
+                riddle: {
+                    question: 'To sow the earth and raise warriors, a king planted dragon teeth. What phrase names these seed-soldiers?',
+                    answers: ['dragon teeth', "dragon's teeth", 'dragons teeth'],
+                    successNext: 'argonauts-success',
+                    failNext: 'island-fail'
+                }
+            },
+            'argonauts-success': {
+                text: 'You name the dragon teeth, and the mariner laughs approvingly. He offers a token that will help on a later voyage.',
+                choices: [
+                    { label: 'Use the token to ask another question', next: 'argonauts-epic' },
+                    { label: 'Thank him and sail on', next: 'map-ending' }
+                ]
+            },
+            'argonauts-epic': {
+                riddle: {
+                    question: 'Which star has long guided sailors and is fixed near the North?',
+                    answers: ['polaris', 'north star', 'pole star'],
+                    successNext: 'argonauts-legend',
+                    failNext: 'island-fail'
+                }
+            },
+            'argonauts-legend': { text: 'You answer well and are told a story of the Argonauts that hints at a secret island — your voyage continues.' },
+            'dolphin-path': {
+                text: 'The dolphins guide you to a calm harbor lined with shells. What do you do?',
+                choices: [
+                    { label: 'Follow the shell path', next: 'aphrodite-ending' },
+                    { label: 'Anchor at the hidden pier', next: 'poseidon-ending' }
+                ]
+            },
+            lantern: {
+                text: 'The lantern reveals a hidden cave. What do you do?',
+                choices: [
+                    { label: 'Go inside', next: 'cave-ending' },
+                    { label: 'Ask the nymph for help', next: 'nymph-ending' }
+                ]
+            },
+            'owl-path': {
+                text: 'The owl leads you to a quiet grove and a ruined loom. The owl asks a riddle. Do you try to answer?',
+                choices: [
+                    { label: 'Solve the riddle', next: 'riddle-arachne' },
+                    { label: 'Rest under the olive tree', next: 'artemis-ending' }
+                ]
+            },
+            'riddle-arachne': {
+                riddle: {
+                    question: 'Which goddess punished a mortal weaver by turning her into a spider?',
+                    answers: ['athena', 'minerva'],
+                    successNext: 'athena-ally',
+                    failNext: 'owl-fail'
+                }
+            },
+            'owl-fail': {
+                text: 'You guess wrong and the owl flies off in disgust. The grove seems to close, but a soft voice offers a second chance.',
+                choices: [
+                    { label: 'Listen for the second chance', next: 'humble-riddle' },
+                    { label: 'Leave the grove', next: 'map-ending' }
+                ]
+            },
+            'humble-riddle': {
+                riddle: {
+                    question: 'I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?',
+                    answers: ['echo'],
+                    successNext: 'athena-guide',
+                    failNext: 'owl-fail-2'
+                }
+            },
+            'owl-fail-2': { text: 'The owl does not return. You leave the grove quietly, with a small lesson about humility.' },
+            'athena-ally': {
+                text: 'Athena appears as a breeze and grants you a polished bronze needle and a clue about a nearby temple. A new riddle appears carved into the altar.',
+                choices: [
+                    { label: 'Attempt the altar riddle', next: 'riddle-olive' },
+                    { label: 'Follow the clue to the temple', next: 'temple-riddle' },
+                    { label: 'Seek the ruined loom (Arachne)', next: 'arachne-duel' }
+                ]
+            },
+            'riddle-olive': {
+                riddle: {
+                    question: 'Which gift did Athena give to the people of her favored city, a symbol still used today?',
+                    answers: ['olive', 'olive tree'],
+                    successNext: 'athena-favor',
+                    failNext: 'athena-fail'
+                }
+            },
+            'arachne-duel': {
+                riddle: {
+                    question: 'A mortal boasted she could out-weave a goddess; what fate befell her?',
+                    answers: ['turned into a spider', 'transformed into a spider', 'spider'],
+                    successNext: 'athena-reward',
+                    failNext: 'owl-fail'
+                }
+            },
+            'athena-favor': {
+                text: 'You answer correctly; Athena smiles and blesses your journey with cleverness.',
+                choices: [
+                    { label: 'Accept Athena’s challenge', next: 'athena-challenge' },
+                    { label: 'Keep your blessing and move on', next: 'athena-reward' }
+                ]
+            },
+            'athena-fail': { text: 'The inscription remains inscrutable. The altar remains silent and your path grows dim.' },
+            'athena-challenge': {
+                riddle: {
+                    question: 'A city values law above sword — which gift best embodies that choice?',
+                    answers: ['olive', 'olive tree'],
+                    successNext: 'athena-guide',
+                    failNext: 'athena-fail'
+                }
+            },
+            'athena-guide': {
+                text: 'Your choice pleases Athena. An acolyte gives you three clues and points to a loom where another test of wit waits.',
+                choices: [
+                    { label: 'Approach the loom', next: 'weaver-lesson' },
+                    { label: 'Consult the acolyte', next: 'athena-reward' }
+                ]
+            },
+            'weaver-lesson': {
+                riddle: {
+                    question: 'I spin and spin and never eat grain; I weave, yet have no hands. What am I?',
+                    answers: ['spider'],
+                    successNext: 'athena-reward',
+                    failNext: 'owl-fail'
+                }
+            },
+            'athena-reward': {
+                text: 'The loom quiets; a small bronze pin is left for you — a clever talisman that opens subtle doors.',
+                choices: [
+                    { label: 'Use the pin on the altar', next: 'pin-riddle' },
+                    { label: 'Keep the pin and leave', next: 'athena-ending' }
+                ]
+            },
+            'pin-riddle': {
+                riddle: {
+                    question: 'I can fill a room but take up no space. What am I?',
+                    answers: ['light'],
+                    successNext: 'athena-endorsement',
+                    failNext: 'athena-fail'
+                }
+            },
+            'athena-endorsement': { text: 'The altar glows softly; the acolyte whispers that Athena sees wit and rewards it. A new path opens toward the city of wisdom.' },
+            'zeus-ending': { text: 'Zeus blesses your courage. You become a hero of the sky.' },
+            'poseidon-ending': { text: 'Poseidon rewards you with safe passage and storm-taming skill.' },
+            'hermes-ending': { text: 'Hermes admires your independence and delivers you safely home.' },
+            'apollo-ending': { text: 'Apollo grants you prophecy and a laurel wreath.' },
+            'map-ending': { text: 'You discover a map, but it leads you in circles until night falls. You return home empty-handed.' },
+            'treasure-ending': { text: 'The chest contains gold and a magical trinket from the sea.' },
+            'oracle-ending': { text: 'The gods respect your restraint and send you a guiding sign.' },
+            'cave-ending': { text: 'Inside the cave you find a hidden oracle and a forgotten truth.' },
+            'nymph-ending': { text: 'The spring is enchanted, and you sleep for a hundred years before waking alone.' },
+            'dionysus-ending': { text: 'Dionysus crowns you with ivy, but the feast lasts too long and you wake with a terrible headache.' },
+            'hephaestus-ending': { text: 'Hephaestus gifts you a finely made charm from the forge.' },
+            'athena-ending': { text: 'Athena grants you wisdom, strategy, and a shining olive branch.' },
+            'hades-ending': { text: 'Hades allows you a brief glimpse of the underworld, but the gates close behind you. You barely escape.' },
+            'aphrodite-ending': { text: 'Aphrodite blesses your heart with beauty and unexpected luck.' },
+            'artemis-ending': { text: 'Artemis leaves you in the wilds, where you must find your own way back.' },
+            'cliff-fall-ending': { text: 'The cliffs give way beneath you. You survive, but the mountain road is lost and your quest ends in failure.' },
+            'storm-ending': { text: 'The storm overturns your boat and you wash ashore exhausted, having gained nothing but trouble.' },
+            'grove-curse-ending': { text: 'The nymph curses the grove, and you are chased out by angry spirits.' },
+            'caught-ending': { text: 'The villagers catch you stealing and banish you from the market in shame.' },
+            'curse-ending': { text: 'A shrine curse follows you home, and every door you open brings misfortune.' },
+            'trap-ending': { text: 'The chest was trapped. You lose your prize and spend the night avoiding more trouble.' },
+
+            /* Long choice chains: each main path gives 10 sequential choices before an outcome */
+            /* Mountain chain */
+            'mountain-chain-1': {
+                riddle: {
+                    question: 'I rise without footsteps, hold the sky like an old stone shoulder; travellers name me though I stand still. What am I?',
+                    answers: ['mountain', 'mountains'],
+                    successNext: 'mountain-chain-2',
+                    failNext: 'mountain-bad-early'
+                }
+            },
+            'mountain-chain-2': {
+                text: 'You skirt a scree and see a cairn. A faded glyph points onward; the road smells of pine and iron.',
+                choices: [ { label: 'Trace the glyph', next: 'mountain-chain-3' }, { label: 'Set a marker and move', next: 'mountain-chain-3' } ]
+            },
+            'mountain-chain-3': {
+                riddle: {
+                    question: 'Who rerouted a river to cleanse a stable, a labour counted among twelve feats of sweat and stone?',
+                    answers: ['heracles', 'hercules', 'herakles'],
+                    successNext: 'mountain-chain-4',
+                    failNext: 'mountain-bad-early'
+                }
+            },
+            'mountain-chain-4': {
+                text: 'The path narrows to a ledge where stars seem close; a single feather lies wedged in rock.',
+                choices: [ { label: 'Pocket the feather', next: 'mountain-chain-5' }, { label: 'Leave it be', next: 'mountain-chain-5' } ]
+            },
+            'mountain-chain-5': {
+                riddle: {
+                    question: 'A single light that never walks but guides mariners and kings alike; name this fixed torch of the north.',
+                    answers: ['polaris', 'north star', 'pole star'],
+                    successNext: 'mountain-chain-6',
+                    failNext: 'mountain-bad-early'
+                }
+            },
+            'mountain-chain-6': {
+                text: 'A ruined shrine offers olive stains and an inscription half-eaten by lichens.',
+                choices: [ { label: 'Clear the lichen', next: 'mountain-chain-7' }, { label: 'Sketch the inscription', next: 'mountain-chain-7' } ]
+            },
+            'mountain-chain-7': {
+                riddle: {
+                    question: 'Which goddess bestowed the olive upon a city and stands with owl and loom?',
+                    answers: ['athena'],
+                    successNext: 'mountain-chain-8',
+                    failNext: 'mountain-bad-early'
+                }
+            },
+            'mountain-chain-8': {
+                text: 'A narrow bridge creaks; below, wind carries a whisper of old songs — the summit waits beyond a fork.',
+                choices: [ { label: 'Cross the bridge', next: 'mountain-chain-9' }, { label: 'Seek a lower pass', next: 'mountain-chain-9' } ]
+            },
+            'mountain-chain-9': {
+                riddle: {
+                    question: 'What walks on four in morning, two at midday, and three when evening crowns the traveller?',
+                    answers: ['man', 'human', 'human being'],
+                    successNext: 'mountain-chain-10',
+                    failNext: 'mountain-bad-early'
+                }
+            },
+            'mountain-chain-10': { text: 'Step 10: The summit shrine yawns before you; the air tastes of iron and rain. What do you do?', choices: [ { label: 'Approach with reverence (Good)', next: 'mountain-good' }, { label: 'Take a small token (Neutral)', next: 'mountain-neutral' }, { label: 'Slip a relic and flee (Bad)', next: 'mountain-bad' } ] },
+            'mountain-good': { text: 'You reach the summit and are blessed by the winds — a heroic ending.' },
+            'mountain-neutral': { text: 'You take a relic and leave quietly; your tale is modestly told.' },
+            'mountain-bad': { text: 'You are chased from the shrine; the villagers curse your name.' },
+            'mountain-bad-early': { text: 'A rockslide or misstep sends you tumbling — your climb ends in bruises and a lesson about haste.' },
+
+            /* Forest chain */
+            'forest-chain-1': {
+                riddle: {
+                    question: 'Green as hope, silent as thought: I hide beneath moss and show the path by moon. What am I?',
+                    answers: ['moss', 'lichen'],
+                    successNext: 'forest-chain-2',
+                    failNext: 'forest-bad-early'
+                }
+            },
+            'forest-chain-2': {
+                text: 'A small stream hums over stones that seem to sing; a willow points a shadow like a finger.',
+                choices: [ { label: 'Follow the sound', next: 'forest-chain-3' }, { label: 'Cross the stream', next: 'forest-chain-3' } ]
+            },
+            'forest-chain-3': {
+                riddle: {
+                    question: 'Fleet-footed huntress who outran suitors and bore golden apples — who is she?',
+                    answers: ['atalanta'],
+                    successNext: 'forest-chain-4',
+                    failNext: 'forest-bad-early'
+                }
+            },
+            'forest-chain-4': {
+                text: 'You find a twisted oak with runes; the smell of juniper swirls in the air.',
+                choices: [ { label: 'Read the runes', next: 'forest-chain-5' }, { label: 'Sit and listen', next: 'forest-chain-5' } ]
+            },
+            'forest-chain-5': {
+                riddle: {
+                    question: 'I have no mouth yet I whisper, I have no feet yet I leave tracks in sand. What am I?',
+                    answers: ['wind', 'the wind'],
+                    successNext: 'forest-chain-6',
+                    failNext: 'forest-bad-early'
+                }
+            },
+            'forest-chain-6': {
+                text: 'A fallen harp waits; one string hums faintly when held to the ear.',
+                choices: [ { label: 'Tune the string', next: 'forest-chain-7' }, { label: 'Play a note', next: 'forest-chain-7' } ]
+            },
+            'forest-chain-7': {
+                riddle: {
+                    question: 'A goddess of the hunt and maiden ways watches the wood. Who is she?',
+                    answers: ['artemis'],
+                    successNext: 'forest-chain-8',
+                    failNext: 'forest-bad-early'
+                }
+            },
+            'forest-chain-8': {
+                text: 'A fox offers to guide you; its eye glints with mischief and guile.',
+                choices: [ { label: 'Trust the fox', next: 'forest-chain-9' }, { label: 'Refuse the fox', next: 'forest-chain-9' } ]
+            },
+            'forest-chain-9': {
+                riddle: {
+                    question: 'Three stones make a circle; step one, two, three — the middle yields a secret. Say the missing number: one, __, three.',
+                    answers: ['two', '2'],
+                    successNext: 'forest-chain-10',
+                    failNext: 'forest-bad-early'
+                }
+            },
+            'forest-chain-10': {
+                text: 'A hidden clearing opens, lit by moon and memory; a choice waits that will linger in your tales.',
+                choices: [ { label: 'Stay and learn (Good)', next: 'forest-good' }, { label: 'Take a token (Neutral)', next: 'forest-neutral' }, { label: 'Steal a seed (Bad)', next: 'forest-bad' } ]
+            },
+            'forest-good': { text: 'A woodland spirit teaches you an old song; your name is later sung in taverns.' },
+            'forest-neutral': { text: 'You leave with a curious token; few notice, but you remember.' },
+            'forest-bad': { text: 'The seed curses your luck; your travel is beset by misfortune.' },
+            'forest-bad-early': { text: 'A nettle patch or misstep leaves you wounded and retreating; the forest keeps its ways.' },
+
+            /* Sea chain */
+            'sea-chain-1': {
+                riddle: {
+                    question: 'I am foam upon rock and whisper at keels, I mirror the moon but hold no light. Sailors know my name and sailors fear me. What am I?',
+                    answers: ['wave', 'waves'],
+                    successNext: 'sea-chain-2',
+                    failNext: 'sea-bad-early'
+                }
+            },
+            'sea-chain-2': {
+                text: 'A shoal shows on the charts and the gulls cry; salt hangs in the rigging like memory.',
+                choices: [ { label: 'Sound the lead', next: 'sea-chain-3' }, { label: 'Tack away', next: 'sea-chain-3' } ]
+            },
+            'sea-chain-3': {
+                riddle: {
+                    question: 'A leader of men sought the Golden Fleece and sailed with a band of heroes — name him.',
+                    answers: ['jason'],
+                    successNext: 'sea-chain-4',
+                    failNext: 'sea-bad-early'
+                }
+            },
+            'sea-chain-4': {
+                text: 'A bottle bobbles with a scrap of map; ink bleeds like old promises.',
+                choices: [ { label: 'Open it', next: 'sea-chain-5' }, { label: 'Tie it to the mast', next: 'sea-chain-5' } ]
+            },
+            'sea-chain-5': {
+                riddle: {
+                    question: 'I point but do not move; ancient sailors steered by my steady eye. Name the star.',
+                    answers: ['polaris', 'north star', 'pole star'],
+                    successNext: 'sea-chain-6',
+                    failNext: 'sea-bad-early'
+                }
+            },
+            'sea-chain-6': {
+                text: 'A fog hides shapes; a sailor offers a tale of an isle that appears only to the worthy.',
+                choices: [ { label: 'Hear the tale', next: 'sea-chain-7' }, { label: 'Ignore the tale', next: 'sea-chain-7' } ]
+            },
+            'sea-chain-7': {
+                riddle: {
+                    question: 'What can be broken but never held?',
+                    answers: ['promise', 'a promise'],
+                    successNext: 'sea-chain-8',
+                    failNext: 'sea-bad-early'
+                }
+            },
+            'sea-chain-8': {
+                text: 'Currents pull toward a reef; you hear the low hum of the deep as if it remembers old voyages.',
+                choices: [ { label: 'Fight the current', next: 'sea-chain-9' }, { label: 'Drift with it', next: 'sea-chain-9' } ]
+            },
+            'sea-chain-9': {
+                riddle: {
+                    question: 'What is as light as a feather, yet the strongest man cannot hold it for long?',
+                    answers: ['breath', 'your breath'],
+                    successNext: 'sea-chain-10',
+                    failNext: 'sea-bad-early'
+                }
+            },
+            'sea-chain-10': {
+                text: 'On the isle a choice waits: aid the mariner, pocket his treasure, or claim the land with a flag.',
+                choices: [ { label: 'Aid the mariner (Good)', next: 'sea-good' }, { label: 'Pocket treasure (Neutral)', next: 'sea-neutral' }, { label: 'Plant the flag (Bad)', next: 'sea-bad' } ]
+            },
+            'sea-good': { text: 'The sailor guides you to hidden coves and favors the Argonauts’ memory.' },
+            'sea-neutral': { text: 'The chest holds odd trinkets. Your tale is curious but quiet.' },
+            'sea-bad': { text: 'Your flag provokes a storm-sentinel; your ship is turned back in shame.' },
+            'sea-bad-early': { text: 'A hidden shoal cracks your keel; you limp back home with little to show.' },
+
+            /* Village chain */
+            'village-chain-1': {
+                riddle: {
+                    question: 'I am baked golden, I feed the waking and the weary; in early markets I am prized. What am I?',
+                    answers: ['bread', 'loaf'],
+                    successNext: 'village-chain-2',
+                    failNext: 'village-bad-early'
+                }
+            },
+            'village-chain-2': {
+                text: 'A child points toward a locked gate and the baker wipes his hands on a cloth stamped with an unfamiliar sigil.',
+                choices: [ { label: 'Ask the child', next: 'village-chain-3' }, { label: 'Question the baker', next: 'village-chain-3' } ]
+            },
+            'village-chain-3': {
+                riddle: {
+                    question: 'Which smith of the gods forged thunder and crafted clever traps for mortals?',
+                    answers: ['hephaestus', 'hephaistos'],
+                    successNext: 'village-chain-4',
+                    failNext: 'village-bad-early'
+                }
+            },
+            'village-chain-4': {
+                text: 'A map fragment shows an alley marked with three knocks and a painted eye.',
+                choices: [ { label: 'Follow the alley', next: 'village-chain-5' }, { label: 'Hide the map', next: 'village-chain-5' } ]
+            },
+            'village-chain-5': {
+                riddle: {
+                    question: 'I run but never walk; I have a bed but never sleep. What am I?',
+                    answers: ['river'],
+                    successNext: 'village-chain-6',
+                    failNext: 'village-bad-early'
+                }
+            },
+            'village-chain-6': {
+                text: 'The priest offers a blessing and whispers a riddle that smells of incense and old coin.',
+                choices: [ { label: 'Accept the blessing', next: 'village-chain-7' }, { label: 'Ask for a tale', next: 'village-chain-7' } ]
+            },
+            'village-chain-7': {
+                riddle: {
+                    question: 'Messenger of gods, trickster and guide — who wears winged sandals?',
+                    answers: ['hermes'],
+                    successNext: 'village-chain-8',
+                    failNext: 'village-bad-early'
+                }
+            },
+            'village-chain-8': {
+                text: 'A lantern-bearer speaks of a crawlspace and a watchful door; the market thins as dusk falls.',
+                choices: [ { label: 'Follow the bearer', next: 'village-chain-9' }, { label: 'Stay in the square', next: 'village-chain-9' } ]
+            },
+            'village-chain-9': {
+                riddle: {
+                    question: 'I hold keys but open no doors; my notes can calm or stir a crowd. What am I?',
+                    answers: ['harp', 'lyre'],
+                    successNext: 'village-chain-10',
+                    failNext: 'village-bad-early'
+                }
+            },
+            'village-chain-10': {
+                text: 'The elder asks your final choice beneath lamplight; your answer will be remembered.',
+                choices: [ { label: 'Serve the village (Good)', next: 'village-good' }, { label: 'Keep the elder’s secret (Neutral)', next: 'village-neutral' }, { label: 'Betray the elder (Bad)', next: 'village-bad' } ]
+            },
+            'village-good': { text: 'You are honored for service and ages remember your kindness.' },
+            'village-neutral': { text: 'You keep a quiet secret and walk away wealthier but a little hollow.' },
+            'village-bad': { text: 'You are shunned; the market doors close and your name fades.' },
+            'village-bad-early': { text: 'A misstep in the narrow street leaves you bruised and empty-handed; the market moves on without you.' },
+            'trojan-pt2': {
+                text: `"So", Hermes began, "I'm totes sorry to ruin your wonderful time but some stuff has to happen when you're Zeus' messenger. Anyway, Eris has decided to crash another wedding and there have been some chain reactions, some is an understatement but the point is, Aphrodite, Athena and Hera are all fighting over who is the most beautiful and you're going to judge them. Awesome right." Hermes said desperately trying to keep it cool. So this shepherd guy was not just a shepherd guy, he was the ultimate prince of Troy, Paris. But Paris didn't know, he thought he was just a normal shepherd. At this point, you're probably thinking, "Hey I want to know more about this random Paris dude."
+
+So Paris was the son of King Priam and Queen Hecuba of Troy, they were friends with literally everyone. Like they were the kind of people who everyone is friends with. When they had Paris, they heard a prophecy saying that Paris would burn the whole city of Troy. So, guess that was pretty annoying. The King and Queen were loyal to their city, so, even though they loved Paris, he had to be sacrificed. However, King Priam just wouldn't be able to be believe it if he just killed Paris on the spot. His servant had to do the job. He ordered his servant, Agileus, to abandon the baby in the mountains. This servant, like pretty much everyone else, loved Priam and eventually agreed to do it. However, like Priam, Agileus couldn't kill him. He instead, raised him and taught him to be a shepherd.`
+            },
+        };
+        let fateNode = 'start';
+        const fateStory = document.getElementById('fate-story');
+        const fateChoices = document.getElementById('fate-choices');
+
+        function renderFate() {
+            const node = fateNodes[fateNode] || {};
+            if (fateStory) fateStory.innerText = node.text || '';
+            if (fateChoices) fateChoices.innerHTML = '';
+
+            // riddle UI elements
+            const fateRiddle = document.getElementById('fate-riddle');
+            const fateRiddleQuestion = document.getElementById('fate-riddle-question');
+            const fateRiddleInput = document.getElementById('fate-riddle-input');
+            const fateRiddleOptions = document.getElementById('fate-riddle-options');
+            const fateRiddleOutput = document.getElementById('fate-riddle-output');
+
+            // If this node contains a riddle, show the riddle UI instead of choices
+            if (node.riddle) {
+                if (fateRiddle) fateRiddle.classList.remove('hidden');
+                if (fateRiddleQuestion) fateRiddleQuestion.innerText = node.riddle.question || '';
+                if (fateRiddleInput) fateRiddleInput.value = '';
+                if (fateRiddleOutput) fateRiddleOutput.innerText = '';
+                if (fateRiddleOptions) fateRiddleOptions.innerHTML = '';
+                if (Array.isArray(node.riddle.options) && fateRiddleOptions) {
+                    node.riddle.options.forEach((opt) => {
+                        const b = document.createElement('button');
+                        b.className = 'game-btn';
+                        b.type = 'button';
+                        b.innerText = opt;
+                        b.addEventListener('click', () => { if (fateRiddleInput) fateRiddleInput.value = opt; });
+                        fateRiddleOptions.appendChild(b);
+                    });
+                }
+            } else {
+                // hide riddle area
+                if (fateRiddle) fateRiddle.classList.add('hidden');
+
+                if (node.choices && fateChoices) {
+                    node.choices.forEach((choice) => {
+                        const button = document.createElement('button');
+                        button.className = 'game-btn';
+                        button.type = 'button';
+                        button.innerText = choice.label;
+                        button.addEventListener('click', () => {
+                            fateNode = choice.next;
+                            renderFate();
+                        });
+                        fateChoices.appendChild(button);
+                    });
+                } else {
+                    // terminal node: no choices and no riddle — leave fateChoices empty
+                }
+            }
+        }
+
+
+        // Riddle handlers
+        const fateRiddleSubmit = document.getElementById('fate-riddle-submit');
+        const fateRiddleSkip = document.getElementById('fate-riddle-skip');
+        const fateRiddleInput = document.getElementById('fate-riddle-input');
+        const fateRiddleOutput = document.getElementById('fate-riddle-output');
+
+        if (fateRiddleSubmit) {
+            fateRiddleSubmit.addEventListener('click', () => {
+                const node = fateNodes[fateNode];
+                if (!node || !node.riddle) return;
+                const raw = (fateRiddleInput && fateRiddleInput.value) ? fateRiddleInput.value.trim().toLowerCase() : '';
+                const answers = (node.riddle.answers || []).map(a => a.toLowerCase());
+                if (answers.includes(raw)) {
+                    fateRiddleOutput.innerText = 'Correct.';
+                    fateNode = node.riddle.successNext || node.riddle.next || fateNode;
+                    setTimeout(renderFate, 450);
+                } else {
+                    fateRiddleOutput.innerText = 'Incorrect. Try again or skip.';
+                }
+            });
+        }
+
+        if (fateRiddleSkip) {
+            fateRiddleSkip.addEventListener('click', () => {
+                const node = fateNodes[fateNode];
+                if (!node || !node.riddle) return;
+                fateNode = node.riddle.failNext || node.riddle.skipNext || 'start';
+                renderFate();
+            });
+        }
+
+        renderFate();
+
+        /* Myth Map Logic (Leaflet) */
+        const mapFacts = {
+            olympus: 'Olympus was the shining home of the gods.',
+            delphi: 'Delphi was famous for the oracle and its prophecies.',
+            athens: 'Athens was a great city of wisdom, theatre, and strategy.',
+            sparta: 'Sparta was known for discipline, training, and warriors.',
+            thebes: 'Thebes appears in many heroic myths, including Oedipus.',
+            mycenae: 'Mycenae was home to powerful kings and heroic legends.',
+            corinth: 'Corinth was a wealthy city with trade and mythic stories.',
+            troyl: 'Troy was the legendary city at the center of the Trojan War.',
+            ithaca: 'Ithaca was the home of Odysseus, the clever traveler.',
+            crete: 'Crete is tied to the Minotaur and the Labyrinth.',
+            knossos: 'Knossos is linked to the palace of King Minos.',
+            nemea: 'Nemea is associated with the Nemean Lion and heroic trials.',
+            aulis: 'Aulis is where the Greek fleet gathered before sailing to Troy.',
+            argos: 'Argos is one of the oldest city-states in Greek myth.',
+            delos: 'Delos is a sacred island associated with Apollo and Artemis.',
+            colchis: 'Colchis is where Jason and the Argonauts sought the Golden Fleece.'
+        };
+
+        const mapOutput = document.getElementById('map-output');
+        if (mapOutput) mapOutput.innerText = 'Click a location pin on the map to see facts.';
+        const mapContainerEl = document.getElementById('leaflet-map');
+        if (typeof L === 'undefined' || !mapContainerEl) {
+            if (mapOutput) mapOutput.innerText = 'Map unavailable: Leaflet failed to load or map container missing. Try a local HTTP server.';
+        } else {
+        // Initialize Leaflet map centered on Greece
+        const leafletMap = L.map('leaflet-map', { scrollWheelZoom: false }).setView([39.0742, 21.8243], 7);
+        // Primary and fallback tile layers
+        // Use Carto as primary to avoid restrictions from volunteer-run OSM tile servers
+        // Use a tiny transparent error tile to avoid ugly blocked squares when tiles fail
+        const transparentTile = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+        const cartoTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap, &copy; CartoDB',
+            errorTileUrl: transparentTile
+        });
+        // Add Carto as the default base layer and expose additional safe styles
+        cartoTiles.addTo(leafletMap);
+        let activeBase = cartoTiles;
+
+        const protocolMsg = (location.protocol === 'file:')
+            ? 'Serving pages via file:// can block map tiles — run a local HTTP server (e.g. `python3 -m http.server`).'
+            : '';
+
+        // Additional basemap styles
+        const cartoVoyager = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap, &copy; CartoDB',
+            errorTileUrl: transparentTile
+        });
+
+        const cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap, &copy; CartoDB',
+            errorTileUrl: transparentTile,
+            className: 'carto-dark-lighten'
+        });
+
+        // Layer control with multiple safe basemaps
+        const baseLayers = {
+            'Carto Light': cartoTiles,
+            'Carto Voyager': cartoVoyager,
+            'Carto Dark Matter': cartoDark,
+        };
+        L.control.layers(baseLayers, null, { position: 'topright' }).addTo(leafletMap);
+
+        // Track which base is active when the user switches layers and implement tolerant error handling
+        const tileErrorCounts = new Map();
+        const ERROR_THRESHOLD = 3; // allow a few tile errors before warning
+
+        // Create a small non-intrusive warning overlay inside the map for basemap issues
+        let basemapWarningEl = null;
+        function createBasemapWarning() {
+            basemapWarningEl = document.createElement('div');
+            basemapWarningEl.className = 'basemap-warning';
+            basemapWarningEl.style.cssText = 'position:absolute;left:12px;top:12px;z-index:1600;background:rgba(255,255,255,0.95);padding:10px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.12);font-size:0.95rem;';
+            basemapWarningEl.innerHTML = `<div id="basemap-warning-text"></div><div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end;"><button id="basemap-keep" class="game-btn">Keep</button><button id="basemap-revert" class="game-btn secondary">Revert</button></div>`;
+            basemapWarningEl.style.display = 'none';
+            const mapContainerEl = document.getElementById('leaflet-map');
+            if (mapContainerEl) mapContainerEl.appendChild(basemapWarningEl);
+            document.getElementById('basemap-revert').addEventListener('click', () => {
+                // revert to Carto
+                try { if (activeBase && typeof leafletMap !== 'undefined' && leafletMap.hasLayer && leafletMap.hasLayer(activeBase)) leafletMap.removeLayer(activeBase); } catch (e) {}
+                if (typeof leafletMap !== 'undefined' && leafletMap && !leafletMap.hasLayer(cartoTiles)) cartoTiles.addTo(leafletMap);
+                activeBase = cartoTiles;
+                basemapWarningEl.style.display = 'none';
+                tileErrorCounts.set(activeBase, 0);
+            });
+            document.getElementById('basemap-keep').addEventListener('click', () => {
+                // keep current basemap and reset its error counter
+                if (activeBase) tileErrorCounts.set(activeBase, 0);
+                basemapWarningEl.style.display = 'none';
+            });
+        }
+
+        function showBasemapWarning(message) {
+            if (!basemapWarningEl) createBasemapWarning();
+            const t = document.getElementById('basemap-warning-text');
+            if (t) t.innerText = message;
+            basemapWarningEl.style.display = 'block';
+        }
+
+        // When user switches basemap, test a sample tile before showing the new layer to avoid blocked tiles
+        function testLayerAvailability(layer, callback) {
+            try {
+                const z = Math.max(4, Math.min(12, leafletMap.getZoom()));
+                const center = leafletMap.getCenter();
+                const point = leafletMap.project(center, z);
+                const tileSize = 256;
+                const x = Math.floor(point.x / tileSize);
+                const y = Math.floor(point.y / tileSize);
+                const url = layer.getTileUrl ? layer.getTileUrl({ x, y, z }) : null;
+                if (!url) return callback(false);
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload = () => callback(true);
+                img.onerror = () => callback(false);
+                // start loading the tile
+                img.src = url;
+            } catch (err) {
+                callback(false);
+            }
+        }
+
+        leafletMap.on('baselayerchange', (e) => {
+            const newLayer = e.layer || cartoTiles;
+            // hide map while we test the new basemap to avoid showing blocked tiles
+            mapContainer.style.visibility = 'hidden';
+            testLayerAvailability(newLayer, (ok) => {
+                if (ok) {
+                    activeBase = newLayer;
+                    tileErrorCounts.set(activeBase, 0);
+                    if (basemapWarningEl) basemapWarningEl.style.display = 'none';
+                    setTimeout(() => { leafletMap.invalidateSize(); mapContainer.style.visibility = 'visible'; }, 200);
+                } else {
+                    // revert to Carto and warn the user
+                    try { if (leafletMap.hasLayer(newLayer)) leafletMap.removeLayer(newLayer); } catch (er) {}
+                    if (!leafletMap.hasLayer(cartoTiles)) cartoTiles.addTo(leafletMap);
+                    activeBase = cartoTiles;
+                    tileErrorCounts.set(activeBase, 0);
+                    showBasemapWarning('The selected basemap appears blocked or unreachable; reverted to Carto Light. ' + protocolMsg);
+                    setTimeout(() => { leafletMap.invalidateSize(); mapContainer.style.visibility = 'visible'; }, 200);
+                }
+            });
+        });
+
+        // If an alternate layer experiences repeated tile errors, show a warning and let user choose
+        [cartoVoyager, cartoDark].forEach((layer) => {
+            tileErrorCounts.set(layer, 0);
+            layer.on('tileerror', () => {
+                const prev = tileErrorCounts.get(layer) || 0;
+                tileErrorCounts.set(layer, prev + 1);
+                if (activeBase === layer && tileErrorCounts.get(layer) >= ERROR_THRESHOLD) {
+                    showBasemapWarning('Selected basemap appears to be missing tiles or blocked. Click "Revert" to return to Carto Light, or "Keep" to continue with this basemap. ' + protocolMsg);
+                }
+            });
+        });
+
+        // Improve interactions and controls
+        leafletMap.doubleClickZoom.enable();
+        leafletMap.touchZoom.enable();
+        // Disable box-zoom to avoid accidental drag-selection
+        try { if (leafletMap.boxZoom) leafletMap.boxZoom.disable(); } catch (e) {}
+        leafletMap.keyboard.enable();
+        L.control.zoom({ position: 'topright' }).addTo(leafletMap);
+
+        // Restrict panning to Greece bounds (with extra margin so popups near edges can be shown)
+        const greeceBounds = L.latLngBounds([[34.0, 17.0], [43.0, 29.5]]);
+        leafletMap.setMaxBounds(greeceBounds);
+        // So the map doesn't aggressively bounce when reaching edges
+        leafletMap.options.maxBoundsViscosity = 0.8;
+
+        // Additionally, clamp the map center after moves to ensure it never leaves Greece
+        leafletMap.on('moveend', () => {
+            const center = leafletMap.getCenter();
+            const north = greeceBounds.getNorth();
+            const south = greeceBounds.getSouth();
+            const east = greeceBounds.getEast();
+            const west = greeceBounds.getWest();
+            const lat = Math.max(Math.min(center.lat, north), south);
+            const lng = Math.max(Math.min(center.lng, east), west);
+            if (lat !== center.lat || lng !== center.lng) {
+                leafletMap.panTo([lat, lng], { animate: true });
+            }
+        });
+
+        // Ensure map renders correctly in various browsers/layouts
+        setTimeout(() => { leafletMap.invalidateSize(); }, 200);
+
+        // Add a small hint overlay on the map about how to zoom
+        const mapContainer = document.getElementById('leaflet-map');
+        const hint = document.createElement('div');
+        hint.className = 'map-hint';
+        hint.innerText = 'Hold Ctrl (or ⌘) + scroll to zoom; double-click to zoom in.';
+        mapContainer.style.position = 'relative';
+        mapContainer.appendChild(hint);
+
+        // Style for the hint
+        const style = document.createElement('style');
+        style.innerText = `
+            .map-hint { position: absolute; left: 12px; bottom: 12px; z-index: 1400; background: rgba(255,255,255,0.85); padding: 6px 10px; border-radius: 8px; font-size: 0.95rem; color: #123; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+            .map-hint.hidden { display: none; }
+        `;
+        document.head.appendChild(style);
+
+        // Enable scroll-wheel zoom only when user holds Ctrl (or Meta) while scrolling
+        let wheelTimer = null;
+        mapContainer.addEventListener('wheel', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (!leafletMap.scrollWheelZoom.enabled()) leafletMap.scrollWheelZoom.enable();
+                clearTimeout(wheelTimer);
+                wheelTimer = setTimeout(() => { leafletMap.scrollWheelZoom.disable(); }, 600);
+            }
+        }, { passive: true });
+
+        // Hide hint after first interaction
+        const hideHint = () => { hint.classList.add('hidden'); };
+        mapContainer.addEventListener('mousedown', hideHint, { once: true });
+        mapContainer.addEventListener('touchstart', hideHint, { once: true });
+
+        const places = [
+            { id: 'olympus', name: 'Olympus', coords: [40.0856, 22.3580] },
+            { id: 'delphi', name: 'Delphi', coords: [38.48, 22.5] },
+            { id: 'thebes', name: 'Thebes', coords: [38.325, 23.318] },
+            { id: 'aulis', name: 'Aulis', coords: [38.4167, 23.5333] },
+            { id: 'athens', name: 'Athens', coords: [37.9838, 23.7275] },
+            { id: 'corinth', name: 'Corinth', coords: [37.9375, 22.9242] },
+            { id: 'nemea', name: 'Nemea', coords: [37.8000, 22.6500] },
+            { id: 'mycenae', name: 'Mycenae', coords: [37.7286, 22.7556] },
+            { id: 'argos', name: 'Argos', coords: [37.6386, 22.7294] },
+            { id: 'sparta', name: 'Sparta', coords: [37.0745, 22.4300] },
+            { id: 'ithaca', name: 'Ithaca', coords: [38.3667, 20.7500] },
+            { id: 'crete', name: 'Crete', coords: [35.2401, 24.8093] },
+            { id: 'knossos', name: 'Knossos', coords: [35.2983, 25.1590] },
+            { id: 'delos', name: 'Delos', coords: [37.4019, 25.2669] },
+            // Removed Troy and Colchis (outside modern Greece view)
+        ];
+
+        places.forEach((p) => {
+            const marker = L.marker(p.coords).addTo(leafletMap);
+            marker.bindPopup(`<strong>${p.name}</strong><br>${mapFacts[p.id] || ''}`, { maxWidth: 260, autoPan: true });
+            marker.on('click', () => {
+                mapOutput.innerText = mapFacts[p.id] || 'A mythic place full of stories.';
+                marker.openPopup();
+            });
+        });
+
+        L.control.scale().addTo(leafletMap);
+        }
+        } catch (err) {
+    // Surface JS errors on the page to help debugging when console is not visible
+    try {
+        const pre = document.createElement('pre');
+        pre.style.background = '#fee';
+        pre.style.padding = '1rem';
+        pre.style.border = '1px solid #fcc';
+        pre.style.color = '#600';
+        pre.style.whiteSpace = 'pre-wrap';
+        pre.innerText = 'JavaScript error: ' + (err && err.stack ? err.stack : String(err));
+        document.body.insertBefore(pre, document.body.firstChild);
+    } catch (e) {
+        // ignore
+    }
+    console.error(err);
+}
+
+// Achievements removed: provide no-op stubs so other code continues working
+let sphinxStats = {};
+let sphinxRunCorrect = 0;
+let sphinxRunPerfect = true;
+function loadSphinxStats() { /* no-op: achievements disabled */ }
+function saveSphinxStats() { /* no-op: achievements disabled */ }
+function updateSphinxBadgesUI() { /* no-op: achievements disabled */ }
+function noteSphinxSolved(difficulty, runPerfect) { /* no-op: achievements disabled */ }
+
+    </script>
+    <script>
+        (function initFunDiscoveries(){
+            const dailyMyths = [
+                ['The golden apple', 'Eris threw a golden apple into a divine wedding, setting three goddesses against one another.'],
+                ['The lyre', 'Hermes invented the lyre as a baby and traded it to Apollo after stealing his cattle.'],
+                ['The laurel', 'Apollo chased Daphne, who became a laurel tree; he made its leaves sacred.'],
+                ['The pomegranate', 'Persephone ate pomegranate seeds in the Underworld, binding her to Hades for part of every year.'],
+                ['The fire-bringer', 'Prometheus gave fire to humanity and paid a severe price for defying Zeus.']
+            ];
+            const badgeNames = ['Daily reader', 'Myth suggester', 'Fun explorer'];
+            const storageKey = 'mythly-fun-discoveries';
+            const state = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            state.badges = state.badges || {};
+            function saveState(){ localStorage.setItem(storageKey, JSON.stringify(state)); renderBadges(); }
+            function unlockBadge(name){ if (!state.badges[name]) { state.badges[name] = true; saveState(); } }
+            function renderBadges(){
+                const badges = document.getElementById('fun-badges');
+                if (!badges) return;
+                badges.innerHTML = badgeNames.map(name => `<span class="fun-badge" style="opacity:${state.badges[name] ? '1' : '.45'}">${name}</span>`).join('');
+            }
+            let dailyIndex = new Date().getDate() % dailyMyths.length;
+            function renderDaily(){
+                const dailyText = document.getElementById('fun-daily-text');
+                if (!dailyText) return;
+                dailyText.innerHTML = `<strong>${dailyMyths[dailyIndex][0]}</strong><br>${dailyMyths[dailyIndex][1]}`;
+                unlockBadge('Daily reader');
+            }
+            const nextDaily = document.getElementById('fun-daily-next');
+            if (nextDaily) nextDaily.addEventListener('click', function(){ dailyIndex = (dailyIndex + 1) % dailyMyths.length; renderDaily(); });
+            const suggestionForm = document.getElementById('fun-suggestion-form');
+            const suggestionInput = document.getElementById('fun-suggestion-input');
+            const suggestionList = document.getElementById('fun-suggestion-list');
+            function escapeSuggestion(value){ return value.replace(/[&<>]/g, function(char){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[char]; }); }
+            function renderSuggestions(){
+                if (!suggestionList) return;
+                const suggestions = JSON.parse(localStorage.getItem('mythly-fun-suggestions') || '[]');
+                const recentSuggestions = suggestions.slice(-5).reverse();
+                suggestionList.innerHTML = recentSuggestions.map(function(item){ return '<li>' + escapeSuggestion(item) + '</li>'; }).join('');
+            }
+            if (suggestionForm) suggestionForm.addEventListener('submit', function(event){
+                event.preventDefault();
+                const value = suggestionInput.value.trim();
+                if (!value) return;
+                const suggestions = JSON.parse(localStorage.getItem('mythly-fun-suggestions') || '[]');
+                suggestions.push(value);
+                localStorage.setItem('mythly-fun-suggestions', JSON.stringify(suggestions));
+                suggestionInput.value = '';
+                renderSuggestions();
+                unlockBadge('Myth suggester');
+            });
+            renderDaily();
+            renderSuggestions();
+            renderBadges();
+            unlockBadge('Fun explorer');
+        }());
+
+        
+    </script>
+</body>
+</html>
