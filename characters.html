@@ -14,7 +14,7 @@
             --nav-height: 5.6rem;
             --sticky-offset: 6rem; /* used to offset anchors so content isn't hidden behind the sticky nav */
         }
-        html{width:100%;height:100%;background:linear-gradient(135deg, rgba(224, 239, 255, 0.88), rgba(239, 231, 255, 0.88)), url('mountolympus.jpg') center/cover fixed no-repeat;background-color:#e8f0ff;background-attachment:fixed;overflow-x:hidden}
+        html{width:100%;height:100%;background:linear-gradient(135deg, rgba(224, 239, 255, 0.75), rgba(239, 231, 255, 0.75)), url('mountolympus.jpg') center/cover fixed no-repeat;background-color:#e8f0ff;background-attachment:fixed;overflow-x:hidden}
         body{font-family: Georgia, "Times New Roman", serif; width:100%; height:100%; margin:2rem; line-height:1.6; padding-top:0; background:transparent; overflow-x:hidden}
         .site-header{position:relative;z-index:1000;margin-bottom:2rem;width:calc(100% - 4rem)}
         .header-top{display:flex;align-items:center;justify-content:space-between;background:rgba(245,230,200,0.98);padding:0.8rem 2rem;box-sizing:border-box;border-radius:.75rem .75rem 0 0;box-shadow:0 14px 28px rgba(0,0,0,0.14)}
@@ -29,8 +29,14 @@
         html{scroll-behavior:smooth}
         :target{scroll-margin-top:var(--sticky-offset)}
         h2{font-family:'Cormorant Garamond', serif;font-weight:500;font-size:2rem}
+        .sort-controls{display:flex;align-items:center;gap:0.75rem;margin:1rem 0 1.5rem;flex-wrap:wrap}
+        .sort-controls label{font-family:'Cormorant Garamond', serif;font-weight:600;font-size:1.35rem;color:#0b3b1f}
+        .sort-controls select{font:inherit;padding:0.55rem 0.85rem;border:1px solid rgba(11,59,31,0.25);border-radius:6px;background:#fff;color:#0b3b1f;min-width:180px}
         .characters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2rem;margin-top:2rem}
-        .character-card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;transition:box-shadow 0.3s ease,transform 0.3s ease}
+        .character-card{background:radial-gradient(circle at center, #ffffff 65%, rgba(255,255,255,0) 100%), linear-gradient(135deg, #e8f4f0 0%, #c7e9d0 25%, #a8d8ff 50%, #b8d4f1 75%, #e8d4f4 100%);border:1px solid #ddd;border-radius:8px;padding:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;transition:box-shadow 0.3s ease,transform 0.3s ease}
+        .character-card:nth-child(4n+1){background:radial-gradient(circle at center, #ffffff 76%, rgba(255,255,255,0) 100%), linear-gradient(135deg, #e8f4f0 0%, #c7e9d0 25%, #a8d8ff 50%, #b8d4f1 75%, #e8d4f4 100%)}
+        .character-card:nth-child(4n+2){background:radial-gradient(circle at center, #ffffff 52%, rgba(255,255,255,0) 100%), linear-gradient(135deg, #e8f4f0 0%, #c7e9d0 25%, #a8d8ff 50%, #b8d4f1 75%, #e8d4f4 100%)}
+        .character-card:nth-child(4n+3){background:radial-gradient(circle at center, #ffffff 62%, rgba(255,255,255,0) 100%), linear-gradient(135deg, #f5f0d5 0%, #e6dca0 20%, #c7e9d0 45%, #a8d8ff 70%, #e8d4f4 100%)}
         .character-card:hover{box-shadow:0 12px 24px rgba(0,0,0,0.12);transform:translateY(-4px)}
         .character-card h3{font-family:'Cormorant Garamond', serif;font-weight:500;margin:0 0 0.5rem 0;font-size:1.5rem}
         .character-card p{margin:0 0 1.5rem 0;flex-grow:1}
@@ -68,90 +74,132 @@
     </header>
     <main>
         <h2>Characters</h2>
+        <div class="sort-controls" aria-label="Sort characters">
+            <label for="character-sort">Sort by:</label>
+            <select id="character-sort" aria-label="Choose character sort order">
+                <option value="alphabetical">Alphabet</option>
+                <option value="importance">Importance</option>
+                <option value="intelligence">Intelligence</option>
+                <option value="battle-skills">Battle skills</option>
+                <option value="beauty">Beauty</option>
+            </select>
+        </div>
         <p>Browse notable figures from Greek myth. Click to learn more about each character.</p>
         <div class="characters-grid">
-            <div class="character-card">
+            <div class="character-card" data-name="Zeus" data-importance="1" data-intelligence="13" data-battle-skills="2" data-beauty="8">
                 <h3>Zeus</h3>
                 <p id="detail-zeus" data-edit-id="detail-zeus" data-editable>Zeus is the ruler of Mount Olympus and the god of the sky and thunder.</p>
                 <a href="zeus.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Hera" data-importance="10" data-intelligence="4" data-battle-skills="8" data-beauty="4">
                 <h3>Hera</h3>
                 <p id="detail-hera" data-edit-id="detail-hera" data-editable>Hera is the queen of the gods, goddess of marriage, family, and fertility.</p>
                 <a href="hera.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Athena" data-importance="11" data-intelligence="1" data-battle-skills="1" data-beauty="6">
                 <h3>Athena</h3>
                 <p id="detail-athena" data-edit-id="detail-athena" data-editable>Athena is the goddess of wisdom, strategic warfare, and crafts.</p>
                 <a href="athena.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Hephaestus" data-importance="6" data-intelligence="3" data-battle-skills="10" data-beauty="16">
                 <h3>Hephaestus</h3>
                 <p id="detail-hephaestus" data-edit-id="detail-hephaestus" data-editable>Hephaestus was the god of fire, metalworking, and craftsmanship.</p>
                 <a href="hephaestus.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Dionysus" data-importance="13" data-intelligence="11" data-battle-skills="9" data-beauty="15">
                 <h3>Dionysus</h3>
                 <p id="detail-dionysus" data-edit-id="detail-dionysus" data-editable>Dionysus was the god of wine, festivity, theatre, and ecstatic celebration.</p>
                 <a href="dionysus.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Poseidon" data-importance="7" data-intelligence="15" data-battle-skills="3" data-beauty="9">
                 <h3>Poseidon</h3>
                 <p id="detail-poseidon" data-edit-id="detail-poseidon" data-editable>Poseidon is the god of the sea, earthquakes, and horses.</p>
                 <a href="poseidon.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Hades" data-importance="2" data-intelligence="7" data-battle-skills="5" data-beauty="14">
                 <h3>Hades</h3>
                 <p id="detail-hades" data-edit-id="detail-hades" data-editable>Hades was the lord of the dead and the underworld.</p>
                 <a href="hades.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Ares" data-importance="15" data-intelligence="16" data-battle-skills="4" data-beauty="5">
                 <h3>Ares</h3>
                 <p id="detail-ares" data-edit-id="detail-ares" data-editable>Ares was the god of chaotic battles and respected mortals devoted to war.</p>
                 <a href="ares.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Aphrodite" data-importance="3" data-intelligence="5" data-battle-skills="15" data-beauty="1">
                 <h3>Aphrodite</h3>
                 <p id="detail-aphrodite" data-edit-id="detail-aphrodite" data-editable>Aphrodite was the god of love and beauty, known for being both kind and cunning.</p>
                 <a href="aphrodite.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Eros" data-importance="4" data-intelligence="10" data-battle-skills="14" data-beauty="2">
                 <h3>Eros</h3>
                 <p id="detail-eros" data-edit-id="detail-eros" data-editable>Eros was the god of love and was feared because of his love arrows.</p>
                 <a href="eros.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Hestia" data-importance="12" data-intelligence="9" data-battle-skills="16" data-beauty="10">
                 <h3>Hestia</h3>
                 <p id="detail-hestia" data-edit-id="detail-hestia" data-editable>Hestia was the goddess of the home and the hearth.</p>
                 <a href="hestia.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Persephone" data-importance="5" data-intelligence="12" data-battle-skills="13" data-beauty="3">
                 <h3>Persephone</h3>
                 <p id="detail-persephone" data-edit-id="detail-persephone" data-editable>Persephone was the goddess of springtime.</p>
                 <a href="persephone.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Demeter" data-importance="4" data-intelligence="11" data-battle-skills="12" data-beauty="7">
                 <h3>Demeter</h3>
                 <p id="detail-demeter" data-edit-id="detail-demeter" data-editable>Demeter was the goddess of the harvest and agriculture.</p>
                 <a href="demeter.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Artemis" data-importance="14" data-intelligence="8" data-battle-skills="6" data-beauty="13">
                 <h3>Artemis</h3>
                 <p id="detail-artemis" data-edit-id="detail-artemis" data-editable>Artemis was the goddess of hunting, archery and the wilderness.</p>
                 <a href="artemis.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Apollo" data-importance="9" data-intelligence="6" data-battle-skills="7" data-beauty="12">
                 <h3>Apollo</h3>
                 <p id="detail-apollo" data-edit-id="detail-apollo" data-editable>Apollo was the god of music, arts, knowledge, healing, and poetry.</p>
                 <a href="apollo.html">Learn More</a>
             </div>
-            <div class="character-card">
+            <div class="character-card" data-name="Hermes" data-importance="8" data-intelligence="2" data-battle-skills="11" data-beauty="11">
                 <h3>Hermes</h3>
                 <p id="detail-hermes" data-edit-id="detail-hermes" data-editable>Hermes was the god of messengers, travelling and thieves.</p>
                 <a href="hermes.html">Learn More</a>
             </div>
         </div>
     </main>
-    
+    <script>
+        const characterSortSelect = document.getElementById('character-sort');
+        const characterGrid = document.querySelector('.characters-grid');
+
+        function sortCharacters(sortMode) {
+            const cards = Array.from(characterGrid.children);
+            const sortedCards = cards.sort((a, b) => {
+                if (sortMode === 'importance') {
+                    return Number(a.dataset.importance) - Number(b.dataset.importance);
+                }
+                if (sortMode === 'intelligence') {
+                    return Number(a.dataset.intelligence) - Number(b.dataset.intelligence);
+                }
+                if (sortMode === 'battle-skills') {
+                    return Number(a.dataset.battleSkills) - Number(b.dataset.battleSkills);
+                }
+                if (sortMode === 'beauty') {
+                    return Number(a.dataset.beauty) - Number(b.dataset.beauty);
+                }
+                return a.dataset.name.localeCompare(b.dataset.name);
+            });
+
+            sortedCards.forEach(card => characterGrid.appendChild(card));
+        }
+
+        if (characterSortSelect) {
+            characterSortSelect.addEventListener('change', (event) => {
+                sortCharacters(event.target.value);
+            });
+        }
+
+        sortCharacters('alphabetical');
+    </script>
 </body>
 </html>

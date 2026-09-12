@@ -142,12 +142,15 @@
         canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
         ctx.scale(dpr, dpr);
         ctx.clearRect(0,0,w,h);
-        const cellH = h / stats.length; const labelW = 100; const cellW = (w - labelW) / 2;
-        ctx.font = '13px Arial'; ctx.fillStyle = '#fff';
+        const headerH = 20; const cellH = (h - headerH) / stats.length; const labelW = 100; const cellW = (w - labelW) / 2;
+        ctx.font = '13px Arial'; ctx.fillStyle = '#201020';
+        ctx.textAlign = 'center';
+        ['Player', 'AI'].forEach((label, j) => { ctx.fillText(label, labelW + j*cellW + cellW/2, headerH - 6); });
+        ctx.textAlign = 'left';
         for(let i=0; i<stats.length; i++){
           const stat = stats[i];
-          const y = i * cellH;
-          ctx.fillText(stat, 8, y + cellH/2 + 5);
+          const y = headerH + i * cellH;
+          ctx.fillStyle = '#201020'; ctx.fillText(stat, 8, y + cellH/2 + 5);
           const c = counts[stat];
           const p = c.player || 0; const a = c.ai || 0;
           [['Player', p, '#2d9cdb'], ['AI', a, '#ff6384']].forEach((col, j) => {
@@ -185,12 +188,15 @@
         canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
         ctx.scale(dpr, dpr);
         ctx.clearRect(0,0,w,h);
-        const cellH = h / stats.length; const labelW = 100; const cellW = (w - labelW) / MAX;
-        ctx.font = '13px Arial'; ctx.fillStyle = '#fff';
+        const headerH = 20; const cellH = (h - headerH) / stats.length; const labelW = 100; const cellW = (w - labelW) / MAX;
+        ctx.font = '13px Arial'; ctx.fillStyle = '#201020';
+        ctx.textAlign = 'center';
+        for(let j=1; j<=MAX; j++){ const label = j>=MAX ? (MAX+'+') : String(j); ctx.fillText(label, labelW + (j-1)*cellW + cellW/2, headerH - 6); }
+        ctx.textAlign = 'left';
         for(let i=0; i<stats.length; i++){
           const stat = stats[i];
-          const y = i * cellH;
-          ctx.fillText(stat, 8, y + cellH/2 + 5);
+          const y = headerH + i * cellH;
+          ctx.fillStyle = '#201020'; ctx.fillText(stat, 8, y + cellH/2 + 5);
           for(let j=1; j<=MAX; j++){
             const c = buckets[stat][j] || 0;
             const alpha = globalMax ? (0.3 + 0.7 * (c / globalMax)) : 0.3;

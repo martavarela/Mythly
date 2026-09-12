@@ -17,7 +17,7 @@
         html {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(224, 239, 255, 0.88), rgba(239, 231, 255, 0.88)), url('mountolympus.jpg') center/cover fixed no-repeat;
+            background: linear-gradient(135deg, rgba(224, 239, 255, 0.75), rgba(239, 231, 255, 0.75)), url('mountolympus.jpg') center/cover fixed no-repeat;
             background-attachment: fixed;
             background-color: #e8f0ff;
             overflow-x: hidden;
@@ -271,6 +271,9 @@
             margin-top: 0.75rem;
         }
         .sphinx-actions .game-btn { flex: 1 1 140px; }
+        
+        
+        
         .fate-story {
             margin-top: 0.75rem;
             padding: 1rem;
@@ -419,34 +422,6 @@
                     <div class="quiz-actions"></div>
                 </div>
 
-                    <div class="tool-card" id="coolest-god-card">
-                    <h3>Which Greek god is the best?</h3>
-                    <p>Pick your favourite and see who is winning.</p>
-                    <div class="quiz-question">Choose one:</div>
-                    <div id="coolest-options" class="hero-options"></div>
-                    <div class="quiz-actions">
-                        <button class="game-btn secondary" type="button" id="coolest-show-chart">Show pie chart</button>
-                    </div>
-                    <div class="tool-output hidden" id="coolest-chart-container" style="padding-top:.5rem;">
-                        <canvas id="coolest-chart" width="780" height="780" style="width:100%;max-width:780px;height:auto;display:block;margin:0 auto;"></canvas>
-                        <div id="coolest-chart-legend" class="small" style="margin-top:.75rem;"></div>
-                    </div>
-                </div>
-
-                <div class="tool-card" id="best-hero-card">
-                    <h3>Which Greek hero is the best?</h3>
-                    <p>Cast your vote for the legendary hero you admire most.</p>
-                    <div class="quiz-question">Choose one:</div>
-                    <div id="hero-poll-options" class="hero-options"></div>
-                    <div class="quiz-actions">
-                        <button class="game-btn secondary" type="button" id="hero-poll-show-chart">Show pie chart</button>
-                    </div>
-                    <div class="tool-output hidden" id="hero-poll-chart-container" style="padding-top:.5rem;">
-                        <canvas id="hero-poll-chart" width="780" height="780" style="width:100%;max-width:780px;height:auto;display:block;margin:0 auto;"></canvas>
-                        <div id="hero-poll-chart-legend" class="small" style="margin-top:.75rem;"></div>
-                    </div>
-                </div>
-
                 <div class="tool-card" id="guess-monster-card">
                     <h3>Guess the Monster</h3>
                     <p>Choose an easy or hard set of clues and race to name as many creatures as possible in one minute.</p>
@@ -464,7 +439,6 @@
                     <div class="quiz-actions">
                         <button class="game-btn" type="button" id="monster-start-btn">Start playing</button>
                         <button class="game-btn secondary hidden" type="button" id="monster-restart-btn">Restart</button>
-                        <button class="game-btn secondary" type="button" id="monster-show-leaderboard-btn">Show leaderboard</button>
                     </div>
                     <div id="monster-game-area" class="hidden">
                         <div class="tool-output small" id="monster-guess-timer">Time left: 1:00</div>
@@ -703,25 +677,6 @@
             renderHeroQuiz();
         }
 
-        const coolestGods = [
-            { key: 'zeus', name: 'Zeus' },
-            { key: 'hera', name: 'Hera' },
-            { key: 'poseidon', name: 'Poseidon' },
-            { key: 'demeter', name: 'Demeter' },
-            { key: 'athena', name: 'Athena' },
-            { key: 'apollo', name: 'Apollo' },
-            { key: 'artemis', name: 'Artemis' },
-            { key: 'ares', name: 'Ares' },
-            { key: 'hephaestus', name: 'Hephaestus' },
-            { key: 'aphrodite', name: 'Aphrodite' },
-            { key: 'hermes', name: 'Hermes' },
-            { key: 'dionysus', name: 'Dionysus' },
-            { key: 'hestia', name: 'Hestia' },
-            { key: 'hades', name: 'Hades' },
-            { key: 'persephone', name: 'Persephone' },
-            {key:  'eros', name: 'Eros' }
-        ];
-        const coolestStorageKey = 'mythly-coolest-god-votes';
         const monsterGuessPool = {
             easy: [
                 { name: 'Minotaur', clue: 'I am half-man and half-bull, and I lurk inside a maze.' },
@@ -804,21 +759,6 @@
         let monsterGuessTimerId = null;
         let monsterGuessAdvanceTimeoutId = null;
         let monsterGuessOrder = [];
-        const heroPollHeroes = [
-            { key: 'achilles', name: 'Achilles' },
-            { key: 'odysseus', name: 'Odysseus' },
-            { key: 'heracles', name: 'Heracles' },
-            { key: 'perseus', name: 'Perseus' },
-            { key: 'theseus', name: 'Theseus' },
-            { key: 'jason', name: 'Jason' }
-        ];
-        const heroPollStorageKey = 'mythly-best-hero-votes';
-        const heroPollUserVoteKey = 'mythly-best-hero-user-vote';
-        const coolestOptionsEl = document.getElementById('coolest-options');
-        const coolestShowChartBtn = document.getElementById('coolest-show-chart');
-        const coolestChartContainer = document.getElementById('coolest-chart-container');
-        const coolestChartCanvas = document.getElementById('coolest-chart');
-        const coolestChartLegend = document.getElementById('coolest-chart-legend');
         const didYouKnowOutput = document.getElementById('did-you-know-output');
         const didYouKnowNextBtn = document.getElementById('did-you-know-next');
         const didYouKnowFacts = [
@@ -968,202 +908,17 @@
             'The god Hermes could move between the world of gods, humans, and the dead, acting as a guide in all realms.'
         ];
 
-        function loadCoolestVotes() {
-            try {
-                return JSON.parse(localStorage.getItem(coolestStorageKey) || '{}');
-            } catch (e) {
-                return {};
-            }
-        }
-
-        function saveCoolestVotes(votes) {
-            try {
-                localStorage.setItem(coolestStorageKey, JSON.stringify(votes));
-            } catch (e) {
-                // ignore storage errors
-            }
-        }
-
-        const coolestUserVoteKey = 'mythly-coolest-god-user-vote';
-        function loadCoolestUserVote() {
-            try {
-                return localStorage.getItem(coolestUserVoteKey) || null;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        function saveCoolestUserVote(key) {
-            try {
-                localStorage.setItem(coolestUserVoteKey, key);
-            } catch (e) {
-                // ignore storage errors
-            }
-        }
-
-        function hasVotedCoolestGod() {
-            return !!loadCoolestUserVote();
-        }
-
-        const coolestChartColors = [
-            '#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E8684A', '#6DC8EC', '#9270CA', '#FF9D4D', '#269A99', '#FF99C3', '#A0D8F1', '#FF7A45', '#8D8DFF', '#B6A2DE', '#FF99AC', '#FFBB96'
-        ];
-        const heroPollChartColors = [
-            '#0b3b1f', '#6a4a1f', '#5B8FF9', '#D9782D', '#E8684A', '#9270CA'
-        ];
-
-        let lastCoolestSignature = '';
-        let lastHeroPollSignature = '';
-
-        function refreshPollViews() {
-            const coolestSignature = JSON.stringify(loadCoolestVotes()) + '|' + (loadCoolestUserVote() || '');
-            const heroSignature = JSON.stringify(loadHeroPollVotes()) + '|' + (loadHeroPollUserVote() || '');
-            if (coolestSignature !== lastCoolestSignature) {
-                try { renderCoolestPoll(); } catch (e) { console.error('refresh coolest poll', e); }
-                lastCoolestSignature = coolestSignature;
-            }
-            if (heroSignature !== lastHeroPollSignature) {
-                try { renderHeroPoll(); } catch (e) { console.error('refresh hero poll', e); }
-                lastHeroPollSignature = heroSignature;
-            }
-        }
-
-        window.__refreshPollViews = refreshPollViews;
-
-        function renderCoolestPoll() {
-            if (!coolestOptionsEl) return;
-            const userVote = loadCoolestUserVote();
-            coolestOptionsEl.innerHTML = '';
-            coolestGods.forEach(god => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'quiz-option';
-                button.innerText = god.name;
-                button.disabled = !!userVote;
-                if (!userVote) {
-                    button.addEventListener('click', () => voteCoolestGod(god.key));
-                }
-                coolestOptionsEl.appendChild(button);
-            });
-            updateCoolestChart();
-        }
-
-        function voteCoolestGod(key) {
-            if (hasVotedCoolestGod()) return;
-            const votes = loadCoolestVotes();
-            votes[key] = (votes[key] || 0) + 1;
-            saveCoolestVotes(votes);
-            saveCoolestUserVote(key);
-            refreshPollViews();
-        }
-
-        function getCoolestVoteSummary() {
-            const votes = loadCoolestVotes();
-            return coolestGods.map((god, idx) => ({
-                key: god.key,
-                name: god.name,
-                count: votes[god.key] || 0,
-                color: coolestChartColors[idx % coolestChartColors.length]
-            }));
-        }
-
-        function updateCoolestChart() {
-            if (!coolestChartCanvas || !coolestChartLegend) return;
-            const summary = getCoolestVoteSummary();
-            const total = summary.reduce((sum, item) => sum + item.count, 0);
-            const ctx = coolestChartCanvas.getContext('2d');
-            ctx.clearRect(0, 0, coolestChartCanvas.width, coolestChartCanvas.height);
-            if (total === 0) {
-                coolestChartLegend.innerHTML = '<em>No votes yet to show.</em>';
-                return;
-            }
-            const centerX = coolestChartCanvas.width / 2;
-            const centerY = coolestChartCanvas.height / 2;
-            const radius = Math.min(centerX, centerY) - 10;
-            let startAngle = -Math.PI / 2;
-            summary.forEach(item => {
-                if (!item.count) return;
-                const slice = (item.count / total) * Math.PI * 2;
-                ctx.beginPath();
-                ctx.moveTo(centerX, centerY);
-                ctx.arc(centerX, centerY, radius, startAngle, startAngle + slice);
-                ctx.closePath();
-                ctx.fillStyle = item.color;
-                ctx.fill();
-
-                const midAngle = startAngle + slice / 2;
-                const textRadius = radius * 0.6;
-                const textX = centerX + Math.cos(midAngle) * textRadius;
-                const textY = centerY + Math.sin(midAngle) * textRadius;
-                const pct = total ? Math.round((item.count / total) * 100) : 0;
-                const label = `${item.name.toUpperCase()} ${pct}%`;
-                const maxTextWidth = Math.max(32, slice * textRadius * 0.85);
-                const maxTextHeight = radius * 0.18;
-                let fontSize = Math.min(40, Math.floor(maxTextHeight));
-                ctx.font = `900 ${fontSize}px sans-serif`;
-                while (fontSize > 10 && ctx.measureText(label).width > maxTextWidth) {
-                    fontSize -= 1;
-                    ctx.font = `900 ${fontSize}px sans-serif`;
-                }
-                ctx.fillStyle = '#ffffff';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(label, textX, textY);
-
-                startAngle += slice;
-            });
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-            ctx.stroke();
-            coolestChartLegend.innerHTML = '';
-        }
-
-        function toggleCoolestChart() {
-            if (!coolestChartContainer || !coolestShowChartBtn) return;
-            const isVisible = !coolestChartContainer.classList.contains('hidden');
-            if (isVisible) {
-                coolestChartContainer.classList.add('hidden');
-                coolestShowChartBtn.innerText = 'Show pie chart';
-            } else {
-                updateCoolestChart();
-                coolestChartContainer.classList.remove('hidden');
-                coolestShowChartBtn.innerText = 'Hide pie chart';
-            }
-        }
-
-        const coolestVotesResetKey = 'mythly-coolest-god-votes-reset-v2';
-        function ensureCoolestVotesResetOnce() {
-            try {
-                if (!localStorage.getItem(coolestVotesResetKey)) {
-                    saveCoolestVotes({});
-                    localStorage.setItem(coolestVotesResetKey, 'true');
-                }
-            } catch (e) {
-                // ignore storage errors
-            }
-        }
-
         function renderDidYouKnow() {
             if (!didYouKnowOutput) return;
             const fact = didYouKnowFacts[Math.floor(Math.random() * didYouKnowFacts.length)];
             didYouKnowOutput.innerHTML = `<strong>Did you know?</strong> ${fact}`;
         }
 
-        function initCoolestAndFacts() {
-            ensureCoolestVotesResetOnce();
-            renderCoolestPoll();
+        function initDidYouKnowFacts() {
             renderDidYouKnow();
-            if (coolestShowChartBtn) coolestShowChartBtn.addEventListener('click', toggleCoolestChart);
             if (didYouKnowNextBtn) didYouKnowNextBtn.addEventListener('click', renderDidYouKnow);
         }
 
-        const heroPollOptionsEl = document.getElementById('hero-poll-options');
-        const heroPollShowChartBtn = document.getElementById('hero-poll-show-chart');
-        const heroPollChartContainer = document.getElementById('hero-poll-chart-container');
-        const heroPollChartCanvas = document.getElementById('hero-poll-chart');
-        const heroPollChartLegend = document.getElementById('hero-poll-chart-legend');
         const monsterGuessClueEl = document.getElementById('monster-guess-clue');
         const monsterGuessInputEl = document.getElementById('monster-guess-input');
         const monsterGuessFeedbackEl = document.getElementById('monster-guess-feedback');
@@ -1172,7 +927,6 @@
         const monsterDifficultySelect = document.getElementById('monster-difficulty');
         const monsterStartBtn = document.getElementById('monster-start-btn');
         const monsterRestartBtn = document.getElementById('monster-restart-btn');
-        const monsterShowLeaderboardBtn = document.getElementById('monster-show-leaderboard-btn');
         const monsterGameAreaEl = document.getElementById('monster-game-area');
         const monsterTimerEl = document.getElementById('monster-guess-timer');
         const monsterScoreEl = document.getElementById('monster-guess-score');
@@ -1181,149 +935,6 @@
         const monsterLeaderboardEl = document.getElementById('monster-leaderboard');
         const monsterPlayerNameEl = document.getElementById('monster-player-name');
         const monsterLeaderboardStorageKey = 'mythly-monster-leaderboard-v1';
-
-        function loadHeroPollVotes() {
-            try {
-                return JSON.parse(localStorage.getItem(heroPollStorageKey) || '{}');
-            } catch (e) {
-                return {};
-            }
-        }
-
-        function saveHeroPollVotes(votes) {
-            try {
-                localStorage.setItem(heroPollStorageKey, JSON.stringify(votes));
-            } catch (e) {
-                // ignore storage errors
-            }
-        }
-
-        function loadHeroPollUserVote() {
-            try {
-                return localStorage.getItem(heroPollUserVoteKey) || null;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        function saveHeroPollUserVote(key) {
-            try {
-                localStorage.setItem(heroPollUserVoteKey, key);
-            } catch (e) {
-                // ignore storage errors
-            }
-        }
-
-        function hasVotedHeroPoll() {
-            return !!loadHeroPollUserVote();
-        }
-
-        function renderHeroPoll() {
-            if (!heroPollOptionsEl) return;
-            const userVote = loadHeroPollUserVote();
-            heroPollOptionsEl.innerHTML = '';
-            heroPollHeroes.forEach(hero => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'quiz-option';
-                button.innerText = hero.name;
-                button.disabled = !!userVote;
-                if (!userVote) {
-                    button.addEventListener('click', () => voteHeroPoll(hero.key));
-                }
-                heroPollOptionsEl.appendChild(button);
-            });
-            updateHeroPollChart();
-        }
-
-        function voteHeroPoll(key) {
-            if (hasVotedHeroPoll()) return;
-            const votes = loadHeroPollVotes();
-            votes[key] = (votes[key] || 0) + 1;
-            saveHeroPollVotes(votes);
-            saveHeroPollUserVote(key);
-            refreshPollViews();
-        }
-
-        function getHeroPollSummary() {
-            const votes = loadHeroPollVotes();
-            return heroPollHeroes.map((hero, idx) => ({
-                key: hero.key,
-                name: hero.name,
-                count: votes[hero.key] || 0,
-                color: heroPollChartColors[idx % heroPollChartColors.length]
-            }));
-        }
-
-        function updateHeroPollChart() {
-            if (!heroPollChartCanvas || !heroPollChartLegend) return;
-            const summary = getHeroPollSummary();
-            const total = summary.reduce((sum, item) => sum + item.count, 0);
-            const ctx = heroPollChartCanvas.getContext('2d');
-            ctx.clearRect(0, 0, heroPollChartCanvas.width, heroPollChartCanvas.height);
-            if (total === 0) {
-                heroPollChartLegend.innerHTML = '<em>No votes yet to show.</em>';
-                return;
-            }
-            const centerX = heroPollChartCanvas.width / 2;
-            const centerY = heroPollChartCanvas.height / 2;
-            const radius = Math.min(centerX, centerY) - 10;
-            let startAngle = -Math.PI / 2;
-            summary.forEach(item => {
-                if (!item.count) return;
-                const slice = (item.count / total) * Math.PI * 2;
-                ctx.beginPath();
-                ctx.moveTo(centerX, centerY);
-                ctx.arc(centerX, centerY, radius, startAngle, startAngle + slice);
-                ctx.closePath();
-                ctx.fillStyle = item.color;
-                ctx.fill();
-
-                const midAngle = startAngle + slice / 2;
-                const textRadius = radius * 0.6;
-                const textX = centerX + Math.cos(midAngle) * textRadius;
-                const textY = centerY + Math.sin(midAngle) * textRadius;
-                const pct = total ? Math.round((item.count / total) * 100) : 0;
-                const label = `${item.name.toUpperCase()} ${pct}%`;
-                const maxTextWidth = Math.max(32, slice * textRadius * 0.85);
-                const maxTextHeight = radius * 0.18;
-                let fontSize = Math.min(40, Math.floor(maxTextHeight));
-                ctx.font = `900 ${fontSize}px sans-serif`;
-                while (fontSize > 10 && ctx.measureText(label).width > maxTextWidth) {
-                    fontSize -= 1;
-                    ctx.font = `900 ${fontSize}px sans-serif`;
-                }
-                ctx.fillStyle = '#ffffff';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(label, textX, textY);
-                startAngle += slice;
-            });
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-            ctx.stroke();
-            heroPollChartLegend.innerHTML = '';
-        }
-
-        function toggleHeroPollChart() {
-            if (!heroPollChartContainer || !heroPollShowChartBtn) return;
-            const isVisible = !heroPollChartContainer.classList.contains('hidden');
-            if (isVisible) {
-                heroPollChartContainer.classList.add('hidden');
-                heroPollShowChartBtn.innerText = 'Show pie chart';
-            } else {
-                updateHeroPollChart();
-                heroPollChartContainer.classList.remove('hidden');
-                heroPollShowChartBtn.innerText = 'Hide pie chart';
-            }
-        }
-
-        function initHeroPoll() {
-            renderHeroPoll();
-            if (heroPollShowChartBtn) heroPollShowChartBtn.addEventListener('click', toggleHeroPollChart);
-        }
 
         function loadMonsterLeaderboard() {
             try {
@@ -1366,18 +977,6 @@
                 item.innerHTML = `<strong>${index + 1}. ${entry.name}</strong> — ${entry.score} correct`;
                 monsterLeaderboardEl.appendChild(item);
             });
-        }
-
-        function toggleMonsterLeaderboard() {
-            if (!monsterLeaderboardPanelEl || !monsterShowLeaderboardBtn) return;
-            const isVisible = !monsterLeaderboardPanelEl.classList.contains('hidden');
-            if (isVisible) {
-                monsterLeaderboardPanelEl.classList.add('hidden');
-                monsterShowLeaderboardBtn.innerText = 'Show leaderboard';
-            } else {
-                monsterLeaderboardPanelEl.classList.remove('hidden');
-                monsterShowLeaderboardBtn.innerText = 'Hide leaderboard';
-            }
         }
 
         function formatMonsterTime(seconds) {
@@ -1625,7 +1224,6 @@
             if (monsterGuessNextBtn) monsterGuessNextBtn.addEventListener('click', nextMonsterGuess);
             if (monsterStartBtn) monsterStartBtn.addEventListener('click', startMonsterGuessGame);
             if (monsterRestartBtn) monsterRestartBtn.addEventListener('click', resetMonsterGuessGame);
-            if (monsterShowLeaderboardBtn) monsterShowLeaderboardBtn.addEventListener('click', toggleMonsterLeaderboard);
             if (monsterDifficultySelect) {
                 monsterDifficultySelect.addEventListener('change', (event) => {
                     monsterGuessDifficulty = event.target.value;
@@ -1646,17 +1244,8 @@
         function initQuizzesOnDomReady() {
             try { renderParentQuestion(); } catch (e) { console.error('init parent quiz', e); }
             try { renderHeroQuiz(); } catch (e) { console.error('init hero quiz', e); }
-            try { initCoolestAndFacts(); } catch (e) { console.error('init coolest and facts', e); }
-            try { initHeroPoll(); } catch (e) { console.error('init hero poll', e); }
+            try { initDidYouKnowFacts(); } catch (e) { console.error('init did you know facts', e); }
             try { initMonsterGuess(); } catch (e) { console.error('init monster guess', e); }
-            window.addEventListener('storage', refreshPollViews);
-            window.addEventListener('focus', refreshPollViews);
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible') {
-                    refreshPollViews();
-                }
-            });
-            setInterval(refreshPollViews, 1500);
         }
 
         if (document.readyState === 'loading') {
