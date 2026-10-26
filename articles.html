@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Articles — Mythly</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>📜</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#244832;--purple:#6b2fa3;--blue:#3d5fa8;--lilac:#efe7ff;--panel:rgba(239,231,255,.78);--field:rgba(224,239,255,.82);--line:rgba(107,47,163,.18)}
+    *{box-sizing:border-box}
+    html{min-height:100%;background:linear-gradient(135deg,rgba(224,239,255,.75),rgba(239,231,255,.75)),url('mountolympus.jpg') center/cover fixed no-repeat;background-color:var(--lilac)}
+    body{margin:0;min-height:100vh;color:var(--ink);font-family:Georgia,"Times New Roman",serif;line-height:1.6}
+    .site-header{width:min(1100px,calc(100% - 2rem));margin:1rem auto 0}
+    .header-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.5rem;background:rgba(245,230,200,.98);border-radius:.75rem .75rem 0 0}
+    h1{margin:0;font:600 clamp(2rem,6vw,3.5rem)/1 'Cormorant Garamond',serif;letter-spacing:.15em;text-transform:uppercase}
+    .top-nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:1.2rem}.top-nav a{color:var(--ink);font:500 clamp(1rem,2.5vw,1.3rem) 'Cormorant Garamond',serif;letter-spacing:.1em;text-decoration:none}.top-nav a:hover{text-decoration:underline}
+    .subtitle{padding:.85rem 1rem;text-align:center;background:rgba(207,232,217,.98);border-radius:0 0 .75rem .75rem}.subtitle p{margin:0;font:500 clamp(1.15rem,3vw,1.8rem) 'Cormorant Garamond',serif}
+    main{width:min(1100px,calc(100% - 2rem));margin:2rem auto 4rem}
+    .intro{text-align:center;margin-bottom:1.5rem}.intro h2{font:500 clamp(2rem,5vw,3rem) 'Cormorant Garamond',serif;margin:.25rem 0}.intro p{margin:.25rem auto;max-width:680px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+    .article{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1.25rem;box-shadow:0 10px 24px rgba(38,61,84,.1)}
+    .article h3{margin:0 0 .45rem;font:600 1.9rem 'Cormorant Garamond',serif}
+    .article p{margin:.4rem 0}
+    .article-toggle{display:inline-block;margin-top:.75rem;padding:.7rem 1rem;border:0;border-radius:.6rem;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;font:600 1rem Georgia,"Times New Roman",serif;cursor:pointer}
+    .article-toggle:hover{filter:brightness(1.08)}
+    .article-content{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
+    .article-content[hidden]{display:none}
+    @media(max-width:760px){.header-top{align-items:flex-start;flex-direction:column}.top-nav{justify-content:flex-start}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-top"><h1>Mythly</h1><nav class="top-nav" aria-label="Main navigation"><a href="home.html">Home</a><a href="characters.html">Characters</a><a href="quizzes.html">Quizzes</a><a href="myths.html">Myths</a><a href="mythly-tools.html">Tools</a><a href="fun.html">Fun</a></nav></div>
+    <div class="subtitle"><p>Greek mythology articles and explainers</p></div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Articles</h2>
+      <p>Ancient myths, modern questions, and the ideas that shaped both worlds.</p>
+    </section>
+
+    <div class="grid">
+      <article class="article">
+        <div class="article-header">
+          <h3>Was Hades a villain?</h3>
+          <p><strong>Modern western culture has framed Hades as a villain but was he truly one?</strong></p>
+        </div>
+        <button class="article-toggle" type="button" aria-expanded="false" aria-controls="hades-article-content">Read article</button>
+        <div id="hades-article-content" class="article-content" hidden>
+          <p>The Greeks were far more afraid of Zeus, Poseidon and even Persephone. However, modern western culture has forgotten that Hades actually represented the peace in death. Why? Well, Hades has always had an aura of death and darkness but did this make him bad? Was death always bad? Of course, the Greeks didn't like death and tried to prevent it but they knew they had to let go at some stage, they knew if their life didn't end they would change the world for the worst, even if they were a good person.  People view death as the final stage, the end, of course they might be correct and the Greeks may well be wrong but there is one thing to remember, Hades was peaceful. In the modern day, death is still considered peaceful but there is always another side to it. The Greeks also believed there was a peaceful and dark side to death but what modern culture has forgotten is that peaceful death is Hades's domain, dark death is the realm of Persephone...</p>
+        </div>
+      </article>
+      <article class="article">
+        <div class="article-header">
+          <h3>The Philosophy of Hera</h3>
+          <p><strong>What can we learn from the powerful Queen of the Gods?</strong></p>
+        </div>
+        <button class="article-toggle" type="button" aria-expanded="false" aria-controls="hera-article-content">Read article</button>
+        <div id="hera-article-content" class="article-content" hidden>
+          <p>Whenever Zeus fell in love, Hera would always react. She knew the women were innocent and it was Zeus's fault but she took revenge on the women instead. Obviously, Zeus was far too powerful for her to take revenge on but did it justify her decision? The obvious choice is of course not. It wasn't their fault as Zeus often forced them to love him or have children with him. It's like taking revenge on a bystander because the real criminal is too powerful. Another thing to consider is why was Hera doing this? She ultimately felt ignored by Zeus, anything could happen: for example, if Zeus were to marry someone else, she would lose her place and have to start again as a minor deity. So really, was this a case of anger or fear. Also, she knew no matter how vengeful she was, Zeus would persist. Like when she stole away Io (a person who Zeus was in love with) who happened to be a cow (long story), then guarded that cow with a guard with 100 eyes who never fell asleep, and still Zeus managed to get Io out. I think saying Hera went a bit over the top that time is putting it lightly. It wasn't just that time, it was every time, she literally chased Leto (another person who Zeus was in love with) with a giant snake and didn't let her have birth anywhere since Hera was the goddess of childbirth and STILL a way through that was found. So Hera knew that Zeus would always be persistent. So Hera was ultimately just trying to not make herself feel sad. She knew she was losing her place and couldn't stop it, so here's a question for you, was Hera truly happy?</p>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <script>
+    document.querySelectorAll('.article-toggle').forEach(function (toggleButton) {
+      const articleContent = document.getElementById(toggleButton.getAttribute('aria-controls'));
+      toggleButton.addEventListener('click', function () {
+      const expanded = toggleButton.getAttribute('aria-expanded') === 'true';
+      toggleButton.setAttribute('aria-expanded', String(!expanded));
+      articleContent.hidden = expanded;
+      toggleButton.textContent = expanded ? 'Read article' : 'Hide article';
+      });
+    });
+  </script>
+</body>
+</html>

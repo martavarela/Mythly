@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Myths — Mythly</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>⚡</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: rgba(255,255,255,0.65);
+            --paper-deep: rgba(255,255,255,0.55);
+            --panel: rgba(246, 239, 230, 0.96);
+            --stone: #d9c8a9;
+            --olive: #2a3d32;
+            --olive-soft: #4f6459;
+            --card-mint: #dff8f0;
+            --card-sky: #d8edff;
+            --card-lilac: #f0e3fb;
+            --card-mint-strong: #cfeee3;
+            --card-sky-strong: #c7e3ff;
+            --card-lilac-strong: #e8d8f8;
+            --ink: #1f2a24;
+            --muted: #586862;
+            --shadow: 0 18px 40px rgba(29, 39, 34, 0.1);
+        }
+
+        html {
+            min-height: 100%;
+            overscroll-behavior-y: none;
+            background: linear-gradient(135deg, rgba(224, 239, 255, 0.72), rgba(239, 231, 255, 0.72)), url('mountolympus.jpg') center/cover fixed no-repeat;
+            background-color: #efe7ff;
+        }
+
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+            min-height: 100vh;
+            margin: 2rem;
+            padding-top: 0;
+            background: transparent;
+            color: var(--ink);
+            overscroll-behavior-y: none;
+        }
+
+        .site-header {
+            position: relative;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(245, 230, 200, 0.98);
+            padding: 0.9rem 2rem;
+            box-sizing: border-box;
+            border-radius: .75rem .75rem 0 0;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.14);
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin: 0;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            color: var(--olive);
+        }
+
+        .subtitle {
+            background: rgba(207, 232, 217, 0.98);
+            padding: 1.1rem 2rem;
+            text-align: center;
+            border-radius: 0 0 .75rem .75rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .subtitle p {
+            margin: 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--olive);
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            gap: 2rem;
+            padding: 0;
+            position: relative;
+            background: none;
+            z-index: 1200;
+            align-items: center;
+        }
+
+        .top-nav a {
+            pointer-events: auto;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-decoration: none;
+            color: var(--olive);
+            padding: 0;
+            background: none;
+            border-radius: 0;
+            border: none;
+            font-size: clamp(1rem, 2.5vw, 1.35rem);
+            transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+        }
+
+        .top-nav a:hover,
+        .top-nav a:active {
+            filter: brightness(.7);
+            text-decoration: underline;
+            text-decoration-color: var(--bronze);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2.5rem auto;
+            padding: 0 1rem 2.5rem;
+        }
+
+        .story-intro {
+            background: linear-gradient(rgba(255,255,255,0.62), rgba(255,255,255,0.46)) padding-box,
+                        linear-gradient(135deg, var(--card-mint-strong), var(--card-sky-strong), var(--card-lilac-strong)) border-box;
+            border: 2px solid transparent;
+            border-radius: 1.3rem;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .story-intro h2 {
+            margin: 0 0 0.75rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            letter-spacing: 0.03em;
+            color: var(--olive);
+        }
+
+        .story-intro p {
+            margin: 0;
+            line-height: 1.7;
+            color: var(--muted);
+            font-size: clamp(1rem, 1.6vw, 1.15rem);
+        }
+
+        .myth-selection {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
+            gap: 1.5rem;
+            position: relative;
+            z-index: 10;
+            margin-top: 1rem;
+        }
+
+        .myth-card {
+            position: relative;
+            z-index: 20;
+            background: linear-gradient(rgba(255,255,255,0.52), rgba(255,255,255,0.40)) padding-box,
+                        linear-gradient(135deg, var(--card-mint-strong), var(--card-sky-strong), var(--card-lilac-strong)) border-box;
+            border: 2px solid transparent;
+            border-radius: 1.2rem;
+            min-height: 220px;
+            padding: 1.2rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        .myth-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(207,238,226,0.22), rgba(200,227,255,0.22), rgba(232,216,248,0.22));
+            pointer-events: none;
+        }
+
+        .myth-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 28px rgba(0, 0, 0, 0.12);
+            filter: brightness(1.02);
+        }
+
+        .myth-card.selected {
+            box-shadow: 0 18px 28px rgba(76, 108, 141, 0.16);
+        }
+
+        .myth-card-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-badge {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            background: rgba(42, 61, 50, 0.06);
+            border: 1px solid rgba(42, 61, 50, 0.15);
+            color: var(--olive-soft);
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .myth-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: clamp(2rem, 3vw, 2.7rem);
+            letter-spacing: 0.02em;
+            line-height: 1.05;
+            color: var(--olive);
+            margin: 0;
+        }
+
+        .card-description {
+            margin: 0.7rem 0 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            letter-spacing: 0.01em;
+        }
+
+        .myth-container {
+            display: none;
+            position: relative;
+            background: linear-gradient(rgba(255,255,255,0.62), rgba(255,255,255,0.48)) padding-box,
+                        linear-gradient(135deg, var(--card-mint-strong), var(--card-sky-strong), var(--card-lilac-strong)) border-box;
+            border: 2px solid transparent;
+            border-radius: 1.4rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+            max-width: 880px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2.5rem 2.2rem 2rem;
+            line-height: 1.9;
+            font-size: 1.12rem;
+        }
+
+        .myth-container::before {
+            content: "";
+            position: absolute;
+            inset: 0.8rem 1rem auto 1rem;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(141, 113, 86, 0.5), transparent);
+        }
+
+        .myth-container h3 {
+            margin-top: 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            letter-spacing: 0.03em;
+            color: var(--olive);
+            text-align: center;
+        }
+
+        .myth-container p {
+            margin: 0 0 1.1rem;
+            color: var(--ink);
+            font-size: clamp(1.04rem, 1.5vw, 1.18rem);
+        }
+
+        .myth-container p:first-of-type::first-letter {
+            float: left;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4.1rem;
+            line-height: 0.8;
+            padding-right: 0.55rem;
+            padding-top: 0.25rem;
+            color: var(--bronze);
+        }
+
+        .back-to-myths {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1.2rem;
+            padding: 0.75rem 1.2rem;
+            border-radius: 999px;
+            border: 1px solid rgba(37, 70, 49, 0.5);
+            background: rgba(37, 70, 49, 0.06);
+            color: var(--olive);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .back-to-myths:hover {
+            background: rgba(37, 70, 49, 0.12);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            body { margin: 1rem; }
+            .top-nav { gap: 1rem; flex-wrap: wrap; }
+            .story-intro { padding: 1.2rem 1.2rem; }
+            .myth-selection { grid-template-columns: 1fr; }
+            .myth-card { min-height: 170px; }
+            main { margin: 1.5rem auto; }
+        }
+
+        @media (max-width: 480px) {
+            body { margin: 0.75rem; }
+            .header-top { padding: 0.7rem 1rem; }
+            .subtitle { padding: 0.8rem 1rem; }
+            .myth-card { padding: 0.8rem; }
+            .myth-container { padding: 1.25rem 1rem 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <h1>Mythly</h1>
+            <nav class="top-nav" aria-label="Main navigation">
+                <a href="home.html">Home</a>
+                <a href="characters.html">Characters</a>
+                <a href="quizzes.html">Quizzes</a>
+                <a href="mythly-tools.html">Tools</a>
+                <a href="fun.html">Fun</a>
+            </nav>
+        </div>
+        <div class="subtitle"><p>Stories and legends from Greek myth</p></div>
+    </header>
+    <main>
+        <section class="story-intro" aria-label="Myth stories intro">
+            <h2>Legends of gods, heroes, and fate</h2>
+            <p>From the apple that started a war to a prince who could not escape prophecy, these stories show how quickly divine pride, grief, and ambition can change the course of a world.</p>
+        </section>
+
+        <div class="myth-selection" aria-label="Myth story selection">
+            <div class="myth-card" id="start-trojan-war-1">
+                <div class="myth-card-inner">
+                    <span class="card-badge">Feud</span>
+                    <h3>Trojan War Part 1</h3>
+                    <p class="card-description">A wedding invite gone wrong ignites a divine feud.</p>
+                </div>
+            </div>
+            <div class="myth-card" id="start-trojan-war-2">
+                <div class="myth-card-inner">
+                    <span class="card-badge">Feud</span>
+                    <h3>Trojan War Part 2</h3>
+                    <p class="card-description">A shepherd prince, a beauty contest, and a choice that deepens a feud.</p>
+                </div>
+            </div>
+            <div class="myth-card" id="start-trojan-war-3">
+                <div class="myth-card-inner">
+                    <span class="card-badge">Epic</span>
+                    <h3>Trojan War Part 3</h3>
+                    <p class="card-description">Swans, eggs, and a kidnapping that sends two heroes to the underworld.</p>
+                </div>
+            </div>
+            <div class="myth-card" id="start-oedipus-1">
+                <div class="myth-card-inner">
+                    <span class="card-badge">Tragedy</span>
+                    <h3>The Fate of Oedipus</h3>
+                    <p class="card-description">A prophecy, a childhood escape, and a life shaped by fate.</p>
+                </div>
+            </div>
+            <div class="myth-card" id="start-oedipus-2">
+                <div class="myth-card-inner">
+                    <span class="card-badge">Tragedy</span>
+                    <h3>The Fate of Oedipus Part 2</h3>
+                    <p class="card-description">The truth emerges, and a kingdom learns the cost of hidden destiny.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="myth-container" id="trojan-war-1-story">
+            <h3>Trojan War Part 1</h3>
+            <p>So it all started with this massive wedding between Thetis (a sea-nymph) and Peleus (some rando mortal.). Literally everyone on Olympus got an invite. Except Eris. Eris is the goddess of chaos and messing stuff up, so obviously nobody wanted her ruining the vibe.</p>
+            <p>But if you think Eris is just going to sit at home and pout, you don't know Eris. She decided to crash the party anyway, and she brought the worst wedding gift ever: a glowing golden apple.</p>
+            <p>Right as the reception was going off, she popped up in the middle of the dancefloor. "Listen up!" she yelled, holding out the shiny fruit. "This apple goes to the absolute most beautiful goddess in the room." Then she just yeeted the apple into the crowd and sprinted out the door.</p>
+            <p>Absolute chaos. Goddesses were throwing elbows trying to catch it, but it miraculously bounced right into Zeus' lap. He looked at the little tag on it. "For the fairest," it read. </p>
+            <p>"Pass it here, Dad," Athena said. "She was totally making eye contact when she threw it."</p>
+            <p>"Excuse you," Hera interrupted. "Zeus, dude, I'm the literal queen of the gods. Hand it to your loving wife before things get ugly."</p>
+            <p>"Um, literally what are you guys talking about?" Aphrodite chimed in. "I'm the actual goddess of beauty. It's my whole thing."</p>
+            <p>Zeus was sweating buckets. If he picked one, the other two would make his immortal life a living nightmare forever. There was zero way to win, so he did what any great leader would do: he shoved the problem onto someone else.</p>
+            <p>"I can't possibly judge this! I'm way too biased," Zeus lied smoothly. "You guys need someone totally neutral."</p>
+            <p>The three goddesses glared at him, but agreed. "Fine," Hera crossed her arms. "Who exactly is this 'fair' judge going to be?"</p>
+            <p>Zeus panicked, looking frantically out the window. Down on Earth, he spotted a totally random, ordinary shepherd just chilling with his sheep. "Him!" Zeus yelled, pointing at the poor guy. "That guy right there!"</p>
+            <p>Thrilled to not be the bad guy, Zeus told Hermes to go handle it. Boom—Hermes teleported right in front of the clueless shepherd, totally ruining his peaceful afternoon.</p>
+            <button class="back-to-myths" type="button">Back to myths</button>
+        </div>
+
+        <div class="myth-container" id="trojan-war-2-story">
+            <h3>Trojan War Part 2</h3>
+            <p>"So", Hermes began, "I'm totes sorry to ruin your wonderful time but some stuff has to happen when you're Zeus' messenger. Anyway, Eris has decided to crash another wedding and there have been some chain reactions, some is an understatement but the point is, Aphrodite, Athena and Hera are all fighting over who is the most beautiful and you're going to judge them. Awesome right." Hermes said desperately trying to keep it cool. So this shepherd guy was not just a shepherd guy, he was the ultimate prince of Troy, Paris. But Paris didn't know, he thought he was just a normal shepherd. At this point, you're probably thinking, "Hey I want to know more about this random Paris dude."</p>
+            <p>So Paris was the son of King Priam and Queen Hecuba of Troy, they were friends with literally everyone. Like they were the kind of people who everyone is friends with. When they had Paris, they heard a prophecy saying that Paris would burn the whole city of Troy. So, guess that was pretty annoying. The King and Queen were loyal to their city, so, even though they loved Paris, he had to be sacrificed. However, King Priam just wouldn't be able to be believe it if he just killed Paris on the spot. His servant had to do the job. He ordered his servant, Agileus, to abandon the baby in the mountains. This servant, like pretty much everyone else, loved Priam and eventually agreed to do it. However, like Priam, Agileus couldn't kill him. He instead, raised him and taught him to be a shepherd.</p>
+            <p>Paris had a great life and eventually married a nymph called Oynone.</p>
+            <p>So back to the beauty contest. Paris was pretty shocked, it isn't every day you judge three major goddesses. However, rejecting a task from the gods is never smart, so he agreed. Out of nowhere, three divine beings appeared in front of him, they literally radiated power. They were all pretty desperate to win the apple or they were just cheaters because they started speaking into his mind.</p>
+
+            <p>"I'm the Queen of the Gods, without me society falls, Olympus descends into chaos. In some ways, I am the most important goddess, pick me and you can become the king of literally everywhere," Hera whispered.</p>
+
+            <p>That sounded pretty good but there were still others.</p>
+
+            <p>"I am the goddess of wisdom, you would be known for your intelligence and knowledge, have you ever wanted to be as cunning as Oddyseus or as resourceful as Perseus?" Athena spoke.</p>
+
+            <p>"My son is Eros, I command over him, his arrows can make anyone fall in love. You could marry this woman," Aphrodite said.</p>
+
+            <p>A woman with incredible beauty was cast into his mind.</p>
+
+            <p>"That is Helen of Sparta," Aphrodite said, "You will surprisingly find her in Sparta. If you pick me and you find her, I promise she will love you."</p>
+
+            <p>Paris was clearly not too faithful to Oynoni as he chose Aphrodite and set off for Sparta. </p>
+
+            <p>This story shows how delicate society can be, all it took was one missed invite for chaos to ensue. It also shows how much people care about what others think of them. That was why Aphrodite, Hera and Athena were so desperate to win the apple even though Athena and Hera probably knew that Aphrodite was the most beautiful.</p>
+            <button class="back-to-myths" type="button">Back to myths</button>
+        </div>
+
+        <div class="myth-container" id="trojan-war-3-story">
+            <h3>Trojan War Part 3</h3>
+            <p>Eventually, Paris would find Helen and fall in love with her, but first the Iliad mentions Leda. Now Leda married the king of Sparta, named Tyndareus. But before Leda married Tyndareus she met someone whose power was on a whole other scale. Zeus. Zeus knew that Hera would be fuming if she found out about Leda, so Zeus visited Leda in the form of a swan. It was slightly awkward, but Zeus would've been mad to try in human form. Eventually, Zeus forgot about Leda and Hera found out about her, so he couldn't visit her anyway.</p>
+            <p>But Zeus had been with her long enough to have kids, so eventually Leda laid 2 eggs, which is very disturbing, but I guess Zeus was in the form of a swan so that made enough sense. Out of the first egg came the 2 twins Helen and Pollux. These were the demigod children of Zeus and Leda. Out of the other egg came Castor and Clytemnestra. These were the mortal children of Tyndareus and Leda. I don't know why Tyndareus's children also came out of eggs since he hadn't been a swan, but they just did. Tyndareus treated his stepchildren very dearly, as if they were his own.</p>
+            <p>Now Helen was very beautiful and many wanted to marry her when she wasn't like 7 years old and was actually at a reasonable age to marry. Theseus, the champion of the labyrinth, wanted to marry Helen and was very impatient, however, his friend Pirithous was just as impatient to marry Helen. Both of them wanted to marry a child of Zeus and they thought Helen was the best and most beautiful. Obviously they couldn't both marry Helen, so when Theseus remained stubborn, Pirithous settled for Persephone.</p>
+            <p>Theseus's plan was to take Helen then and wait till she was older to marry her. It was a terrible plan. He travelled all the way to Sparta, which must've been like ages away since Theseus was king of Athens, only to kidnap Helen. Helen wasn't a warrior or anything, so the two grown heroes easily took her. Helen struggled, but Theseus could probably pin her with his left hand with ease, just like Hera did to Artemis later on in the Iliad. Long story. Pretty embarrassing for Artemis. I'll talk about it later on in the Trojan War section.</p>
+            <p>Theseus and Pirithous couldn't just stay making sure Helen didn't escape, so they left her to be guarded by Theseus's mother's house. Theseus probably felt bad for getting Helen rather than Pirithous getting her, so he settled to help Pirithous kidnap Persephone, which would be an indeterminable amount harder than kidnapping Helen. For starters, Persephone was a goddess with powerful magic, Helen was just a mortal. Plus, Persephone was guarded by the underworld, Helen was at best guarded by Sparta. Plus, Persephone had Hades himself to protect her. Helen had nobody.</p>
+            <p>When they got there, they found Persephone, who immediately knew what they were doing and didn't approve. Since she respected Hades and her knowing was already bad enough, she alerted Hades. Hades decided to play a little trick on these dense men. He invited them to sit at the table and feast. They didn't imagine this was a tad suspicious because they had the worst minds in Athens. Then Theseus started bragging about how he would make a glorious husband to Helen and Hades burned with anger. Two snakes coiled around Theseus and Pirithous's feet and trapped them to their chairs. As it happened, sitting on the chairs actually made them forget literally everything, so they sat still, paralysed by the silence.</p>
+            <p>Eventually, the mighty hero Heracles would rip Theseus off the chair in his final labour, but Persephone demanded Pirithous stay there for his arrogance, because Pirithous was the one who actually wanted to marry her. However, this wasn't actually mentioned in the Iliad, it was mentioned in some lost epics, and the Iliad does mention the abduction of Helen, so you may as well know what happened to Pirithous.</p>
+            <p>So what the Iliad does mention is the retrieval of Helen. Now Helen was guarded by Theseus's mother, so would she ever be rescued???</p>
+            <button class="back-to-myths" type="button">Back to myths</button>
+        </div>
+
+        <div class="myth-container" id="oedipus-story">
+            <h3>The Fate of Oedipus Part 1</h3>
+            <p>This story starts with a prophecy. This prophecy stated that if King Laius of Thebes were to father a son, the son would grow up to kill him and marry his queen, Jocasta of Thebes. So King Laius of Thebes was pretty bummed. </p>
+            <p>Eventually, the temptation to have a child became too much for Laius and he had one. Immediately after, Laius told his shepherd to leave Oedipus on mount Cithaeron to die. King Laius also pinned the boy's ankles together. I mean, to me that sounds pretty useless, having a baby so it gets killed afterwards.</p>
+            <p>But the shepherd couldn't bring himself to kill the child. So the shepherd of Thebes gave him to a shepherd in Corinth. Then this shepherd passed him on to the king and queen of Corinth. Since all the events in the past had happened well before his memory, he believed his mother and father were the king and queen of Corinth. They name him Oedipus meaning swollen ankle because of how Laius pinned his ankle. </p>
+            <p>One day, Oedipus was at the palace of the king and queen of Corinth when a drunk man approached him. The drunk mant told him that he was not the son of the king and queen of Corinth. Oedipus decided to visit the oracle at Delphi to find out more. The oracle told Oedipus the prophecy but did not answer the question as to whether he was the son of the king and queen of Corinth. Oedipus was shocked. He didn't want to marry and kill the king and queen of Corinth who he believed were the ones in the prophecy. Eventually, Oedipus decided to go somewhere else to lessen the chances of killing and marrying the king and queen.</p>
+            <p>Unfortunately, the place Oedipus chose to go to was Thebes. On the path to Thebes, he met the king. The king demanded that Oedipus make way for him. Oedipus was like, "No way, dude, I was here first." They quarreled for a while, and eventually Oedipus killed the king, unaware that this was his father.</p>
+            <p>Next, Oedipus fell in love with the king's wife, Jocasta. Anyone who wanted to marry Jocasta had to solve a riddle set by the sphinx. The sphinx was terrorising the city of Thebes and wouldn't go until someone correctly solved its riddle. The city was so despearate that anyone who solved the riddle could marry the queen of Thebes. The sphinx had the head of a person, the body of a lion, and the wings of an eagle.</p>
+            <p>Sphinxes were known for their fiendishly tricky riddles and puzzles. Anyway, the sphinx asked Oedipus, "What has four legs in the morning, two legs in the afternoon, and three legs in the evening?" Oedipus didn't hesitate. "A person," he said, "a person crawls when they are a baby, walks on two feet when they are grown up, and uses a walking stick when they are elderly." The sphinx was so embarssed that it jumped off a cliff and Oedipus and Jocasta got married.</p>
+            <button class="back-to-myths" type="button">Back to myths</button>
+        </div>
+
+        <div class="myth-container" id="oedipus-2-story">
+            <h3>The Fate of Oedipus Part 2</h3>
+            <p>Oedipus was a hero in Thebes for killing the Sphinx. He and Jocasta had two sons named Polyneices and Eteocles and two daughters named Antigone and Ismene.</p>
+            <p> One day a plague hits Thebes, and the citizens are desperate for a solution. Oedipus takes it upon himself to find the cause of the plague and save his people. He sends Jocasta's brother, Creon, to investigate. Now Creon was the man who had suggested that Jocasta should marry whoever solved the riddle so he was known for his wisdom.</p>
+            <p> Creon tells Oedipus that the plague is a punishment for the murder of Laius, and that the murderer must be found and punished. Unaware that he is the murderer, Oedipus curses the murderer.</p>
+            <p> There was a blind prophet named Tiresias who could see the future. He was called upon to help solve the mystery of the plague. He originally refused to speak, afraid of angering Oedipus but when Oedipus accuses Tiresias of being the murderer, he tells Oedipus that Oedipus himself is the murderer.</p>
+            <p> Oedipus accused Tiresias of conspiring with Creon to steal the throne.</p>
+            <p> Jocasta comforts Oedipus by telling him that prophecies are fake and that he should not be so afraid.</p>
+            <p> She tells Oedipus that the son in the prophecy was killed ages ago and that Laius was killed by a group of bandits where three roads meet.</p>
+            <p> While Oedipus had killed almost all of Laius' servants, he had spared one. He called for him.</p>
+            <p> While waiting for the servant a messenger came saying that the king of Corinth was dead of old age. Since, Oedipus was still in belief that the king of Corinth was the one in the prophecy, he was glad he had not killed him.</p>
+            <p> The messenger then told Oedipus that the king and queen of Corinth were not his real parents so he had nothing to fear. Now this messenger knew this because he was the Corinthian shepherd who had been given Oedipus by the Thebian Shepherd.</p>
+            <p> Oedipus was relieved to hear this, but he was still curious about his true parentage. He asked the messenger to tell him more about his past.</p>
+            <p> Soon the servant Oedipus had summoned arrived and the servant was the Thebian shepherd who had given Oedipus to the Corinthian shepherd.</p>
+            <p> Oedipus remembered that Jocasta had told him that Laius was killed by a group of bandits where three roads meet. He had killed someone where three roads meet. The Thebian shepherd confirmed Oedipus' past and the truth was revealed.</p>
+            <p> Jocasta hung herself in despair. When Oedipus found her, he uses her brooches to blind himself.</p>
+            <button class="back-to-myths" type="button">Back to myths</button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var mythSelection = document.querySelector('.myth-selection');
+            var mythCards = document.querySelectorAll('.myth-card');
+            var storyPanels = document.querySelectorAll('.myth-container');
+            var backButtons = document.querySelectorAll('.back-to-myths');
+
+            function showStory(storyId) {
+                mythCards.forEach(function(card) {
+                    card.classList.toggle('selected', card.id === 'start-' + storyId.replace('-story', ''));
+                });
+
+                mythSelection.style.display = 'none';
+                storyPanels.forEach(function(panel) {
+                    panel.style.display = panel.id === storyId ? 'block' : 'none';
+                });
+            }
+
+            function showGrid() {
+                mythCards.forEach(function(card) {
+                    card.classList.remove('selected');
+                });
+
+                mythSelection.style.display = 'grid';
+                storyPanels.forEach(function(panel) {
+                    panel.style.display = 'none';
+                });
+            }
+
+            document.getElementById('start-trojan-war-1').addEventListener('click', function() {
+                showStory('trojan-war-1-story');
+            });
+
+            document.getElementById('start-trojan-war-2').addEventListener('click', function() {
+                showStory('trojan-war-2-story');
+            });
+
+            document.getElementById('start-trojan-war-3').addEventListener('click', function() {
+                showStory('trojan-war-3-story');
+            });
+
+            document.getElementById('start-oedipus-1').addEventListener('click', function() {
+                showStory('oedipus-story');
+            });
+
+            document.getElementById('start-oedipus-2').addEventListener('click', function() {
+                showStory('oedipus-2-story');
+            });
+
+            backButtons.forEach(function(button) {
+                button.addEventListener('click', showGrid);
+            });
+        });
+    </script>
+</body>
+</html>

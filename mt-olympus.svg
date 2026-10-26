@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#bfe9ff"/>
+      <stop offset="100%" stop-color="#eaf6ff"/>
+    </linearGradient>
+    <linearGradient id="mount1" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#9ab07a"/>
+      <stop offset="100%" stop-color="#6b704a"/>
+    </linearGradient>
+    <linearGradient id="mount2" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#7b8f63"/>
+      <stop offset="100%" stop-color="#47533a"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.8" />
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)" />
+  <g transform="translate(0,60)">
+    <path d="M-50 760 L280 380 L560 760 Z" fill="url(#mount1)" filter="url(#soft)"/>
+    <path d="M480 760 L820 320 L1200 760 Z" fill="url(#mount2)" filter="url(#soft)"/>
+    <path d="M1000 760 L1350 420 L1650 760 Z" fill="#5b6d45"/>
+    <g opacity="0.9">
+      <path d="M480 760 L820 320 L1200 760 Z" fill="rgba(255,255,255,0.14)" transform="translate(0,0) scale(1)"/>
+      <path d="M-50 760 L280 380 L560 760 Z" fill="rgba(255,255,255,0.08)"/>
+    </g>
+  </g>
+  <g transform="translate(0,0)">
+    <circle cx="1220" cy="140" r="34" fill="#fff8d6" opacity="0.95" />
+  </g>
+</svg>

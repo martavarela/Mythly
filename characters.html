@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Characters — Mythly</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>⚡</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --title-size: clamp(2.5rem, 9vw, 10rem);
+            --subtitle-size: clamp(1.2rem, 3vw, 2rem);
+            --nav-height: 5.6rem;
+            --sticky-offset: 6rem; /* used to offset anchors so content isn't hidden behind the sticky nav */
+        }
+        html{width:100%;height:100%;background:linear-gradient(135deg, rgba(224, 239, 255, 0.75), rgba(239, 231, 255, 0.75)), url('mountolympus.jpg') center/cover fixed no-repeat;background-color:#e8f0ff;background-attachment:fixed;overflow-x:hidden}
+        body{font-family: Georgia, "Times New Roman", serif; width:100%; height:100%; margin:2rem; line-height:1.6; padding-top:0; background:transparent; overflow-x:hidden}
+        .site-header{position:relative;z-index:1000;margin-bottom:2rem;width:calc(100% - 4rem)}
+        .header-top{display:flex;align-items:center;justify-content:space-between;background:rgba(245,230,200,0.98);padding:0.8rem 2rem;box-sizing:border-box;border-radius:.75rem .75rem 0 0;box-shadow:0 14px 28px rgba(0,0,0,0.14)}
+        h1{font-family:'Cormorant Garamond', serif;font-weight:600;font-size:clamp(2rem,6vw,3.5rem);text-transform:uppercase;margin:0;letter-spacing:0.15em;line-height:1;color:#0b3b1f}
+        .subtitle{background:rgba(207,232,217,0.98);padding:1.1rem 2rem;text-align:center;border-radius:0 0 .75rem .75rem;box-shadow:0 8px 20px rgba(0,0,0,0.08)}
+        .subtitle p{margin:0;font-family:'Cormorant Garamond', serif;font-weight:500;text-transform:none;letter-spacing:0.02em;font-size:clamp(1.2rem,3vw,2rem);color:#0b3b1f}
+        .top-nav{display:flex;justify-content:flex-end;gap:2rem;padding:0;position:relative;background:none;z-index:1200;align-items:center}
+        .top-nav a{font-family:'Cormorant Garamond', serif;font-weight:500;text-transform:none;letter-spacing:0.15em;font-size:clamp(1rem,2.5vw,1.3rem);text-decoration:none;color:#0b3b1f;background:none;border:none;padding:0;cursor:pointer}
+        .top-nav a:hover{filter:brightness(.7);text-decoration:underline}
+        .top-nav a:active{text-decoration:underline}
+        main{max-width:1100px;margin:2.5rem auto;padding:0 1rem}
+        html{scroll-behavior:smooth}
+        :target{scroll-margin-top:var(--sticky-offset)}
+        h2{font-family:'Cormorant Garamond', serif;font-weight:500;font-size:2rem}
+        .sort-controls{display:flex;align-items:center;gap:0.75rem;margin:1rem 0 1.5rem;flex-wrap:wrap}
+        .sort-controls label{font-family:'Cormorant Garamond', serif;font-weight:600;font-size:1.35rem;color:#0b3b1f}
+        .sort-controls select{font:inherit;padding:0.55rem 0.85rem;border:1px solid rgba(11,59,31,0.25);border-radius:6px;background:#fff;color:#0b3b1f;min-width:180px}
+        .characters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2rem;margin-top:2rem}
+        .character-card{background:linear-gradient(135deg, #e4faf4 0%, #c8ecff 33%, #ede0f5 66%);border-radius:12px;padding:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;transition:box-shadow 0.3s ease,transform 0.3s ease;position:relative}
+        .character-card:nth-child(4n+1){background:linear-gradient(135deg, #e4faf4 0%, #c8ecff 33%, #ede0f5 66%)}
+        .character-card:nth-child(4n+2){background:linear-gradient(45deg, #ede0f5 0%, #c8ecff 33%, #e4faf4 66%)}
+        .character-card:nth-child(4n+3){background:linear-gradient(225deg, #c8ecff 0%, #ede0f5 33%, #e4faf4 66%)}
+        .character-card:hover{box-shadow:0 12px 24px rgba(0,0,0,0.12);transform:translateY(-4px)}
+        .character-card h3{font-family:'Cormorant Garamond', serif;font-weight:500;margin:0 0 0.5rem 0;font-size:1.5rem}
+        .character-card p{margin:0 0 1.5rem 0;flex-grow:1}
+        .character-card a{display:inline-block;padding:0.75rem 1.25rem;background:#6b2fa3;color:#fff;text-decoration:none;border-radius:6px;border:1px solid rgba(0,0,0,0.06);transition:background 0.2s;margin-top:auto;text-align:center;font-weight:600}
+        .character-card a:hover{filter:brightness(1.1)}
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body { margin: 1rem; }
+            .top-nav { gap: 1rem; flex-wrap: wrap; }
+            .characters-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+            .character-card { padding: 1rem; }
+        }
+        @media (max-width: 480px) {
+            body { margin: 0.75rem; }
+            .top-nav { gap: 0.75rem; }
+            .characters-grid { grid-template-columns: 1fr; }
+            .character-card a { min-height: 44px; padding: 0.6rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <h1 id="site-title" data-edit-id="site-title" data-editable>Mythly</h1>
+            <nav class="top-nav" aria-label="Main navigation">
+                <a href="home.html">Home</a>
+                <a href="quizzes.html">Quizzes</a>
+                <a href="myths.html">Myths</a>
+                <a href="mythly-tools.html">Tools</a>
+                <a href="fun.html">Fun</a>
+            </nav>
+        </div>
+        <div class="subtitle"><p id="site-subtitle" data-edit-id="site-subtitle" data-editable style="margin:0;font-family:'Cormorant Garamond', serif;font-weight:500;text-transform:none;font-size:var(--subtitle-size);color:#0b3b1f">Explore the gods, heroes, and creatures</p></div>
+    </header>
+    <main>
+        <h2>Characters</h2>
+        <div class="sort-controls" id="sort-controls" aria-label="Sort characters">
+            <label for="character-sort">Sort by:</label>
+            <select id="character-sort" aria-label="Choose character sort order">
+                <option value="alphabetical">Alphabet</option>
+                <option value="intelligence">Intelligence</option>
+                <option value="battle-skills">Battle skills</option>
+            </select>
+        </div>
+        <div class="sort-controls" aria-label="Filter characters">
+            <label for="character-type">Filter by:</label>
+            <select id="character-type" aria-label="Filter characters by type">
+                <option value="god">Gods</option>
+                <option value="titan">Titans</option>
+                <option value="primordial">Primordials</option>
+                <option value="hero">Heroes</option>
+            </select>
+        </div>
+        <p id="no-characters" hidden>No characters of this type have been added yet.</p>
+        <p>Browse notable figures from Greek myth. Click to learn more about each character.</p>
+        <div class="characters-grid">
+            <div class="character-card" data-name="Kronos" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Kronos</h3>
+                <p id="detail-kronos" data-edit-id="detail-kronos" data-editable>Kronos was the youngest of the Titans and the king of the gods before the Olympians overthrew him.</p>
+                <a href="kronos.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Rhea" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Rhea</h3>
+                <p id="detail-rhea" data-edit-id="detail-rhea" data-editable>The Titaness mother of the Olympians, who saved Zeus from Kronos.</p>
+                <a href="rhea.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Themis" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Themis</h3>
+                <p id="detail-themis" data-edit-id="detail-themis" data-editable>The Titaness of divine law, order and justice.</p>
+                <a href="themis.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Atlas" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Atlas</h3>
+                <p id="detail-atlas" data-edit-id="detail-atlas" data-editable>The Titan condemned by Zeus to hold up the sky for eternity.</p>
+                <a href="atlas.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Prometheus" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Prometheus</h3>
+                <p id="detail-prometheus" data-edit-id="detail-prometheus" data-editable>The Titan of forethought who stole fire for humanity and was punished by Zeus.</p>
+                <a href="prometheus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Epimetheus" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Epimetheus</h3>
+                <p id="detail-epimetheus" data-edit-id="detail-epimetheus" data-editable>The Titan of afterthought, brother of Prometheus, who accepted Pandora as a gift.</p>
+                <a href="epimetheus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Leto" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Leto</h3>
+                <p id="detail-leto" data-edit-id="detail-leto" data-editable>The Titaness who became the mother of Apollo and Artemis.</p>
+                <a href="leto.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Helios" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Helios</h3>
+                <p id="detail-helios" data-edit-id="detail-helios" data-editable>The Titan of the sun who drives his chariot across the sky each day.</p>
+                <a href="helios.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Selene" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Selene</h3>
+                <p id="detail-selene" data-edit-id="detail-selene" data-editable>The Titaness of the moon who crosses the night sky in her chariot.</p>
+                <a href="selene.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Eos" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Eos</h3>
+                <p id="detail-eos" data-edit-id="detail-eos" data-editable>The Titaness of the dawn who opens the gates of heaven each morning.</p>
+                <a href="eos.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Hecate" data-type="titan" data-intelligence="0" data-battle-skills="0">
+                <h3>Hecate</h3>
+                <p id="detail-hecate" data-edit-id="detail-hecate" data-editable>The Titaness of the dark side of the moon, magic and crossroads who guided Persephone through the Underworld.</p>
+                <a href="hecate.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Khaos" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Khaos</h3>
+                <p id="detail-khaos" data-edit-id="detail-khaos" data-editable>The first primordial, the void or chasm from which all things came into being.</p>
+                <a href="khaos.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Gaia" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Gaia</h3>
+                <p id="detail-gaia" data-edit-id="detail-gaia" data-editable>The primordial goddess of the Earth and mother of the Titans.</p>
+                <a href="gaia.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Ouranos" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Ouranos</h3>
+                <p id="detail-ouranos" data-edit-id="detail-ouranos" data-editable>The primordial god of the sky and father of the Titans, who was overthrown by Kronos.</p>
+                <a href="ouranos.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Tartarus" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Tartarus</h3>
+                <p id="detail-tartarus" data-edit-id="detail-tartarus" data-editable>The primordial god of the deep abyss beneath the Underworld, used as a prison for the Titans.</p>
+                <a href="tartarus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Eros" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Eros</h3>
+                <p id="detail-eros" data-edit-id="detail-eros" data-editable>The primordial god of love and desire, who drew the first beings together.</p>
+                <a href="primordial-eros.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Nyx" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Nyx</h3>
+                <p id="detail-nyx" data-edit-id="detail-nyx" data-editable>The primordial goddess of the night.</p>
+                <a href="nyx.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Ananke" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Ananke</h3>
+                <p id="detail-ananke" data-edit-id="detail-ananke" data-editable>The primordial goddess of fate, necessity and inevitability.</p>
+                <a href="ananke.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Erebos" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Erebos</h3>
+                <p id="detail-erebos" data-edit-id="detail-erebos" data-editable>The primordial god of darkness and shadow.</p>
+                <a href="erebos.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Aether" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Aether</h3>
+                <p id="detail-aether" data-edit-id="detail-aether" data-editable>The primordial god of the bright upper air breathed by the gods.</p>
+                <a href="aether.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Hemera" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Hemera</h3>
+                <p id="detail-hemera" data-edit-id="detail-hemera" data-editable>The primordial goddess of the day.</p>
+                <a href="hemera.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="The Fates" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>The Fates</h3>
+                <p id="detail-fates" data-edit-id="detail-fates" data-editable>The three Moirai who spin, measure and cut the thread of every life.</p>
+                <a href="fates.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Pontus" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Pontus</h3>
+                <p id="detail-pontus" data-edit-id="detail-pontus" data-editable>The primordial god of the sea, born from Gaia, and father of many sea deities.</p>
+                <a href="pontus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Khronos" data-type="primordial" data-intelligence="0" data-battle-skills="0">
+                <h3>Khronos</h3>
+                <p id="detail-khronos" data-edit-id="detail-khronos" data-editable>The primordial god of time, not to be confused with the Titan Kronos.</p>
+                <a href="khronos.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Helen" data-type="hero" data-intelligence="10" data-battle-skills="23">
+                <h3>Helen</h3>
+                <p id="detail-helen" data-edit-id="detail-helen" data-editable>The most beautiful woman in the world, whose abduction by Paris sparked the Trojan War.</p>
+                <a href="helen.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Paris" data-type="hero" data-intelligence="14" data-battle-skills="11">
+                <h3>Paris</h3>
+                <p id="detail-paris" data-edit-id="detail-paris" data-editable>The Trojan prince who judged the golden apple contest and took Helen to Troy.</p>
+                <a href="paris.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Agamemnon" data-type="hero" data-intelligence="5" data-battle-skills="7">
+                <h3>Agamemnon</h3>
+                <p id="detail-agamemnon" data-edit-id="detail-agamemnon" data-editable>The king of Mycenae and commander of the Greek forces at Troy.</p>
+                <a href="agamemnon.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Menelaus" data-type="hero" data-intelligence="8" data-battle-skills="14">
+                <h3>Menelaus</h3>
+                <p id="detail-menelaus" data-edit-id="detail-menelaus" data-editable>The king of Sparta and husband of Helen, who led the Greeks to reclaim her.</p>
+                <a href="menelaus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Achilles" data-type="hero" data-intelligence="7" data-battle-skills="1">
+                <h3>Achilles</h3>
+                <p id="detail-achilles" data-edit-id="detail-achilles" data-editable>The greatest Greek warrior of the Trojan War, nearly invulnerable except for his heel.</p>
+                <a href="achilles.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Orestes" data-type="hero" data-intelligence="13" data-battle-skills="15">
+                <h3>Orestes</h3>
+                <p id="detail-orestes" data-edit-id="detail-orestes" data-editable>The son of Agamemnon who avenged his father by killing his mother Clytemnestra.</p>
+                <a href="orestes.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Iphigenia" data-type="hero" data-intelligence="12" data-battle-skills="22">
+                <h3>Iphigenia</h3>
+                <p id="detail-iphigenia" data-edit-id="detail-iphigenia" data-editable>The daughter of Agamemnon, offered as a sacrifice to Artemis so the Greek fleet could sail to Troy.</p>
+                <a href="iphigenia.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Elektra" data-type="hero" data-intelligence="11" data-battle-skills="21">
+                <h3>Elektra</h3>
+                <p id="detail-elektra" data-edit-id="detail-elektra" data-editable>The daughter of Agamemnon who urged her brother Orestes to avenge their father.</p>
+                <a href="elektra.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Odysseus" data-type="hero" data-intelligence="2" data-battle-skills="12">
+                <h3>Odysseus</h3>
+                <p id="detail-odysseus" data-edit-id="detail-odysseus" data-editable>The cunning king of Ithaca whose ten-year journey home from Troy is told in the Odyssey.</p>
+                <a href="odysseus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Jason" data-type="hero" data-intelligence="9" data-battle-skills="9">
+                <h3>Jason</h3>
+                <p id="detail-jason" data-edit-id="detail-jason" data-editable>The leader of the Argonauts who sailed to Colchis to win the Golden Fleece.</p>
+                <a href="jason.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Heracles" data-type="hero" data-intelligence="6" data-battle-skills="2">
+                <h3>Heracles</h3>
+                <p id="detail-heracles" data-edit-id="detail-heracles" data-editable>The son of Zeus famed for his strength and his twelve labours.</p>
+                <a href="heracles.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Theseus" data-type="hero" data-intelligence="23" data-battle-skills="3">
+                <h3>Theseus</h3>
+                <p id="detail-theseus" data-edit-id="detail-theseus" data-editable>The king of Athens who slew the Minotaur in the Labyrinth of Crete.</p>
+                <a href="theseus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Perseus" data-type="hero" data-intelligence="4" data-battle-skills="5">
+                <h3>Perseus</h3>
+                <p id="detail-perseus" data-edit-id="detail-perseus" data-editable>The son of Zeus who beheaded Medusa and rescued Andromeda.</p>
+                <a href="perseus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Bellerophon" data-type="hero" data-intelligence="22" data-battle-skills="4">
+                <h3>Bellerophon</h3>
+                <p id="detail-bellerophon" data-edit-id="detail-bellerophon" data-editable>The hero who tamed Pegasus and slew the Chimera.</p>
+                <a href="bellerophon.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Cyrene" data-type="hero" data-intelligence="18" data-battle-skills="10">
+                <h3>Cyrene</h3>
+                <p id="detail-cyrene" data-edit-id="detail-cyrene" data-editable>A Thessalian huntress who wrestled a lion and was loved by Apollo.</p>
+                <a href="cyrene.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Atalanta" data-type="hero" data-intelligence="17" data-battle-skills="6">
+                <h3>Atalanta</h3>
+                <p id="detail-atalanta" data-edit-id="detail-atalanta" data-editable>A swift huntress who took part in the Calydonian Boar hunt and outran all suitors but one.</p>
+                <a href="atalanta.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Otrera" data-type="hero" data-intelligence="21" data-battle-skills="8">
+                <h3>Otrera</h3>
+                <p id="detail-otrera" data-edit-id="detail-otrera" data-editable>The first queen of the Amazons and a daughter of Ares.</p>
+                <a href="otrera.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Orpheus" data-type="hero" data-intelligence="16" data-battle-skills="19">
+                <h3>Orpheus</h3>
+                <p id="detail-orpheus" data-edit-id="detail-orpheus" data-editable>The legendary musician who charmed all living things and journeyed to the Underworld for his wife.</p>
+                <a href="orpheus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Eurydice" data-type="hero" data-intelligence="15" data-battle-skills="18">
+                <h3>Eurydice</h3>
+                <p id="detail-eurydice" data-edit-id="detail-eurydice" data-editable>The wife of Orpheus, who died of a snake bite and was lost to the Underworld a second time.</p>
+                <a href="eurydice.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Sisyphus" data-type="hero" data-intelligence="1" data-battle-skills="17">
+                <h3>Sisyphus</h3>
+                <p id="detail-sisyphus" data-edit-id="detail-sisyphus" data-editable>The cunning king of Corinth, condemned to push a boulder up a hill for eternity.</p>
+                <a href="sisyphus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Tantalus" data-type="hero" data-intelligence="20" data-battle-skills="16">
+                <h3>Tantalus</h3>
+                <p id="detail-tantalus" data-edit-id="detail-tantalus" data-editable>The king punished in Tartarus with endless hunger and thirst, with food and water always just out of reach.</p>
+                <a href="tantalus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Lycaon" data-type="hero" data-intelligence="19" data-battle-skills="13">
+                <h3>Lycaon</h3>
+                <p id="detail-lycaon" data-edit-id="detail-lycaon" data-editable>The king of Arcadia who tested Zeus with a human feast and was turned into a wolf.</p>
+                <a href="lycaon.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Penelope" data-type="hero" data-intelligence="3" data-battle-skills="20">
+                <h3>Penelope</h3>
+                <p id="detail-penelope" data-edit-id="detail-penelope" data-editable>The clever queen of Ithaca who held off her suitors for years while waiting for Odysseus.</p>
+                <a href="penelope.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Zeus"  data-intelligence="6" data-battle-skills="2" >
+                <h3>Zeus</h3>
+                <p id="detail-zeus" data-edit-id="detail-zeus" data-editable>Zeus is the ruler of Mount Olympus and the god of the sky and thunder.</p>
+                <a href="zeus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Hera"  data-intelligence="4" data-battle-skills="8">
+                <h3>Hera</h3>
+                <p id="detail-hera" data-edit-id="detail-hera" data-editable>Hera is the queen of the gods, goddess of marriage, family, and fertility.</p>
+                <a href="hera.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Athena"  data-intelligence="1" data-battle-skills="1" >
+                <h3>Athena</h3>
+                <p id="detail-athena" data-edit-id="detail-athena" data-editable>Athena is the goddess of wisdom, strategic warfare, and crafts.</p>
+                <a href="athena.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Hephaestus"  data-intelligence="9" data-battle-skills="9">
+                <h3>Hephaestus</h3>
+                <p id="detail-hephaestus" data-edit-id="detail-hephaestus" data-editable>Hephaestus was the god of fire, metalworking, and craftsmanship.</p>
+                <a href="hephaestus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Dionysus"  data-intelligence="11" data-battle-skills="7.5" >
+                <h3>Dionysus</h3>
+                <p id="detail-dionysus" data-edit-id="detail-dionysus" data-editable>Dionysus was the god of wine, festivity, theatre, and ecstatic celebration.</p>
+                <a href="dionysus.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Poseidon"  data-intelligence="12" data-battle-skills="3" >
+                <h3>Poseidon</h3>
+                <p id="detail-poseidon" data-edit-id="detail-poseidon" data-editable>Poseidon is the god of the sea, earthquakes, and horses.</p>
+                <a href="poseidon.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Hades"  data-intelligence="7" data-battle-skills="5" >
+                <h3>Hades</h3>
+                <p id="detail-hades" data-edit-id="detail-hades" data-editable>Hades was the lord of the dead and the underworld.</p>
+                <a href="hades.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Ares"  data-intelligence="16" data-battle-skills="4" >
+                <h3>Ares</h3>
+                <p id="detail-ares" data-edit-id="detail-ares" data-editable>Ares was the god of chaotic battles and respected mortals devoted to war.</p>
+                <a href="ares.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Aphrodite"  data-intelligence="5" data-battle-skills="15" >
+                <h3>Aphrodite</h3>
+                <p id="detail-aphrodite" data-edit-id="detail-aphrodite" data-editable>Aphrodite was the god of love and beauty, known for being both kind and cunning.</p>
+                <a href="aphrodite.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Eros" data-intelligence="11" data-battle-skills="14" >
+                <h3>Eros</h3>
+                <p id="detail-eros" data-edit-id="detail-eros" data-editable>Eros was the god of love and was feared because of his love arrows.</p>
+                <a href="eros.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Hestia"  data-intelligence="10" data-battle-skills="16">
+                <h3>Hestia</h3>
+                <p id="detail-hestia" data-edit-id="detail-hestia" data-editable>Hestia was the goddess of the home and the hearth.</p>
+                <a href="hestia.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Persephone" data-intelligence="15" data-battle-skills="13" >
+                <h3>Persephone</h3>
+                <p id="detail-persephone" data-edit-id="detail-persephone" data-editable>Persephone was the goddess of springtime.</p>
+                <a href="persephone.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Demeter"  data-intelligence="13" data-battle-skills="12">
+                <h3>Demeter</h3>
+                <p id="detail-demeter" data-edit-id="detail-demeter" data-editable>Demeter was the goddess of the harvest and agriculture.</p>
+                <a href="demeter.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Artemis"  data-intelligence="8" data-battle-skills="8.5" >
+                <h3>Artemis</h3>
+                <p id="detail-artemis" data-edit-id="detail-artemis" data-editable>Artemis was the goddess of hunting, archery and the wilderness.</p>
+                <a href="artemis.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Apollo" data-intelligence="8.5" data-battle-skills="7" >
+                <h3>Apollo</h3>
+                <p id="detail-apollo" data-edit-id="detail-apollo" data-editable>Apollo was the god of music, arts,  healing, logic and prophecy.</p>
+                <a href="apollo.html">Learn More</a>
+            </div>
+            <div class="character-card" data-name="Hermes" data-intelligence="2" data-battle-skills="11">
+                <h3>Hermes</h3>
+                <p id="detail-hermes" data-edit-id="detail-hermes" data-editable>Hermes was the god of messengers, travelling and thieves.</p>
+                <a href="hermes.html">Learn More</a>
+            </div>
+        </div>
+    </main>
+    <script>
+        const characterSortSelect = document.getElementById('character-sort');
+        const characterGrid = document.querySelector('.characters-grid');
+
+        function sortCharacters(sortMode) {
+            const cards = Array.from(characterGrid.children);
+            const sortedCards = cards.sort((a, b) => {
+                if (sortMode === 'intelligence') {
+                    return Number(a.dataset.intelligence) - Number(b.dataset.intelligence);
+                }
+                if (sortMode === 'battle-skills') {
+                    return Number(a.dataset.battleSkills) - Number(b.dataset.battleSkills);
+                }
+                return a.dataset.name.localeCompare(b.dataset.name);
+            });
+
+            sortedCards.forEach(card => characterGrid.appendChild(card));
+        }
+
+        const SORT_STORAGE_KEY = 'characterSortMode';
+
+        if (characterSortSelect) {
+            const savedSortMode = localStorage.getItem(SORT_STORAGE_KEY);
+            if (savedSortMode) {
+                characterSortSelect.value = savedSortMode;
+            }
+
+            characterSortSelect.addEventListener('change', (event) => {
+                localStorage.setItem(SORT_STORAGE_KEY, event.target.value);
+                sortCharacters(event.target.value);
+            });
+        }
+
+        sortCharacters(characterSortSelect ? characterSortSelect.value : 'alphabetical');
+
+        // Cards without a data-type attribute are gods; use data-type="titan", "primordial" or "hero" for others.
+        const typeSelect = document.getElementById('character-type');
+        const noCharacters = document.getElementById('no-characters');
+        const TYPE_STORAGE_KEY = 'characterTypeFilter';
+
+        function filterCharacters(type) {
+            let visible = 0;
+            Array.from(characterGrid.children).forEach(card => {
+                const show = (card.dataset.type || 'god') === type;
+                card.hidden = !show;
+                card.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+            noCharacters.hidden = visible > 0;
+            document.getElementById('sort-controls').style.display = type === 'god' || type === 'hero' ? '' : 'none';
+        }
+
+        if (typeSelect) {
+            const savedType = localStorage.getItem(TYPE_STORAGE_KEY);
+            if (savedType && savedType !== 'all') {
+                typeSelect.value = savedType;
+            }
+            typeSelect.addEventListener('change', (event) => {
+                localStorage.setItem(TYPE_STORAGE_KEY, event.target.value);
+                filterCharacters(event.target.value);
+            });
+            filterCharacters(typeSelect.value);
+        }
+    </script>
+</body>
+</html>

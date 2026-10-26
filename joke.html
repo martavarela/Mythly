@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Joke on a God — Mythly</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' text-anchor='middle' x='50'>⚡</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--forest:#153d32;--leaf:#32705a;--coral:#e27053;--cream:#f7f0df;--paper:#fffdf7;--line:#d8d0bd;--muted:#68756d}
+    *{box-sizing:border-box}
+    html{min-height:100%;background:linear-gradient(135deg,rgba(224,239,255,.74),rgba(239,231,255,.78)),url('mountolympus.jpg') center/cover fixed no-repeat;background-color:#e8f0ff}
+    body{margin:0;min-height:100vh;color:var(--forest);font-family:'DM Sans',sans-serif;line-height:1.5}
+    .site-header,main{width:min(1120px,calc(100% - 2rem));margin-inline:auto}
+    .site-header{margin-top:1rem}
+    .header-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 1.5rem;background:var(--cream);border-radius:12px 12px 0 0}
+    .brand{margin:0;font:600 2.5rem/1 'Cormorant Garamond',serif;letter-spacing:.08em;text-transform:uppercase}
+    .top-nav{display:flex;flex-wrap:wrap;gap:1.25rem}
+    .top-nav a{color:var(--forest);font:600 1.15rem 'Cormorant Garamond',serif;text-decoration:none}
+    .top-nav a:hover{text-decoration:underline;text-underline-offset:4px}
+    .subtitle{width:100%;margin:0;padding:.65rem 1rem;text-align:center;background:#cfe6d4;border-radius:0 0 12px 12px}
+    .subtitle p{margin:0;font:500 1.25rem 'Cormorant Garamond',serif}
+    main{padding:2rem 0 3rem}
+    .game-meta{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+    .score{flex:0 0 auto;padding:.55rem .85rem;background:var(--paper);border:1px solid var(--line);border-radius:6px;font-size:.9rem;font-weight:700}
+    .score strong{color:var(--coral);font-size:1.2rem}
+    .game{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);min-height:490px;background:var(--paper);border:1px solid rgba(21,61,50,.2);border-radius:10px;overflow:hidden;box-shadow:0 18px 42px rgba(26,48,36,.16);animation:arrive .45s ease-out both}
+    @keyframes arrive{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .portrait-wrap{position:relative;display:flex;align-items:center;justify-content:center;min-height:420px;padding:1.5rem;background:linear-gradient(145deg,#214e45,#447267 55%,#a1b49b)}
+    .portrait-wrap:before{position:absolute;inset:1rem;border:1px solid rgba(255,255,255,.35);content:'';pointer-events:none}
+    .portrait-wrap img{display:block;width:100%;height:440px;object-fit:contain;filter:drop-shadow(0 18px 20px rgba(8,24,19,.28));}
+    .portrait-wrap img.cropped{object-fit:cover;filter:none}
+    .image-fallback{display:none;position:absolute;inset:1rem;align-items:center;justify-content:center;padding:2rem;color:white;text-align:center;font:600 1.5rem 'Cormorant Garamond',serif}
+    .art-credit{position:absolute;right:1.35rem;bottom:1rem;left:1.35rem;color:#fff;font-size:.72rem;text-shadow:0 1px 3px #163b32}
+    .art-credit a{color:#fff}
+    .game-panel{display:flex;flex-direction:column;padding:clamp(1.25rem,3vw,2rem)}
+    .round-label{margin:0;color:var(--coral);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+    .difficulty-row{display:flex;align-items:center;gap:.65rem;margin:0 0 1rem}
+    .difficulty-row label{font-size:.85rem;font-weight:700;color:var(--muted)}
+    .difficulty-row select{min-height:40px;padding:.45rem 2rem .45rem .65rem;border:1px solid #c8d2c8;border-radius:5px;background:#f5f7f0;color:var(--forest);font:600 .95rem 'DM Sans',sans-serif}
+    .answers{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+    .answer{min-height:48px;padding:.65rem .75rem;border:1px solid #c8d2c8;border-radius:5px;background:#f5f7f0;color:var(--forest);font:600 1rem 'DM Sans',sans-serif;text-align:left;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
+    .answer:hover:not(:disabled){transform:translateY(-2px);border-color:var(--leaf);background:#e8f1e8}
+    .answer:disabled{cursor:default;opacity:.8}
+    .answer.correct{border-color:#45865e;background:#e1f1df;color:#174f30}
+    .answer.incorrect{border-color:#d8917e;background:#fae7df;color:#7f3027}
+    .feedback{min-height:2rem;margin:.75rem 0 0;color:var(--muted);font-size:.92rem}
+    .joke-reveal{margin-top:.25rem;padding:1rem;background:#f8e9d4;border-left:4px solid var(--coral);animation:arrive .3s ease-out both}
+    .joke-reveal[hidden]{display:none}
+    .joke-reveal strong{display:block;margin-bottom:.25rem;font:600 1.25rem 'Cormorant Garamond',serif}
+    .joke-reveal p{margin:0;color:#483d31}
+    .game-actions{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-top:auto;padding-top:1.1rem}
+    .next-button,.reset-button{min-height:44px;border:0;border-radius:5px;font:700 .95rem 'DM Sans',sans-serif;cursor:pointer}
+    .next-button{padding:.65rem 1rem;background:var(--forest);color:white}
+    .next-button:hover{background:var(--leaf)}
+    .next-button:disabled{opacity:.4;cursor:not-allowed}
+    .reset-button{padding:.5rem .4rem;background:transparent;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+    button:focus-visible,a:focus-visible{outline:3px solid #e27053;outline-offset:3px}
+    @media(max-width:760px){.header-top{align-items:flex-start;flex-direction:column}.game{grid-template-columns:1fr}.portrait-wrap{min-height:320px}.portrait-wrap img{height:340px}.game-panel{min-height:365px}}
+    @media(max-width:420px){.site-header,main{width:calc(100% - 1rem)}.header-top{padding:.8rem 1rem}.brand{font-size:2.1rem}.top-nav{gap:.9rem}.top-nav a{font-size:1rem}.answers{grid-template-columns:1fr 1fr}.answer{padding:.6rem .5rem;font-size:.9rem}.portrait-wrap{min-height:275px;padding:1rem}.portrait-wrap img{height:290px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-top"><h1 class="brand">Mythly</h1><nav class="top-nav" aria-label="Main navigation"><a href="home.html">Home</a><a href="characters.html">Characters</a><a href="quizzes.html">Quizzes</a><a href="myths.html">Myths</a><a href="fun.html">Fun</a></nav></div>
+    <div class="subtitle"><p>A little divine comedy</p></div>
+  </header>
+  <main>
+    <section class="game" aria-label="God guessing game">
+      <figure class="portrait-wrap">
+        <img id="god-image" src="" alt="Classical painting of a Greek mythological scene" fetchpriority="high">
+        <div class="image-fallback" id="image-fallback" aria-hidden="true">Painting temporarily unavailable</div>
+        <figcaption class="art-credit">Painting source: <a id="art-source" href="https://commons.wikimedia.org/" target="_blank" rel="noreferrer">Wikimedia Commons</a></figcaption>
+      </figure>
+      <div class="game-panel">
+        <div class="game-meta"><p class="round-label" id="round-label">Round 1</p><div class="score" aria-live="polite">Jokes earned: <strong id="score">0</strong></div></div>
+        <div class="difficulty-row"><label for="difficulty-select">Difficulty</label><select id="difficulty-select"><option value="easy">Easy</option><option value="hard">Hard</option></select></div>
+        <div class="answers" id="answers" role="group" aria-label="Choose a god"></div>
+        <p class="feedback" id="feedback" aria-live="polite">One right answer earns one divine joke.</p>
+        <div class="joke-reveal" id="joke-reveal" hidden aria-live="polite"><strong id="joke-title"></strong><p id="joke-text"></p></div>
+        <div class="game-actions"><button class="reset-button" type="button" id="reset-score">Reset score</button><button class="next-button" type="button" id="next-round" disabled>Next god</button></div>
+      </div>
+    </section>
+  </main>
+  <script>
+    (function(){
+      var gods=[
+        {name:'Zeus',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Jupiter_and_Thetis_%28Ingres%29.jpg/1280px-Jupiter_and_Thetis_%28Ingres%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:Jupiter_and_Thetis_(Ingres).jpg',crop:false,joke:'Why does Zeus make a terrible secret agent? Every plan ends with a thunderous announcement.'},
+        {name:'Hera',difficulty:'hard',image:'https://upload.wikimedia.org/wikipedia/commons/1/14/Juno_Borrowing_the_Girdle_of_Venus_by_Benjamin_West.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',source:'https://commons.wikimedia.org/wiki/File:Juno_Borrowing_the_Girdle_of_Venus_by_Benjamin_West.jpg',crop:false,joke:'Why did Hera start a family group chat? Olympus needed someone to keep the drama organized.'},
+        {name:'Athena',difficulty:'easy',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Gustav_Klimt_045.jpg/1280px-Gustav_Klimt_045.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:Gustav_Klimt_045.jpg',crop:true,focus:'50% 45%',joke:'Why did Athena ace the quiz? She went in with a wise strategy.'},
+        {name:'Poseidon',difficulty:'hard',image:'https://upload.wikimedia.org/wikipedia/commons/2/28/Poseidon_and_his_Chariot.jpg',source:'https://commons.wikimedia.org/wiki/File:Poseidon_and_his_Chariot.jpg',crop:false,joke:'Why does Poseidon never use a calendar? His schedule is always making waves.'},
+        {name:'Hades',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Peter_Paul_Rubens_-_The_Rape_of_Proserpina%2C_1636-1638.jpg/1280px-Peter_Paul_Rubens_-_The_Rape_of_Proserpina%2C_1636-1638.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:Peter_Paul_Rubens_-_The_Rape_of_Proserpina,_1636-1638.jpg',crop:false,joke:'Why is Hades so good at hide-and-seek? He always knows where the dead ends are.'},
+        {name:'Aphrodite',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/1280px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg',crop:false,joke:'Why did Aphrodite open a bakery? Her heart-shaped rolls were impossible not to fall for.'},
+        {name:'Ares',difficulty:'easy',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Vel%C3%A1zquez_-_Dios_Marte_%28Museo_del_Prado%2C_1639-41%29.jpg/1280px-Vel%C3%A1zquez_-_Dios_Marte_%28Museo_del_Prado%2C_1639-41%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:Vel%C3%A1zquez_-_Dios_Marte_(Museo_del_Prado,_1639-41).jpg',crop:true,focus:'50% 35%',joke:'Why did Ares bring a ladder to battle? He wanted to take the high ground.'},
+        {name:'Apollo',difficulty:'hard',image:'https://upload.wikimedia.org/wikipedia/commons/0/04/Apollo_and_Daphne_waterhouse.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',source:'https://commons.wikimedia.org/wiki/File:Apollo_and_Daphne_waterhouse.jpg',crop:false,joke:'Why did Apollo start a band? He already had the lyre-ics.'},
+        {name:'Artemis',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Titian_-_Diana_and_Actaeon_-_Google_Art_Project.jpg/1280px-Titian_-_Diana_and_Actaeon_-_Google_Art_Project.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:Titian_-_Diana_and_Actaeon_-_Google_Art_Project.jpg',crop:false,joke:'Why did Artemis bring an extra arrow? She liked to be on target, just in case.'},
+        {name:'Hermes',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/F%C3%A1bula_de_Mercurio_y_Argos%2C_by_Diego_Vel%C3%A1zquez.jpg/1280px-F%C3%A1bula_de_Mercurio_y_Argos%2C_by_Diego_Vel%C3%A1zquez.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:F%C3%A1bula_de_Mercurio_y_Argos,_by_Diego_Vel%C3%A1zquez.jpg',crop:false,joke:'Why did Hermes deliver his own punchline? Nobody else could get it there faster.'},
+        {name:'Demeter',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/Ceres_and_Pan.jpg/1280px-Ceres_and_Pan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:Ceres_and_Pan.jpg',crop:false,joke:'Why did Demeter win the garden contest? She was outstanding in her field.'},
+        {name:'Persephone',difficulty:'easy',image:'https://upload.wikimedia.org/wikipedia/commons/3/37/Dante_Gabriel_Rossetti_-_Proserpine_-_Google_Art_Project.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',source:'https://commons.wikimedia.org/wiki/File:Dante_Gabriel_Rossetti_-_Proserpine_-_Google_Art_Project.jpg',crop:true,focus:'50% 35%',joke:'Why does Persephone enjoy autumn? It is the season she really comes into her own.'},
+        {name:'Hephaestus',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Vel%C3%A1zquez_-_La_Fragua_de_Vulcano_%28Museo_del_Prado%2C_1630%29.jpg/1280px-Vel%C3%A1zquez_-_La_Fragua_de_Vulcano_%28Museo_del_Prado%2C_1630%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:Vel%C3%A1zquez_-_La_Fragua_de_Vulcano_(Museo_del_Prado,_1630).jpg',crop:false,joke:'Why was Hephaestus such a good problem solver? He always hammered out the details.'},
+        {name:'Dionysus',difficulty:'easy',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Bacchus_by_Caravaggio_1.jpg/1280px-Bacchus_by_Caravaggio_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:Bacchus_by_Caravaggio_1.jpg',crop:true,focus:'50% 43%',joke:'Why did Dionysus bring grapes to the party? He heard it was going to be grape.'},
+        {name:'Nyx',difficulty:'easy',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Nyx%2C_Night_Goddess_by_Gustave_Moreau_%281880%29.jpg/1280px-Nyx%2C_Night_Goddess_by_Gustave_Moreau_%281880%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',source:'https://commons.wikimedia.org/wiki/File:Nyx,_Night_Goddess_by_Gustave_Moreau_(1880).jpg',crop:true,focus:'50% 42%',joke:'Why does Nyx love a quiet night? She practically invented them.'},
+        {name:'Aphrodite',difficulty:'easy',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Venus_Anadyomene.jpg/1280px-Venus_Anadyomene.jpg',source:'https://commons.wikimedia.org/wiki/File:Venus_Anadyomene.jpg',crop:false,joke:'Why did Aphrodite open a bakery? Her heart-shaped rolls were impossible not to fall for.'},
+        {name:'Artemis',difficulty:'easy',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Pietro_Antonio_Rotari_-_Diana%2C_goddess_of_the_hunt%2C_leaning_against_a_tree.jpg/1280px-Pietro_Antonio_Rotari_-_Diana%2C_goddess_of_the_hunt%2C_leaning_against_a_tree.jpg',source:'https://commons.wikimedia.org/wiki/File:Pietro_Antonio_Rotari_-_Diana,_goddess_of_the_hunt,_leaning_against_a_tree.jpg',crop:true,focus:'50% 34%',joke:'Why did Artemis bring an extra arrow? She liked to be on target, just in case.'},
+        {name:'Apollo',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/Heinrich_Maria_von_Hess_Appolon_et_les_Muses.jpg/1280px-Heinrich_Maria_von_Hess_Appolon_et_les_Muses.jpg',source:'https://commons.wikimedia.org/wiki/File:Heinrich_Maria_von_Hess_Appolon_et_les_Muses.jpg',crop:false,joke:'Why did Apollo start a band? He already had the lyre-ics.'},
+        {name:'Apollo',difficulty:'hard',image:'https://commons.wikimedia.org/wiki/Special:FilePath/1671_G%C3%A9rard_de_Lairesse_-_Apollo_and_Aurora.jpg',source:'https://commons.wikimedia.org/wiki/File:1671_G%C3%A9rard_de_Lairesse_-_Apollo_and_Aurora.jpg',crop:false,joke:'Why did Apollo start a band? He already had the lyre-ics.'},
+        {name:'Hades',difficulty:'hard',image:'https://upload.wikimedia.org/wikipedia/commons/9/90/Hans_Bocksberger_d._J._%28zugeschrieben%29_-_Pluto_entf%C3%BChrt_Proserpina_-_10523_-_Bavarian_State_Painting_Collections.jpg',source:'https://commons.wikimedia.org/wiki/File:Hans_Bocksberger_d._J._(zugeschrieben)_-_Pluto_entf%C3%BChrt_Proserpina_-_10523_-_Bavarian_State_Painting_Collections.jpg',crop:false,joke:'Why is Hades so good at hide-and-seek? He always knows where the dead ends are.'},
+        {name:'Hades',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/Roman_Wall_Painting_From_a_Tomb_that_Depicts_Pluto_%28Hades%29_Abducting_Proserpina_%28Persephone%29.jpg/1280px-Roman_Wall_Painting_From_a_Tomb_that_Depicts_Pluto_%28Hades%29_Abducting_Proserpina_%28Persephone%29.jpg',source:'https://commons.wikimedia.org/wiki/File:Roman_Wall_Painting_From_a_Tomb_that_Depicts_Pluto_(Hades)_Abducting_Proserpina_(Persephone).jpg',crop:false,joke:'Why is Hades so good at hide-and-seek? He always knows where the dead ends are.'},
+        {name:'Athena',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Georg_Engelhard_Schr%C3%B6der_-_Athena_och_Pegasus.jpg/1280px-Georg_Engelhard_Schr%C3%B6der_-_Athena_och_Pegasus.jpg',source:'https://commons.wikimedia.org/wiki/File:Georg_Engelhard_Schr%C3%B6der_-_Athena_och_Pegasus.jpg',crop:false,joke:'Why did Athena ace the quiz? She went in with a wise strategy.'},
+        {name:'Zeus',difficulty:'hard',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Dosso_Dossi_-_Jupiter_and_Semele%2C_1520s.jpg/1280px-Dosso_Dossi_-_Jupiter_and_Semele%2C_1520s.jpg',source:'https://commons.wikimedia.org/wiki/File:Dosso_Dossi_-_Jupiter_and_Semele,_1520s.jpg',crop:false,joke:'Why does Zeus make a terrible secret agent? Every plan ends with a thunderous announcement.'},
+        {name:'Hera',difficulty:'hard',image:'https://upload.wikimedia.org/wikipedia/commons/3/30/Juno_Receiving_the_Cestus_from_Venus_by_Joshua_Reynolds.jpg',source:'https://commons.wikimedia.org/wiki/File:Juno_Receiving_the_Cestus_from_Venus_by_Joshua_Reynolds.jpg',crop:false,joke:'Why did Hera start a family group chat? Olympus needed someone to keep the drama organized.'},
+        {name:'Aphrodite',difficulty:'hard',image:'https://upload.wikimedia.org/wikipedia/commons/d/d8/Jean_Honore_Fragonard_Venus_and_Cupid.jpg',source:'https://commons.wikimedia.org/wiki/File:Jean_Honore_Fragonard_Venus_and_Cupid.jpg',crop:false,joke:'Why did Aphrodite open a bakery? Her heart-shaped rolls were impossible not to fall for.'}
+      ];
+      var storageKey='mythly-joke-score';
+      var score=Number(localStorage.getItem(storageKey))||0;
+      var round=0;
+      var currentGod;
+      var wrongGuesses=0;
+      var image=document.getElementById('god-image');
+      var answers=document.getElementById('answers');
+      var feedback=document.getElementById('feedback');
+      var jokeReveal=document.getElementById('joke-reveal');
+      var nextButton=document.getElementById('next-round');
+      var shuffledGods=[];
+      var activeDifficulty='easy';
+      function shuffle(items){var copy=items.slice();for(var i=copy.length-1;i>0;i--){var index=Math.floor(Math.random()*(i+1));var swap=copy[i];copy[i]=copy[index];copy[index]=swap;}return copy;}
+      function nextGod(){
+        if(!shuffledGods.length)shuffledGods=shuffle(gods.filter(function(god){return god.difficulty===activeDifficulty;}));
+        currentGod=shuffledGods.pop();wrongGuesses=0;round+=1;
+        document.getElementById('round-label').textContent='Round '+round+' · '+(activeDifficulty==='easy'?'Easy':'Hard');
+        image.src=currentGod.image;
+        image.alt=(currentGod.crop?'Cropped ':'')+'classical painting featuring '+currentGod.name;
+        image.classList.toggle('cropped',!!currentGod.crop);
+        image.style.objectPosition=currentGod.focus||'50% 50%';
+        document.getElementById('art-source').href=currentGod.source;
+        image.style.display='block';
+        document.getElementById('image-fallback').style.display='none';
+        answers.innerHTML='';jokeReveal.hidden=true;nextButton.disabled=true;
+        feedback.textContent='One right answer earns one divine joke.';
+        var otherNames=Array.from(new Set(gods.map(function(god){return god.name;}))).filter(function(name){return name!==currentGod.name;});
+        var choices=shuffle([currentGod.name].concat(shuffle(otherNames).slice(0,3)));
+        choices.forEach(function(name){var button=document.createElement('button');button.type='button';button.className='answer';button.textContent=name;button.addEventListener('click',function(){guess(button,name);});answers.appendChild(button);});
+      }
+      function guess(button,name){
+        if(name===currentGod.name){
+          button.classList.add('correct');
+          Array.prototype.forEach.call(answers.children,function(option){option.disabled=true;});
+          score+=1;localStorage.setItem(storageKey,String(score));
+          document.getElementById('score').textContent=String(score);
+          document.getElementById('joke-title').textContent=currentGod.name+' says…';
+          document.getElementById('joke-text').textContent=currentGod.joke;
+          jokeReveal.hidden=false;feedback.textContent='Correct. You earned a joke!';nextButton.disabled=false;
+          return;
+        }
+        button.classList.add('incorrect');button.disabled=true;wrongGuesses+=1;
+        if(wrongGuesses===3){Array.prototype.forEach.call(answers.children,function(option){option.disabled=true;if(option.textContent===currentGod.name)option.classList.add('correct');});feedback.textContent='The answer was '+currentGod.name+'. No joke this round, but there is another god waiting.';nextButton.disabled=false;}
+        else{feedback.textContent='Not this one. Try another portrait match.';}
+      }
+      image.addEventListener('error',function(){image.style.display='none';document.getElementById('image-fallback').style.display='flex';});
+      document.getElementById('score').textContent=String(score);
+      document.getElementById('difficulty-select').addEventListener('change',function(){activeDifficulty=this.value;shuffledGods=[];nextGod();});
+      nextButton.addEventListener('click',nextGod);
+      document.getElementById('reset-score').addEventListener('click',function(){score=0;localStorage.removeItem(storageKey);document.getElementById('score').textContent='0';feedback.textContent='Your joke score is reset. Keep guessing!';});
+      nextGod();
+    }());
+  </script>
+</body>
+</html>
